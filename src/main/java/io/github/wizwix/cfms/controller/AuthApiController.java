@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,17 @@ public class AuthApiController {
   }
 
   @PostMapping("/logout")
-  public void logout() {}
+  public ResponseEntity<Void> logout(HttpServletResponse resp) {
+    Cookie cookie = new Cookie("jwt_token", null);
+    cookie.setHttpOnly(true);
+    cookie.setPath("/");
+    cookie.setMaxAge(0);
+
+    resp.addCookie(cookie);
+
+    return ResponseEntity.ok().build();
+    // `/`로 리다이렉션하는 것은 프론트엔드의 몫
+  }
 
   @PatchMapping("/password-reset")
   public void passwordReset() {}
@@ -50,5 +61,8 @@ public class AuthApiController {
   public void passwordResetVerify() {}
 
   @PostMapping("/register")
-  public void register(@Valid @RequestBody RequestRegister req, HttpServletResponse response) {}
+  public ResponseEntity<?> register(@Valid @RequestBody RequestRegister req) {
+    userService.register(req);
+    return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/login").build();
+  }
 }
