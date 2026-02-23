@@ -31,8 +31,12 @@ public class ClubMember {
   /// 동아리
   @ManyToOne
   private Club club;
+  /// 동아리 내 자기 소개문
+  private String introduction;
   /// 동아리 참여 일자
   private LocalDateTime joinedAt;
+  /// (가입 거절 시) 거절 사유
+  private String rejectReason;
   /// 동아리 부원 역할 (부원, 부장, 부부장)
   @Enumerated(EnumType.STRING)
   private ClubRole role;
