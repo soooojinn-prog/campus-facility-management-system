@@ -30,9 +30,11 @@ export function CampusMapPage() {
     setTooltip(prev => ({...prev, visible: false}));
   }
 
+  // customRoute가 있으면 해당 경로로, 없으면 기본 /building/:key로 이동
+  // 현재 customRoute 사용 건물: 식당 → /cafeteria
   function handleClick(b) {
     if (!b.rentable) return;
-    navigate(`/building/${b.key}`);
+    navigate(b.customRoute || `/building/${b.key}`);
   }
 
   return (<div id="mapView">

@@ -1,4 +1,6 @@
-// 건물 SVG polygon 좌표
+// 건물 SVG polygon 좌표 (캠퍼스 지도 위 클릭 영역)
+// - rentable: true인 건물만 클릭 가능 (hover 시 파란색 하이라이트)
+// - customRoute: 기본 /building/:key 대신 별도 경로로 이동 (예: 식당 → /cafeteria)
 export const BUILDING_POLYGONS = [{
   key: 'lecture1',
   name: '강의동 1',
@@ -26,8 +28,9 @@ export const BUILDING_POLYGONS = [{
 }, {
   key: 'cafeteria',
   name: '식당',
-  info: '학생식당 · 교직원식당',
-  rentable: false,
+  info: '학생식당 · 푸드코트',
+  rentable: true,
+  customRoute: '/cafeteria',
   points: '239,382 292,363 315,412 313,425 262,446 239,396',
 }, {
   key: 'admin',
@@ -55,7 +58,9 @@ export const BUILDING_POLYGONS = [{
   points: '587,487 643,543 669,549 689,545 704,529 704,519 713,527 719,523 709,509 713,502 709,491 723,487 756,512 797,480 772,455 746,469 745,457 746,437 732,423 715,423 696,433 690,448 690,466 679,459 662,465 649,454 628,449 607,451 587,465',
 }];
 
-// 건물 상세 데이터 (추후 백엔드 API로 대체)
+// 건물 상세 데이터 — 백엔드 BuildingApiController 미구현으로 프론트 mock 사용 중
+// 구조: { [buildingKey]: { name, info, floors: { [층번호]: { desc, rooms[] } } } }
+// rooms 항목: id(호실코드), name, type, category, capacity, status(available/partial/full)
 export const BUILDING_DATA = {
   lecture1: {
     name: '강의동 1', info: '강의실 12개 · 1~4층', floors: {
@@ -144,7 +149,7 @@ export const BUILDING_DATA = {
   },
 };
 
-// 학기 데이터
+// 학기 데이터 — 백엔드 SemesterController 미구현으로 프론트 mock 사용 중
 export const SEMESTERS = [{name: '2025년 2학기', start: '2025-09-01', end: '2025-12-19'}, {
   name: '2025년 겨울 계절수업', start: '2025-12-22', end: '2026-02-20',
 }, {name: '2026년 1학기', start: '2026-03-02', end: '2026-06-19'}];
@@ -162,7 +167,8 @@ export function getCurrentSemester() {
 
 export const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-// 가상 예약 데이터 생성
+// 가상 예약 데이터 생성 — roomId+날짜 기반 시드로 일관된 가짜 예약 생성
+// 백엔드 ReservationApiController 구현 후 fetchReservations()로 교체 예정
 export function genReservations(roomId, dateStr) {
   const seed = roomId.charCodeAt(0) + roomId.charCodeAt(roomId.length - 1) + parseInt(dateStr.replace(/-/g, '')) % 100;
   const res = [];

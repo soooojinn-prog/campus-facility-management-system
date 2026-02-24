@@ -179,3 +179,66 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f5f7fa; min-height:
 .auth-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; }
 .auth-tab { flex: 1; text-align: center; padding: 10px; font-size: .9rem; font-weight: 500; color: #a0aec0; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
 .auth-tab.active { color: #1a365d; font-weight: 700; border-bottom-color: #1a365d; }
+
+/* ── 식당 페이지 (CafeteriaPage.jsx) ── */
+/* 모든 클래스 이름에 caf- 접두어 사용 (기존 CSS와 충돌 방지) */
+/* 푸드코트 레이아웃은 건물 상세의 floor-list/floor-detail 패턴 재활용 */
+/* 색상: #ed8936(할인/인기 강조), #e53e3e(할인가), #fefcbf(할인 뱃지 배경) */
+
+/* 오늘의 학식 요약 (info-col 내부) */
+.caf-today-summary { text-align: center; }
+.caf-summary-title { font-size: .85rem; font-weight: 700; color: #2d3748; margin-bottom: 12px; }
+.caf-summary-row { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 4px 0; font-size: .82rem; color: #4a5568; }
+.caf-summary-icon { font-size: 1rem; }
+.caf-summary-type { font-weight: 600; color: #2d3748; min-width: 32px; }
+.caf-summary-time { color: #718096; font-size: .78rem; }
+
+/* 푸드코트 레이아웃 */
+.caf-foodcourt { display: flex; min-height: calc(100vh - 280px); }
+
+/* 학식 섹션 */
+.caf-meal-section { padding: 32px 0; background: #fafbfc; min-height: calc(100vh - 280px); }
+.caf-meal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.caf-meal-card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+.caf-meal-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.caf-meal-header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+.caf-meal-icon { font-size: 2rem; }
+.caf-meal-type { font-size: 1.15rem; font-weight: 700; }
+.caf-meal-time { font-size: .8rem; opacity: .8; margin-top: 2px; }
+.caf-meal-items { padding: 16px 24px; }
+.caf-meal-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+.caf-meal-item:last-child { border-bottom: none; }
+.caf-meal-item.has-discount { background: #fffff0; margin: 0 -24px; padding: 12px 24px; border-left: 3px solid #ed8936; }
+.caf-item-name { font-size: .9rem; font-weight: 500; color: #2d3748; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.caf-item-price { font-size: .88rem; font-weight: 600; color: #2d3748; white-space: nowrap; }
+
+/* 할인 관련 */
+.caf-discount-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .68rem; font-weight: 600; background: #fefcbf; color: #b7791f; border: 1px solid #f6e05e; }
+.caf-price-original { text-decoration: line-through; color: #a0aec0; font-size: .82rem; margin-right: 6px; font-weight: 400; }
+.caf-price-discount { color: #e53e3e; font-weight: 700; }
+
+/* 푸드코트 메뉴 행 */
+.caf-menu-row.caf-has-discount { background: #fffff0; border-left: 3px solid #ed8936; }
+.caf-menu-price { font-size: .88rem; font-weight: 600; color: #2d3748; text-align: right; white-space: nowrap; }
+.caf-menu-discount-label { font-size: .72rem; color: #b7791f; margin-top: 2px; }
+
+/* 인기 메뉴 */
+.caf-popular-dot { width: 10px; height: 10px; border-radius: 50%; background: #ed8936; margin-right: 10px; flex-shrink: 0; }
+.caf-popular-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 8px; font-size: .65rem; font-weight: 600; background: rgba(237,137,54,.15); color: #ed8936; vertical-align: middle; }
+
+/* 할인 요약 카드 */
+.caf-discount-summary { margin-top: 24px; padding: 20px; background: #fffff0; border: 1px solid #f6e05e; border-radius: 10px; }
+.caf-discount-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(246,224,94,.3); font-size: .85rem; }
+.caf-discount-item:last-child { border-bottom: none; }
+.caf-discount-name { flex: 1; color: #2d3748; font-weight: 500; }
+.caf-discount-save { color: #e53e3e; font-weight: 600; font-size: .82rem; }
+
+/* 반응형 */
+@media (max-width: 992px) {
+  .caf-meal-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .caf-foodcourt { flex-direction: column; }
+  .caf-foodcourt .floor-list { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #e2e8f0; display: flex; overflow-x: auto; }
+  .caf-foodcourt .floor-item { min-width: 160px; }
+}
