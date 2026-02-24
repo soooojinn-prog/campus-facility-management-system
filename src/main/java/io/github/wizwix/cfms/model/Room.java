@@ -1,5 +1,6 @@
 package io.github.wizwix.cfms.model;
 
+import io.github.wizwix.cfms.model.enums.RoomStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,9 +35,14 @@ public class Room {
   /// 호실이 속한 건물
   @ManyToOne(fetch = FetchType.LAZY)
   private Building building;
+  /// 수용 가능 인원
+  private Integer capacity;
   /// 호실의 정식 명칭 (e.g. 'IT대학동 104호')
   @Column(unique = true, nullable = false)
   private String roomCode;
   /// 호실의 방 번호 (e.g. '104')
   private String roomNumber;
+  /// 호실 상태
+  // TODO: 이 필드가 정말 필요할까? 백엔드에서 Reservation 테이블을 검색해 동적으로 지정할 수는 없는 걸까?
+  private RoomStatus status;
 }
