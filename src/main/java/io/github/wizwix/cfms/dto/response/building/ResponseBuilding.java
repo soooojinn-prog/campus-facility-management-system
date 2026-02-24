@@ -1,4 +1,4 @@
-package io.github.wizwix.cfms.dto.response.reservation;
+package io.github.wizwix.cfms.dto.response.building;
 
 import io.github.wizwix.cfms.model.enums.BuildingType;
 

@@ -2,9 +2,10 @@ package io.github.wizwix.cfms.model.enums;
 
 /// 건물 유형
 public enum BuildingType {
-  ///
-  // TODO: 대체 뭐 하는 곳인가요?
+  /// 대학 본부 (안내, 행정 업무 등)
   ADMIN,
+  /// 식당
+  CAFETERIA,
   /// 기숙사
   DORMITORY,
   /// 강의동

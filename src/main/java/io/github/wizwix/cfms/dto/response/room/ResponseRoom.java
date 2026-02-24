@@ -1,4 +1,4 @@
-package io.github.wizwix.cfms.dto.response.reservation;
+package io.github.wizwix.cfms.dto.response.room;
 
 /// 호실 정보
 ///

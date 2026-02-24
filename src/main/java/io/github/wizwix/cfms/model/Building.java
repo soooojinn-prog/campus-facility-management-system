@@ -24,6 +24,10 @@ public class Building {
   private Long id;
   /// 건물 이름 (e.g. '강의동 1')
   private String name;
+  /// 건물 설명 (e.g. '강의실 XX개, 1~X층')
+  private String info;
+  /// 캠퍼스 전체 지도에서 해당 건물이 차지하는 영역의 각 꼭지점 모음
+  private String points;
   /// 건물의 대여 가능한 방 존재 여부
   private Boolean rentable;
   /// 건물 유형
