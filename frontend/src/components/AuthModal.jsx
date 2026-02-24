@@ -2,10 +2,15 @@ import {useState} from 'react';
 import {useAuth} from '../context/AuthContext.jsx';
 import {loginApi, signupApi} from '../data/api.js';
 
+/// 한글 실명 검증 (2~5자, 완성형 한글만 허용)
 function isKorean(str) {
   return /^[가-힣]{2,5}$/.test(str);
 }
 
+/// 로그인/회원가입 모달
+/// - 로그인: 학번(userNumber) + 비밀번호 → 백엔드 /api/auth/login
+/// - 회원가입: 역할 선택 + 이름 + 학번 + 이메일 + 비밀번호 → 백엔드 /api/auth/register
+/// - 회원가입 성공 시 자동 로그인 없이 로그인 탭으로 이동 (백엔드가 201만 반환)
 export function AuthModal({onClose}) {
   const {login} = useAuth();
   const [tab, setTab] = useState('login'); // 'login' | 'signup'
@@ -18,6 +23,7 @@ export function AuthModal({onClose}) {
   // 회원가입 폼
   const [signupName, setSignupName] = useState('');
   const [signupId, setSignupId] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
   const [signupPw, setSignupPw] = useState('');
   const [signupPw2, setSignupPw2] = useState('');
 
@@ -27,8 +33,9 @@ export function AuthModal({onClose}) {
       return;
     }
     try {
-      const user = await loginApi(loginId, loginPw);
-      login(user);
+      // 백엔드 응답: { accessToken, user: {...} } → user만 추출하여 Context에 저장
+      const res = await loginApi(loginId, loginPw);
+      login(res.user);
       onClose();
     } catch (e) {
       alert('아이디 또는 비밀번호가 올바르지 않습니다.');
@@ -44,8 +51,12 @@ export function AuthModal({onClose}) {
       alert('이름은 한글 실명(2~5자)으로 입력해주세요.\n닉네임은 사용할 수 없습니다.');
       return;
     }
-    if (!signupId || signupId.length < 4) {
-      alert('아이디는 4자 이상 입력해주세요.');
+    if (!signupId) {
+      alert('학번/교번을 입력해주세요.');
+      return;
+    }
+    if (!signupEmail) {
+      alert('이메일을 입력해주세요.');
       return;
     }
     if (signupPw.length < 8) {
@@ -58,10 +69,9 @@ export function AuthModal({onClose}) {
     }
 
     try {
-      const user = await signupApi(signupId, signupPw, signupName, selectedRole);
-      login(user);
-      onClose();
-      alert(`✅ 회원가입이 완료되었습니다!\n\n${signupName}(${selectedRole})님 환영합니다.`);
+      await signupApi(signupId, signupPw, signupName, signupEmail);
+      alert(`회원가입이 완료되었습니다!\n${signupName}님, 로그인해주세요.`);
+      setTab('login');
     } catch (e) {
       alert(e.message || '회원가입에 실패했습니다.');
     }
@@ -89,8 +99,8 @@ export function AuthModal({onClose}) {
 
         {tab === 'login' ? (<>
           <div className="mb-3">
-            <label className="form-label">아이디</label>
-            <input type="text" className="form-control" placeholder="아이디를 입력하세요" value={loginId}
+            <label className="form-label">학번 / 교번</label>
+            <input type="text" className="form-control" placeholder="학번 또는 교번을 입력하세요" value={loginId}
                    onChange={e => setLoginId(e.target.value)}/>
           </div>
           <div className="mb-3">
@@ -124,9 +134,14 @@ export function AuthModal({onClose}) {
             </div>
           </div>
           <div className="mb-3">
-            <label className="form-label">아이디</label>
-            <input type="text" className="form-control" placeholder="영문/숫자 조합" value={signupId}
+            <label className="form-label">학번 / 교번</label>
+            <input type="text" className="form-control" placeholder="학번 또는 교번을 입력하세요" value={signupId}
                    onChange={e => setSignupId(e.target.value)}/>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">이메일</label>
+            <input type="email" className="form-control" placeholder="이메일을 입력하세요" value={signupEmail}
+                   onChange={e => setSignupEmail(e.target.value)}/>
           </div>
           <div className="mb-3">
             <label className="form-label">비밀번호</label>

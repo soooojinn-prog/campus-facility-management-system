@@ -1,26 +1,28 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {FloorGuide} from '../components/FloorGuide.jsx';
 import {MiniCalendar} from '../components/MiniCalendar.jsx';
 import {ReservationView} from '../components/ReservationView.jsx';
-import {fetchBuildingDetail, fetchCurrentSemester} from '../data/api.js';
+import {BUILDING_DATA, getCurrentSemester} from '../data/buildings.js';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+/// 건물 상세 페이지
+/// - URL 파라미터 :buildingKey로 건물 식별 (e.g. 'lecture1', 'gym')
+/// - 층별 안내 탭: FloorGuide 컴포넌트 (호실 목록 + 상태)
+/// - 예약 현황 탭: ReservationView 컴포넌트 (타임라인 UI)
+/// - TODO: 백엔드 API 구현 후 mock 데이터(buildings.js)를 API 호출로 교체
 export function BuildingPage() {
   const {buildingKey} = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('floor');
   const [jumpToRoom, setJumpToRoom] = useState(null);
-  const [data, setData] = useState(null);
-  const [semester, setSemester] = useState(null);
 
-  useEffect(() => {
-    fetchBuildingDetail(buildingKey).then(setData);
-    fetchCurrentSemester().then(setSemester);
-  }, [buildingKey]);
+  // 백엔드 미구현으로 mock 데이터 직접 참조
+  const data = BUILDING_DATA[buildingKey];
+  const semester = getCurrentSemester();
 
-  if (!data) return <div className="container mt-4">로딩 중...</div>;
+  if (!data) return <div className="container mt-4">건물 정보를 찾을 수 없습니다.</div>;
 
   const now = new Date();
   const y = now.getFullYear();
@@ -31,6 +33,7 @@ export function BuildingPage() {
     setJumpToRoom(null);
   }
 
+  // 층별 안내에서 호실 클릭 시 → 예약 현황 탭으로 전환 + 해당 호실 자동 선택
   function handleRoomClick(roomId) {
     setJumpToRoom(roomId);
     setActiveTab('schedule');

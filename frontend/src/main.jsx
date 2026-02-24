@@ -1,7 +1,7 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/index.css';
 import {Header} from './components/Header.jsx';
 import {AuthProvider} from './context/AuthContext.jsx';

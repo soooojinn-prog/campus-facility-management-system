@@ -1,21 +1,23 @@
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {fetchBuildingMap} from '../data/api.js';
+import {BUILDING_POLYGONS} from '../data/buildings.js';
 
+/// 캠퍼스 지도 페이지
+/// - SVG polygon overlay로 건물 영역 표시 (좌표는 buildings.js에 정의)
+/// - 건물 hover 시 툴팁(이름, 정보, 대여 가능 여부) 표시
+/// - 대여 가능 건물 클릭 시 /building/:key 상세 페이지로 이동
+/// - TODO: 백엔드 /api/buildings/map 구현 후 API 데이터로 교체
 export function CampusMapPage() {
-  const [buildings, setBuildings] = useState([]);
+  const buildings = BUILDING_POLYGONS;
   const [tooltip, setTooltip] = useState({visible: false, x: 0, y: 0, name: '', info: '', rentable: false});
   const mapRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchBuildingMap().then(setBuildings);
-  }, []);
 
   function handleMouseEnter(b) {
     setTooltip(prev => ({...prev, visible: true, name: b.name, info: b.info, rentable: b.rentable}));
   }
 
+  // 툴팁이 지도 영역 밖으로 넘어가지 않도록 위치 보정
   function handleMouseMove(e) {
     const rect = mapRef.current.getBoundingClientRect();
     let x = e.clientX - rect.left + 15;

@@ -1,6 +1,12 @@
+/// 예약 현황 컴포넌트
+/// - 좌측: 층별 호실 목록 (클릭으로 선택)
+/// - 중앙: 미니 캘린더 (날짜 선택)
+/// - 우측: 시간대별 타임라인 (09:00~21:00, 1시간 단위)
+/// - 빈 슬롯 클릭 시 예약 모달 표시 (교수/동아리장만 가능)
+/// - TODO: 백엔드 ReservationApiController 구현 후 genReservations → fetchReservations로 교체
 import {useEffect, useState} from 'react';
 import {useAuth} from '../context/AuthContext.jsx';
-import {fetchReservations} from '../data/api.js';
+import {genReservations} from '../data/buildings.js';
 import {AuthModal} from './AuthModal.jsx';
 import {MiniCalendar} from './MiniCalendar.jsx';
 import {ReserveModal} from './ReserveModal.jsx';
@@ -36,7 +42,7 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
     const y = now.getFullYear();
     const m = now.getMonth();
     const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
-    fetchReservations(selectedRoom.id, dateStr).then(setReservations);
+    setReservations(genReservations(selectedRoom.id, dateStr));
   }, [selectedRoom, selectedDay]);
 
   const y = now.getFullYear();
@@ -60,7 +66,7 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
     // 예약 후 타임라인 새로고침
     if (!selectedRoom) return;
     const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
-    fetchReservations(selectedRoom.id, dateStr).then(setReservations);
+    setReservations(genReservations(selectedRoom.id, dateStr));
   }
 
   return (<div className="reservation-view">
