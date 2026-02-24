@@ -1,4 +1,4 @@
-package io.github.wizwix.cfms.global.config.dev;
+package io.github.wizwix.cfms.global.config.dev.base;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
