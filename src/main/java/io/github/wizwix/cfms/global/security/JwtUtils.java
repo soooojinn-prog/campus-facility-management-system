@@ -1,4 +1,4 @@
-package io.github.wizwix.cfms.jwt;
+package io.github.wizwix.cfms.global.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,4 @@
-package io.github.wizwix.cfms.config;
+package io.github.wizwix.cfms.global.config;
 
 import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.model.enums.UserRole;
@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DevDataInitializer {
+  private final PasswordEncoder passwordEncoder;
   private final String devAdminEmail = "admin1@university.ac.kr";
   private final String devAdminNumber = "26999999";
   private final String devAdminPassword = "123";
@@ -45,7 +46,7 @@ public class DevDataInitializer {
 
   @Bean
   @Profile("!dev")
-  public CommandLineRunner removeDevData(UserRepository userRepository) {
+  public CommandLineRunner removeDevData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
     return args -> {
       List<String> devUserNames = List.of(devStudentNumber, devProfessorNumber, devAdminNumber);
       for (var devUserName : devUserNames) {
@@ -56,9 +57,9 @@ public class DevDataInitializer {
             case ROLE_ADMIN -> devAdminEmail.equals(user.getEmail());
           };
           boolean isDevPassword = switch (user.getRole()) {
-            case ROLE_STUDENT -> devStudentPassword.equals(user.getPassword());
-            case ROLE_PROFESSOR -> devProfessorPassword.equals(user.getPassword());
-            case ROLE_ADMIN -> devAdminPassword.equals(user.getPassword());
+            case ROLE_STUDENT -> passwordEncoder.matches(devStudentPassword, user.getPassword());
+            case ROLE_PROFESSOR -> passwordEncoder.matches(devProfessorPassword, user.getPassword());
+            case ROLE_ADMIN -> passwordEncoder.matches(devAdminPassword, user.getPassword());
           };
           if (isDevEmail && isDevPassword) userRepository.delete(user);
         });

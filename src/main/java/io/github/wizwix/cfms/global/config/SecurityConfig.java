@@ -1,12 +1,13 @@
-package io.github.wizwix.cfms.config;
+package io.github.wizwix.cfms.global.config;
 
-import io.github.wizwix.cfms.jwt.JwtAuthenticationFilter;
-import io.github.wizwix.cfms.jwt.JwtUtils;
-import jakarta.servlet.http.HttpServletResponse;
+import io.github.wizwix.cfms.global.error.JsonErrorResponseWriter;
+import io.github.wizwix.cfms.global.ratelimit.PasswordResetRateLimitFilter;
+import io.github.wizwix.cfms.global.security.JwtAuthenticationProcessingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,20 +24,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-  private final AccessDeniedHandler jsonAccessDeniedHandler = ((request, response, accessDeniedException) -> {
-    response.setContentType("application/json;charset=utf-8");
-    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    response.getWriter().write("{\"message\": \"You do not have permission to access this resource.\"}");
-  });
-  private final AuthenticationEntryPoint jsonAuthenticationEntryPoint = (request, response, authException) -> {
-    response.setContentType("application/json;charset=UTF-8");
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    response.getWriter().write("{\"message\":\"Full authentication is required to access this resource.\"}");
-  };
-  private final JwtUtils jwtUtils;
+  private final JsonErrorResponseWriter errorWriter;
+  private final JwtAuthenticationProcessingFilter jwtAuthenticationFilter;
+  private final PasswordResetRateLimitFilter rateLimitFilter;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    AuthenticationEntryPoint entryPoint = (request, response, ex) -> errorWriter.write(response, HttpStatus.UNAUTHORIZED, "Authentication required");
+    AccessDeniedHandler deniedHandler = (request, response, ex) -> errorWriter.write(response, HttpStatus.FORBIDDEN, "Access denied");
+
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
@@ -56,8 +52,9 @@ public class SecurityConfig {
             // everything else (React frontend, static files etc.) are permitted
             .anyRequest().permitAll()
         )
-        .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling(conf -> conf.accessDeniedHandler(jsonAccessDeniedHandler).authenticationEntryPoint(jsonAuthenticationEntryPoint));
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(rateLimitFilter, JwtAuthenticationProcessingFilter.class)
+        .exceptionHandling(conf -> conf.authenticationEntryPoint(entryPoint).accessDeniedHandler(deniedHandler));
     return http.build();
   }
 

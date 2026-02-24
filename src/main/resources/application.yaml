@@ -27,6 +27,10 @@ spring:
     show-sql: true
   #  main:
   #    allow-bean-definition-overriding: true
+  mvc:
+    format:
+      date: 'yyyy-MM-dd'
+      date-time: "yyyy-MM-dd'T'HH:mm:ss"
   sql:
     init:
       encoding: utf-8
