@@ -99,7 +99,7 @@ public class CafeteriaDevLoader implements DevDataLoader {
   }
 
   private void loadMeals() {
-    JsonNode root = readJson("data/dev/cafeteria-meals.json");
+    JsonNode root = readJson("data/dev/cafeteria-meals.jsonc");
     if (root == null) return;
 
     LocalDate today = LocalDate.now();
