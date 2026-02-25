@@ -10,6 +10,7 @@ import {CafeteriaPage} from './page/CafeteriaPage.jsx';
 import {CampusMapPage} from './page/CampusMapPage.jsx';
 import {DormitoryPage} from './page/DormitoryPage.jsx';
 import {MyPage} from './page/MyPage.jsx';
+import {CounselingPage} from './page/CounselingPage.jsx';
 
 createRoot(document.getElementById('root')).render(<StrictMode>
   <BrowserRouter>
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')).render(<StrictMode>
         <Route path="/building/:buildingKey" element={<BuildingPage/>}/>
         <Route path="/cafeteria" element={<CafeteriaPage/>}/>
         <Route path="/dormitory" element={<DormitoryPage/>}/>
+        <Route path="/counseling" element={<CounselingPage/>}/>
         <Route path="/mypage" element={<MyPage/>}/>
       </Routes>
     </AuthProvider>

@@ -1,21 +1,21 @@
 [
   // 강의동 1 - 1층
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 120,
     "floor": 1,
     "roomNumber": "101호",
     "type": "AUDITORIUM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 1,
     "roomNumber": "102호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 1,
     "roomNumber": "103호",
@@ -23,21 +23,21 @@
   },
   // 강의동 1 - 2층
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 80,
     "floor": 2,
     "roomNumber": "201호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "202호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 20,
     "floor": 2,
     "roomNumber": "203호",
@@ -45,21 +45,21 @@
   },
   // 강의동 1 - 3층
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 3,
     "roomNumber": "301호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 3,
     "roomNumber": "302호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 3,
     "roomNumber": "303호",
@@ -67,21 +67,21 @@
   },
   // 강의동 1 - 4층
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 30,
     "floor": 4,
     "roomNumber": "401호",
     "type": "SEMINAR"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 4,
     "roomNumber": "402호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 1",
+    "building": "lecture1",
     "capacity": 60,
     "floor": 4,
     "roomNumber": "403호",
@@ -89,21 +89,21 @@
   },
   // 강의동 2 - 1층
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 150,
     "floor": 1,
     "roomNumber": "101호",
     "type": "AUDITORIUM"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 80,
     "floor": 1,
     "roomNumber": "102호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 60,
     "floor": 1,
     "roomNumber": "103호",
@@ -111,21 +111,21 @@
   },
   // 강의동 2 - 2층
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "201호",
     "type": "AUDITORIUM"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "202호",
     "type": "AUDITORIUM"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 40,
     "floor": 2,
     "roomNumber": "203호",
@@ -133,21 +133,21 @@
   },
   // 강의동 2 - 3층
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 50,
     "floor": 3,
     "roomNumber": "301호",
     "type": "COMPUTER"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 40,
     "floor": 3,
     "roomNumber": "302호",
     "type": "LAB"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 50,
     "floor": 3,
     "roomNumber": "303호",
@@ -155,21 +155,21 @@
   },
   // 강의동 2 - 4층
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 50,
     "floor": 4,
     "roomNumber": "401호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 50,
     "floor": 4,
     "roomNumber": "402호",
     "type": "COMPUTER"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 50,
     "floor": 4,
     "roomNumber": "403호",
@@ -177,21 +177,21 @@
   },
   // 강의동 2 - 5층
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 25,
     "floor": 5,
     "roomNumber": "501호",
     "type": "SEMINAR"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 60,
     "floor": 5,
     "roomNumber": "502호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 2",
+    "building": "lecture2",
     "capacity": 50,
     "floor": 5,
     "roomNumber": "503호",
@@ -199,35 +199,35 @@
   },
   // 강의동 3 - 1층
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 80,
     "floor": 1,
     "roomNumber": "101호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 25,
     "floor": 1,
     "roomNumber": "102호",
     "type": "SEMINAR"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 1,
     "roomNumber": "103호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 1,
     "roomNumber": "104호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 1,
     "roomNumber": "105호",
@@ -235,35 +235,35 @@
   },
   // 강의동 3 - 2층
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "201호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 20,
     "floor": 2,
     "roomNumber": "202호",
     "type": "SEMINAR"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "203호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "204호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 3",
+    "building": "lecture3",
     "capacity": 60,
     "floor": 2,
     "roomNumber": "205호",
@@ -271,28 +271,28 @@
   },
   // 강의동 4 - 1층
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 40,
     "floor": 1,
     "roomNumber": "101호",
     "type": "LAB"
   },
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 40,
     "floor": 1,
     "roomNumber": "102호",
     "type": "LAB"
   },
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 40,
     "floor": 1,
     "roomNumber": "103호",
     "type": "LAB"
   },
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 40,
     "floor": 1,
     "roomNumber": "104호",
@@ -300,28 +300,28 @@
   },
   // 강의동 4 - 2층
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 80,
     "floor": 2,
     "roomNumber": "201호",
     "type": "CLASSROOM"
   },
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 35,
     "floor": 2,
     "roomNumber": "202호",
     "type": "LAB"
   },
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 40,
     "floor": 2,
     "roomNumber": "203호",
     "type": "LAB"
   },
   {
-    "building": "강의동 4",
+    "building": "lecture4",
     "capacity": 40,
     "floor": 2,
     "roomNumber": "204호",
@@ -329,35 +329,35 @@
   },
   // 체육관
   {
-    "building": "체육관",
+    "building": "gym",
     "capacity": 200,
     "floor": 1,
     "roomNumber": "축구장",
     "type": "COURT"
   },
   {
-    "building": "체육관",
+    "building": "gym",
     "capacity": 80,
     "floor": 1,
     "roomNumber": "농구장",
     "type": "COURT"
   },
   {
-    "building": "체육관",
+    "building": "gym",
     "capacity": 40,
     "floor": 1,
     "roomNumber": "배드민턴장",
     "type": "RACQUET"
   },
   {
-    "building": "체육관",
+    "building": "gym",
     "capacity": 50,
     "floor": 1,
     "roomNumber": "헬스장",
     "type": "GYM"
   },
   {
-    "building": "체육관",
+    "building": "gym",
     "capacity": 200,
     "floor": 1,
     "roomNumber": "탁구장",

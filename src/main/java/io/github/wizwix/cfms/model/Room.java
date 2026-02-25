@@ -20,7 +20,7 @@ import lombok.Setter;
 @Table(
     name = "cfms_room",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"building_id", "room_number"}),
+        @UniqueConstraint(columnNames = {"building_id", "name"}),
     }
 )
 @Getter

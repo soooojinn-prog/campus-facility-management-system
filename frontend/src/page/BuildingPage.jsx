@@ -1,28 +1,68 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {FloorGuide} from '../components/FloorGuide.jsx';
 import {MiniCalendar} from '../components/MiniCalendar.jsx';
 import {ReservationView} from '../components/ReservationView.jsx';
-import {BUILDING_DATA, getCurrentSemester} from '../data/buildings.js';
+import {fetchBuildingRooms} from '../data/api.js';
+import {BUILDING_POLYGONS, getCurrentSemester, ROOM_TYPE_LABELS} from '../data/buildings.js';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 /// 건물 상세 페이지
 /// - URL 파라미터 :buildingKey로 건물 식별 (e.g. 'lecture1', 'gym')
-/// - 층별 안내 탭: FloorGuide 컴포넌트 (호실 목록 + 상태)
+/// - 층별 안내 탭: FloorGuide 컴포넌트 (호실 목록)
 /// - 예약 현황 탭: ReservationView 컴포넌트 (타임라인 UI)
-/// - TODO: 백엔드 API 구현 후 mock 데이터(buildings.js)를 API 호출로 교체
 export function BuildingPage() {
   const {buildingKey} = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('floor');
   const [jumpToRoom, setJumpToRoom] = useState(null);
+  const [buildingData, setBuildingData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // 백엔드 미구현으로 mock 데이터 직접 참조
-  const data = BUILDING_DATA[buildingKey];
+  const polygon = BUILDING_POLYGONS.find(b => b.key === buildingKey);
   const semester = getCurrentSemester();
 
-  if (!data) return <div className="container mt-4">건물 정보를 찾을 수 없습니다.</div>;
+  useEffect(() => {
+    setLoading(true);
+    // API 응답(flat room list)을 FloorGuide/ReservationView가 기대하는 floor 구조로 변환
+    // API: [{ id, buildingName, name, floor, type, capacity }, ...]
+    // 변환 결과: { floors: { 1: { desc: "강의실 / 세미나실", rooms: [...] }, 2: ... } }
+    fetchBuildingRooms(buildingKey).then(rooms => {
+      const floors = {};
+      rooms.forEach(r => {
+        if (!floors[r.floor]) floors[r.floor] = {rooms: [], types: new Set()};
+        floors[r.floor].rooms.push({
+          id: r.id,           // DB PK (Long) — mock에서는 "L1-101" 같은 문자열이었음
+          name: r.name,       // 호실 번호 (e.g. "101호")
+          type: ROOM_TYPE_LABELS[r.type] || r.type,  // 한글 변환 (CLASSROOM → "강의실")
+          rawType: r.type,    // 원본 enum (FloorGuide에서 카테고리 그룹화에 사용)
+          capacity: r.capacity,
+        });
+        floors[r.floor].types.add(ROOM_TYPE_LABELS[r.type] || r.type);
+      });
+      // desc: 해당 층의 호실 유형들을 종합 (e.g. "강의실 / 세미나실")
+      Object.values(floors).forEach(fd => {
+        fd.desc = [...fd.types].join(' / ');
+        delete fd.types;  // Set은 JSON 직렬화 불가하므로 제거
+      });
+      // name/info는 BUILDING_POLYGONS에서 가져옴 (DB의 Building.rentable과 프론트 설정이 다를 수 있으므로)
+      setBuildingData({
+        name: polygon?.name || buildingKey,
+        info: polygon?.info || '',
+        floors,
+      });
+      setLoading(false);
+    }).catch(() => {
+      setBuildingData(null);
+      setLoading(false);
+    });
+  }, [buildingKey]);
+
+  if (loading) return <div className="container mt-4">로딩 중...</div>;
+  if (!buildingData || Object.keys(buildingData.floors).length === 0) {
+    return <div className="container mt-4">건물 정보를 찾을 수 없습니다.</div>;
+  }
 
   const now = new Date();
   const y = now.getFullYear();
@@ -52,7 +92,7 @@ export function BuildingPage() {
           navigate('/');
         }}>캠퍼스 지도</a>
         <span className="sep">/</span>
-        <span className="current">{data.name}</span>
+        <span className="current">{buildingData.name}</span>
         <span className="sep">/</span>
         <span className="current">{activeTab === 'floor' ? '층별 안내' : '예약 현황'}</span>
       </div>
@@ -61,7 +101,7 @@ export function BuildingPage() {
     <div className="store-info-area">
       <div className="container">
         <div className="store-name">
-          <span>{data.name}</span>
+          <span>{buildingData.name}</span>
           <a className="back-link" onClick={() => navigate('/')}>← 캠퍼스 지도로 돌아가기</a>
         </div>
         <div className="info-grid">
@@ -126,7 +166,7 @@ export function BuildingPage() {
       </button>
     </div>
 
-    {activeTab === 'floor' ? (<FloorGuide buildingData={data} onRoomClick={handleRoomClick}/>) : (
-        <ReservationView buildingKey={buildingKey} buildingData={data} jumpToRoom={jumpToRoom}/>)}
+    {activeTab === 'floor' ? (<FloorGuide buildingData={buildingData} onRoomClick={handleRoomClick}/>) : (
+        <ReservationView buildingKey={buildingKey} buildingData={buildingData} jumpToRoom={jumpToRoom}/>)}
   </div>);
 }

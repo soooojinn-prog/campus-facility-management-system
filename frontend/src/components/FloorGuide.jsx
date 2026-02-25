@@ -1,18 +1,23 @@
 import {useState} from 'react';
 
-const STATUS_LABEL = {available: '예약 가능', partial: '일부 예약', full: '예약 마감'};
-const STATUS_COLOR = {available: 'success', partial: 'warning', full: 'danger'};
-
+/// 층별 안내 컴포넌트
+/// - buildingData.floors: { [층번호]: { desc: "강의실 / 세미나실", rooms: [...] } }
+/// - room.type: 한글 변환된 유형 (BuildingPage에서 ROOM_TYPE_LABELS 적용 완료)
+/// - room.id: DB PK (Long) — 클릭 시 onRoomClick(room.id)로 ReservationView 탭 전환
+/// - 모든 호실이 "예약 가능" 배지를 표시 (실시간 예약 상태 표시는 추후 구현)
 export function FloorGuide({buildingData, onRoomClick}) {
   const floorKeys = Object.keys(buildingData.floors).map(Number).sort((a, b) => b - a);
   const [activeFloor, setActiveFloor] = useState(floorKeys[0]);
 
   const floorData = buildingData.floors[activeFloor];
 
+  // room.type(한글)별 그룹화 → 카테고리 섹션으로 표시
+  // e.g. { "강의실": [room1, room2], "세미나실": [room3] }
   const categories = {};
   floorData.rooms.forEach(r => {
-    if (!categories[r.category]) categories[r.category] = [];
-    categories[r.category].push(r);
+    const cat = r.type;
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(r);
   });
 
   return (<div className="floor-guide">
@@ -36,35 +41,19 @@ export function FloorGuide({buildingData, onRoomClick}) {
           <h3>{activeFloor}F</h3>
           <div className="floor-subtitle">{buildingData.name} · {floorData.desc}</div>
         </div>
-        <div className="status-legend mb-3">
-          <div className="status-legend-item">
-            <div className="room-status-dot available"/>
-            예약 가능
-          </div>
-          <div className="status-legend-item">
-            <div className="room-status-dot partial"/>
-            일부 예약
-          </div>
-          <div className="status-legend-item">
-            <div className="room-status-dot full"/>
-            예약 마감
-          </div>
-        </div>
       </div>
       {Object.entries(categories).map(([cat, rooms]) => (<div key={cat} className="room-category">
         <div className="room-category-title">{cat}<span className="room-category-count">{rooms.length}</span>
         </div>
         {rooms.map(room => (<div key={room.id} className="room-row" onClick={() => onRoomClick(room.id)}>
           <div className="d-flex align-items-center">
-            <div className={`room-status-dot ${room.status}`}/>
+            <div className="room-status-dot available"/>
             <div>
               <div className="room-name">{room.name}</div>
               <div className="room-cap">{room.type} · 수용 {room.capacity}명</div>
             </div>
           </div>
-          <span className={`badge bg-${STATUS_COLOR[room.status]}`} style={{fontSize: '0.72rem'}}>
-                  {STATUS_LABEL[room.status]}
-                </span>
+          <span className="badge bg-success" style={{fontSize: '0.72rem'}}>예약 가능</span>
         </div>))}
       </div>))}
     </div>

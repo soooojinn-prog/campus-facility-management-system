@@ -32,7 +32,7 @@ public class BuildingService implements IBuildingService {
   public List<ResponseRoom> getRoomsBySlug(String slug) {
     List<ResponseRoom> list = new ArrayList<>();
     roomRepository.getRoomsByBuildingSlug(slug).forEach(r -> {
-      var resp = new ResponseRoom(r.getId(), r.getBuilding().getName(), r.getName());
+      var resp = new ResponseRoom(r.getId(), r.getBuilding().getName(), r.getName(), r.getFloor(), r.getType(), r.getCapacity());
       list.add(resp);
     });
     return list;

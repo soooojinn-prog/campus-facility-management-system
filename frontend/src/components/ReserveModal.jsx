@@ -3,7 +3,7 @@ import {useAuth} from '../context/AuthContext.jsx';
 import {createReservation} from '../data/api.js';
 
 const ROLE_LABELS = {
-  ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '동아리장',
+  ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '관리자',
 };
 
 export function ReserveModal({buildingName, room, selectedDay, startHour, onClose, onReserved}) {
@@ -29,18 +29,20 @@ export function ReserveModal({buildingName, room, selectedDay, startHour, onClos
     }
 
     try {
+      // 백엔드 RequestReservation DTO에 맞춘 요청 형식
+      // startTime/endTime: ISO 8601 LocalDateTime (e.g. "2026-02-25T09:00:00")
+      // roomId: DB PK (Long) — mock에서는 문자열 키였으나 DB 전환 후 숫자
+      // clubId: 동아리 예약 기능은 추후 구현 (현재 null)
       await createReservation({
-        roomKey: room.id,
-        date: dateStr,
-        startHour: start,
-        endHour: end,
+        roomId: room.id,
+        startTime: `${dateStr}T${String(start).padStart(2, '0')}:00:00`,
+        endTime: `${dateStr}T${String(end).padStart(2, '0')}:00:00`,
         purpose: purpose,
-        title: purpose,
-        detail: `${currentUser.name}(${ROLE_LABELS[currentUser.role] || currentUser.role})`,
+        clubId: null,
       });
       onClose();
       if (onReserved) onReserved();
-      alert(`✅ 예약 신청이 완료되었습니다!\n\n` + `신청자: ${currentUser.name}(${currentUser.role})\n` + `호실: ${room.name}\n` + `시간: ${String(start).padStart(2, '0')}:00 ~ ${String(end).padStart(2, '0')}:00\n` + `목적: ${purpose}\n\n` + `관리자 승인 후 확정됩니다.`);
+      alert(`예약 신청이 완료되었습니다!\n\n` + `신청자: ${currentUser.name}(${currentUser.role})\n` + `호실: ${room.name}\n` + `시간: ${String(start).padStart(2, '0')}:00 ~ ${String(end).padStart(2, '0')}:00\n` + `목적: ${purpose}\n\n` + `관리자 승인 후 확정됩니다.`);
     } catch (e) {
       setError(true);
     }

@@ -283,6 +283,22 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f5f7fa; min-height:
 .mypage-badge-rejected { background: #fed7d7; color: #c53030; }
 .mypage-badge-cancelled { background: #e2e8f0; color: #718096; }
 
+/* ── 상담 예약 페이지 (CounselingPage.jsx) ── */
+.counsel-layout { display: flex; min-height: calc(100vh - 280px); }
+.counsel-sidebar { width: 280px; min-width: 280px; border-right: 1px solid #e2e8f0; background: #fff; overflow-y: auto; }
+.counsel-sidebar-header { padding: 16px 20px; font-size: .85rem; font-weight: 700; color: #a0aec0; background: #f7fafc; border-bottom: 1px solid #edf2f7; text-transform: uppercase; letter-spacing: .05em; }
+.counsel-counselor-item { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all .15s; }
+.counsel-counselor-item:hover { background: #f7fafc; }
+.counsel-counselor-item.active { background: #1a365d; color: #fff; }
+.counsel-counselor-name { font-size: .95rem; font-weight: 700; }
+.counsel-counselor-pos { font-size: .78rem; opacity: .7; margin-top: 2px; }
+.counsel-counselor-spec { font-size: .75rem; opacity: .6; margin-top: 4px; }
+.counsel-counselor-item.active .counsel-counselor-pos,
+.counsel-counselor-item.active .counsel-counselor-spec { opacity: .85; }
+.counsel-empty { padding: 24px; text-align: center; color: #a0aec0; font-size: .88rem; }
+.counsel-calendar-side { width: 300px; min-width: 300px; padding: 24px; border-right: 1px solid #e2e8f0; background: #fff; }
+.counsel-timeline-side { flex: 1; padding: 24px 32px; overflow-y: auto; background: #fafbfc; }
+
 /* 반응형 */
 @media (max-width: 992px) {
   .caf-meal-grid { grid-template-columns: 1fr; }
@@ -296,4 +312,9 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f5f7fa; min-height:
   .mypage-sidebar { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #e2e8f0; display: flex; overflow-x: auto; }
   .mypage-sidebar-item { min-width: 120px; text-align: center; }
   .mypage-content { padding: 20px 16px; }
+  .counsel-layout { flex-direction: column; }
+  .counsel-sidebar { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #e2e8f0; display: flex; overflow-x: auto; }
+  .counsel-counselor-item { min-width: 180px; }
+  .counsel-calendar-side { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #e2e8f0; }
+  .counsel-timeline-side { padding: 16px; }
 }

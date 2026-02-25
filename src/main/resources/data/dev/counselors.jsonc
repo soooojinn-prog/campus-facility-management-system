@@ -1,0 +1,9 @@
+[
+  {"name": "김학사", "department": "ACADEMIC", "position": "교무처 상담관", "specialization": "수강신청 · 학점 관리 · 전과/복수전공"},
+  {"name": "이교무", "department": "ACADEMIC", "position": "교무처 선임상담관", "specialization": "휴학/복학 · 졸업요건 · 학사경고"},
+  {"name": "박심리", "department": "STUDENT", "position": "학생처 상담사", "specialization": "대학생활 적응 · 스트레스 관리"},
+  {"name": "정상담", "department": "STUDENT", "position": "학생처 수석상담사", "specialization": "심리상담 · 대인관계 · 진로고민"},
+  {"name": "최취업", "department": "CAREER", "position": "취업지원센터 컨설턴트", "specialization": "이력서/자소서 · 면접 준비"},
+  {"name": "한진로", "department": "CAREER", "position": "취업지원센터 팀장", "specialization": "진로설계 · 대학원 진학 · 인턴십"},
+  {"name": "윤멘토", "department": "CAREER", "position": "취업지원센터 멘토", "specialization": "IT취업 · 포트폴리오 · 코딩테스트"}
+]

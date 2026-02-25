@@ -6,11 +6,13 @@ import io.github.wizwix.cfms.model.Building;
 import io.github.wizwix.cfms.repo.BuildingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("buildingDevLoader")
 @Profile("dev")
+@Order(1)
 @Slf4j
 public class BuildingDevLoader extends BaseDevLoader<Building> {
   private final BuildingRepository repo;

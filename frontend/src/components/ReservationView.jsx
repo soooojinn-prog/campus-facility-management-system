@@ -2,11 +2,10 @@
 /// - 좌측: 층별 호실 목록 (클릭으로 선택)
 /// - 중앙: 미니 캘린더 (날짜 선택)
 /// - 우측: 시간대별 타임라인 (09:00~21:00, 1시간 단위)
-/// - 빈 슬롯 클릭 시 예약 모달 표시 (교수/동아리장만 가능)
-/// - TODO: 백엔드 ReservationApiController 구현 후 genReservations → fetchReservations로 교체
+/// - 빈 슬롯 클릭 시 예약 모달 표시 (교수/관리자만 가능)
 import {useEffect, useState} from 'react';
 import {useAuth} from '../context/AuthContext.jsx';
-import {genReservations} from '../data/buildings.js';
+import {fetchRoomReservations} from '../data/api.js';
 import {AuthModal} from './AuthModal.jsx';
 import {MiniCalendar} from './MiniCalendar.jsx';
 import {ReserveModal} from './ReserveModal.jsx';
@@ -36,14 +35,36 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
     }
   }, [jumpToRoom]);
 
-  // 예약 데이터 로드
+  // 호실+날짜가 바뀔 때마다 해당 예약 데이터를 API에서 불러옴
   useEffect(() => {
+    if (!selectedRoom) return;
+    loadReservations();
+  }, [selectedRoom, selectedDay]);
+
+  function loadReservations() {
     if (!selectedRoom) return;
     const y = now.getFullYear();
     const m = now.getMonth();
     const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
-    setReservations(genReservations(selectedRoom.id, dateStr));
-  }, [selectedRoom, selectedDay]);
+    // GET /api/reservations?roomId={id}&date={date} → 공개 API (비로그인 가능)
+    fetchRoomReservations(selectedRoom.id, dateStr).then(data => {
+      // API 응답(ResponseReservation)을 타임라인 UI가 사용하는 형식으로 변환
+      //   API: { startTime: "2026-02-25T09:00:00", endTime: "...", purpose, userName, status, ... }
+      //   타임라인: { start: 9, end: 10, title: "목적", detail: "예약자", status: "pending" }
+      const mapped = data.map(r => {
+        const startHour = new Date(r.startTime).getHours();
+        const endHour = new Date(r.endTime).getHours();
+        return {
+          start: startHour,
+          end: endHour,
+          title: r.purpose || '예약',
+          detail: r.userName + (r.clubName ? ` (${r.clubName})` : ''),
+          status: r.status.toLowerCase(),  // "PENDING" → "pending" (CSS 클래스용)
+        };
+      });
+      setReservations(mapped);
+    }).catch(() => setReservations([]));
+  }
 
   const y = now.getFullYear();
   const m = now.getMonth();
@@ -56,17 +77,14 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
       return;
     }
     if (currentUser.role === 'ROLE_STUDENT') {
-      alert('학생은 직접 시설 예약이 불가합니다.\n동아리장 또는 교수만 예약할 수 있습니다.');
+      alert('학생은 직접 시설 예약이 불가합니다.\n교수 또는 관리자만 예약할 수 있습니다.');
       return;
     }
     setModalInfo({room: selectedRoom, startHour: h});
   }
 
   function handleReserved() {
-    // 예약 후 타임라인 새로고침
-    if (!selectedRoom) return;
-    const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
-    setReservations(genReservations(selectedRoom.id, dateStr));
+    loadReservations();
   }
 
   return (<div className="reservation-view">
@@ -84,7 +102,7 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
                 setSelectedDay(now.getDate());
               }}
           >
-            <div className={`rv-dot room-status-dot ${room.status}`}/>
+            <div className="rv-dot room-status-dot available"/>
             <span>{room.name}</span>
           </div>))}
         </div>);

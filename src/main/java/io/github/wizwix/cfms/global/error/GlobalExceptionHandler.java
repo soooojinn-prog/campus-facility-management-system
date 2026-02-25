@@ -37,6 +37,16 @@ public class GlobalExceptionHandler {
     return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
+  /// IllegalStateException → 409 Conflict
+  /// 사용 사례:
+  ///   - 시설 예약 시간 충돌 ("선택한 시간에 이미 예약이 존재합니다")
+  ///   - PENDING이 아닌 예약 취소 시도 ("승인 대기 중인 예약만 취소할 수 있습니다")
+  ///   - 본인 예약이 아닌 경우 ("본인의 예약만 취소할 수 있습니다")
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<ResponseError> handleIllegalState(IllegalStateException e, HttpServletResponse response) {
+    return buildResponse(HttpStatus.CONFLICT, e.getMessage());
+  }
+
   @ExceptionHandler(NotImplementedException.class)
   public ResponseEntity<ResponseError> handleNotImplemented(NotImplementedException e, HttpServletResponse response) {
     return buildResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage());

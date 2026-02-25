@@ -4,7 +4,7 @@ import {useAuth} from '../context/AuthContext.jsx';
 import {AuthModal} from './AuthModal.jsx';
 
 const ROLE_LABELS = {
-  ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '동아리장',
+  ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '관리자',
 };
 
 export function Header() {

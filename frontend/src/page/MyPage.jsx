@@ -8,18 +8,21 @@
 //   PATCH /api/users/me         — 프로필 수정 (ProfileTab)
 //   GET  /api/dorms/my          — 기숙사 신청 내역 (DormTab)
 //   DELETE /api/dorms/{id}      — 신청 취소 (DormTab)
+//   GET  /api/reservations/me   — 강의실 예약 내역 (ReservationTab)
+//   DELETE /api/reservations/{id} — 예약 취소 (ReservationTab)
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext.jsx';
-import {cancelDormApplication, fetchMyDormApplications, fetchMyProfile, updateMyProfile} from '../data/api.js';
+import {cancelCounselingReservation, cancelDormApplication, cancelReservation, fetchMyCounselingReservations, fetchMyDormApplications, fetchMyProfile, fetchMyReservations, updateMyProfile} from '../data/api.js';
 
 const TABS = [
   {key: 'profile', label: '개인정보'},
   {key: 'dorm', label: '기숙사 신청'},
-  // TODO: 상담 예약 탭 추가 예정
+  {key: 'reservation', label: '강의실 예약'},
+  {key: 'counseling', label: '상담 예약'},
 ];
 
-const ROLE_LABELS = {ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '동아리장'};
+const ROLE_LABELS = {ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '관리자'};
 const GENDER_LABELS = {MALE: '남성', FEMALE: '여성'};
 const PERIOD_LABELS = {SEMESTER: '한 학기', YEAR: '1년'};
 const STATUS_LABELS = {PENDING: '대기 중', APPROVED: '승인', REJECTED: '거절', CANCELLED: '취소됨'};
@@ -48,6 +51,8 @@ export function MyPage() {
       <div className="mypage-content">
         {tab === 'profile' && <ProfileTab/>}
         {tab === 'dorm' && <DormTab/>}
+        {tab === 'reservation' && <ReservationTab/>}
+        {tab === 'counseling' && <CounselingTab/>}
       </div>
     </div>
   );
@@ -202,6 +207,165 @@ function DormTab() {
                   <td>
                     {a.status === 'PENDING' && (
                       <button className="btn btn-outline-danger btn-sm" onClick={() => handleCancel(a.id)}>취소</button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 강의실 예약 내역 탭 — 테이블 형태
+// PENDING 상태만 취소 버튼 노출
+// 취소 시 서버 DELETE 호출 후, 로컬 상태만 CANCELLED로 변경
+function ReservationTab() {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchMyReservations()
+      .then(setList)
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleCancel(id) {
+    if (!confirm('정말 취소하시겠습니까?')) return;
+    try {
+      await cancelReservation(id);
+      setList(prev => prev.map(r => r.id === id ? {...r, status: 'CANCELLED'} : r));
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  function formatTime(dateStr) {
+    if (!dateStr) return '-';
+    const d = new Date(dateStr);
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${mm}/${dd} ${hh}:${mi}`;
+  }
+
+  if (loading) return <div className="mypage-loading">로딩 중...</div>;
+  if (error) return <div className="alert alert-danger">{error}</div>;
+
+  return (
+    <div>
+      <div className="mypage-section-header">
+        <h3>강의실 예약 내역</h3>
+        <p className="mypage-section-sub">내 강의실 예약 현황을 확인할 수 있습니다.</p>
+      </div>
+      {list.length === 0 ? (
+        <div className="mypage-empty">신청 내역이 없습니다.</div>
+      ) : (
+        <div className="table-responsive">
+          <table className="table mypage-table">
+            <thead>
+              <tr>
+                <th>강의실</th>
+                <th>시작</th>
+                <th>종료</th>
+                <th>목적</th>
+                <th>동아리</th>
+                <th>상태</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map(r => (
+                <tr key={r.id}>
+                  <td>{r.roomCode}</td>
+                  <td>{formatTime(r.startTime)}</td>
+                  <td>{formatTime(r.endTime)}</td>
+                  <td>{r.purpose || '-'}</td>
+                  <td>{r.clubName || '-'}</td>
+                  <td><span className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}>{STATUS_LABELS[r.status] || r.status}</span></td>
+                  <td>
+                    {r.status === 'PENDING' && (
+                      <button className="btn btn-outline-danger btn-sm" onClick={() => handleCancel(r.id)}>취소</button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const DEPT_LABELS = {ACADEMIC: '교무처', STUDENT: '학생처', CAREER: '취업지원센터'};
+
+// 상담 예약 내역 탭 — 테이블 형태
+// PENDING 상태만 취소 버튼 노출
+function CounselingTab() {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchMyCounselingReservations()
+      .then(setList)
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleCancel(id) {
+    if (!confirm('정말 취소하시겠습니까?')) return;
+    try {
+      await cancelCounselingReservation(id);
+      setList(prev => prev.map(r => r.id === id ? {...r, status: 'CANCELLED'} : r));
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  if (loading) return <div className="mypage-loading">로딩 중...</div>;
+  if (error) return <div className="alert alert-danger">{error}</div>;
+
+  return (
+    <div>
+      <div className="mypage-section-header">
+        <h3>상담 예약 내역</h3>
+        <p className="mypage-section-sub">내 상담 예약 현황을 확인할 수 있습니다.</p>
+      </div>
+      {list.length === 0 ? (
+        <div className="mypage-empty">상담 예약 내역이 없습니다.</div>
+      ) : (
+        <div className="table-responsive">
+          <table className="table mypage-table">
+            <thead>
+              <tr>
+                <th>상담사</th>
+                <th>부서</th>
+                <th>날짜</th>
+                <th>시간</th>
+                <th>주제</th>
+                <th>상태</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map(r => (
+                <tr key={r.id}>
+                  <td>{r.counselorName}</td>
+                  <td>{DEPT_LABELS[r.department] || r.department}</td>
+                  <td>{r.date}</td>
+                  <td>{r.startTime?.substring(0, 5)} ~ {r.endTime?.substring(0, 5)}</td>
+                  <td>{r.topic || '-'}</td>
+                  <td><span className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}>{STATUS_LABELS[r.status] || r.status}</span></td>
+                  <td>
+                    {r.status === 'PENDING' && (
+                      <button className="btn btn-outline-danger btn-sm" onClick={() => handleCancel(r.id)}>취소</button>
                     )}
                   </td>
                 </tr>

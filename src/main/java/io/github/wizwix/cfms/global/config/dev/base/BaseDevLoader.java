@@ -22,7 +22,10 @@ public abstract class BaseDevLoader<T> implements DevDataLoader {
     this.loader = loader;
     this.entityClass = entityClass;
     this.jsonPath = jsonPath;
+    // Spring이 주입하는 ObjectMapper 사용 (JavaTimeModule 등 이미 등록됨)
+    // JSONC(주석 포함 JSON) 파싱을 위해 ALLOW_COMMENTS 활성화
     this.mapper = mapper;
+    this.mapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS, true);
   }
 
   protected void processItems(Consumer<T> action) {

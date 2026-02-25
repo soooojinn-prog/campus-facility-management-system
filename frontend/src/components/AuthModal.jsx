@@ -84,7 +84,7 @@ export function AuthModal({onClose}) {
 
   const roles = [{key: '학생', icon: '🎓', label: '학생', desc: '동아리 가입 가능\n시설 예약 불가'}, {
     key: '교수', icon: '👨‍🏫', label: '교수', desc: '수업 개설\n반복 예약 가능',
-  }, {key: '동아리장', icon: '⭐', label: '동아리장', desc: '동아리 개설\n시설 예약 가능'}];
+  }];
 
   return (<div className="modal-bg show" onClick={e => {
     if (e.target === e.currentTarget) onClose();

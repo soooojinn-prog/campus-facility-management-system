@@ -1,26 +1,34 @@
 // Vite 프록시를 통해 백엔드(8080)로 전달됨 (vite.config.js 참고)
 const BASE = '/api';
 
-// ── 건물/시설 관련 (백엔드 미구현 → 현재 buildings.js mock 데이터 사용 중) ──
+// ── 건물/시설 관련 ──
 
-// TODO: 백엔드 BuildingApiController 구현 후 활성화
-export async function fetchBuildingMap() {
-  const res = await fetch(`${BASE}/buildings/map`);
+/// 건물 목록 조회 (공개)
+/// 응답: [{ id, name, slug, info, points, type, rentable }]
+export async function fetchBuildings() {
+  const res = await fetch(`${BASE}/buildings`);
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
-// TODO: 백엔드 BuildingApiController 구현 후 활성화
-export async function fetchBuildingDetail(key) {
-  const res = await fetch(`${BASE}/buildings/${key}`);
+/// 건물 호실 목록 조회 (공개)
+/// 응답: [{ id, buildingName, name, floor, type, capacity }]
+export async function fetchBuildingRooms(slug) {
+  const res = await fetch(`${BASE}/buildings/${slug}/rooms`);
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
-// TODO: 백엔드 ReservationApiController 구현 후 활성화
-export async function fetchReservations(roomKey, date) {
-  const res = await fetch(`${BASE}/reservations?roomKey=${roomKey}&date=${date}`);
+/// 호실별 예약 현황 조회 (공개)
+/// 응답: [{ id, roomCode, buildingName, userName, clubName, startTime, endTime, status, purpose, rejectReason, createdAt }]
+export async function fetchRoomReservations(roomId, date) {
+  const res = await fetch(`${BASE}/reservations?roomId=${roomId}&date=${date}`);
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
 
+/// 시설 예약 신청 — 로그인 필요
+/// data: { roomId, startTime, endTime, purpose, clubId? }
 export async function createReservation(data) {
   const res = await fetch(`${BASE}/reservations`, {
     method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
@@ -29,12 +37,6 @@ export async function createReservation(data) {
     const text = await res.text();
     throw new Error(text);
   }
-  return res.json();
-}
-
-// TODO: 백엔드 SemesterController 자체가 없음 — 구현 필요
-export async function fetchCurrentSemester() {
-  const res = await fetch(`${BASE}/semesters/current`);
   return res.json();
 }
 
@@ -138,5 +140,64 @@ export async function fetchMyDormApplications() {
 /// 기숙사 신청 취소 — PENDING만 가능, 로그인 필요
 export async function cancelDormApplication(id) {
   const res = await fetch(`${BASE}/dorms/${id}`, {method: 'DELETE'});
+  if (!res.ok) throw new Error(await res.text());
+}
+
+/// 내 강의실 예약 내역 조회 — 로그인 필요
+/// 응답: [{ id, roomCode, buildingName, userName, clubName, startTime, endTime, status, purpose, rejectReason, createdAt }]
+export async function fetchMyReservations() {
+  const res = await fetch(`${BASE}/reservations/me`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 강의실 예약 취소 — PENDING만 가능, 로그인 필요
+export async function cancelReservation(id) {
+  const res = await fetch(`${BASE}/reservations/${id}`, {method: 'DELETE'});
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// ── 상담 예약 관련 ──
+
+/// 상담사 목록 — dept: "ACADEMIC" | "STUDENT" | "CAREER" (null이면 전체)
+/// 응답: [{ id, name, department, position, specialization }]
+export async function fetchCounselors(dept) {
+  const q = dept ? `?dept=${dept}` : '';
+  const res = await fetch(`${BASE}/counseling/counselors${q}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 해당 상담사+날짜의 예약 현황 — 공개 API
+/// 응답: [{ id, counselorName, department, date, startTime, endTime, status, topic, memo, createdAt }]
+export async function fetchCounselingSlots(counselorId, date) {
+  const res = await fetch(`${BASE}/counseling/slots?counselorId=${counselorId}&date=${date}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 상담 예약 신청 — 로그인 필요
+/// data: { counselorId, date, startTime, endTime, topic, memo }
+export async function createCounselingReservation(data) {
+  const res = await fetch(`${BASE}/counseling/reservations`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 내 상담 예약 내역 — 로그인 필요
+/// 응답: [{ id, counselorName, department, date, startTime, endTime, status, topic, memo, createdAt }]
+export async function fetchMyCounselingReservations() {
+  const res = await fetch(`${BASE}/counseling/reservations/me`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 상담 예약 취소 — PENDING만 가능, 로그인 필요
+export async function cancelCounselingReservation(id) {
+  const res = await fetch(`${BASE}/counseling/reservations/${id}`, {method: 'DELETE'});
   if (!res.ok) throw new Error(await res.text());
 }
