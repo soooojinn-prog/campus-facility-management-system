@@ -1,5 +1,8 @@
 package io.github.wizwix.cfms.global.config.dev;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.wizwix.cfms.global.config.dev.base.BaseDevLoader;
+import io.github.wizwix.cfms.model.Room;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,12 +38,11 @@ public class RoomDevLoader implements DevDataLoader {
   private final RoomRepository roomRepo;
   private final ObjectMapper mapper;
 
-  public RoomDevLoader(ResourceLoader resourceLoader, BuildingRepository buildingRepo, RoomRepository roomRepo) {
+  public RoomDevLoader(ResourceLoader resourceLoader, ObjectMapper mapper, BuildingRepository buildingRepo, RoomRepository roomRepo) {
     this.resourceLoader = resourceLoader;
     this.buildingRepo = buildingRepo;
     this.roomRepo = roomRepo;
-    this.mapper = new ObjectMapper();
-    this.mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+    this.mapper = mapper;
   }
 
   @Override

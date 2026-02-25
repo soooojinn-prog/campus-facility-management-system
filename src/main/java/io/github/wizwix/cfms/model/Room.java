@@ -1,5 +1,7 @@
 package io.github.wizwix.cfms.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.wizwix.cfms.global.jackson.BuildingSlugDeserializer;
 import io.github.wizwix.cfms.model.enums.RoomType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,8 +36,9 @@ public class Room {
   private Long id;
   /// 방 번호 (e.g. '104호')
   private String name;
-  /// 방이 속한 건물
+  /// 방이 속한 건물 — JSONC에서 slug(String)로 참조, Jackson이 BuildingSlugDeserializer로 자동 변환
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonDeserialize(using = BuildingSlugDeserializer.class)
   private Building building;
   /// 방의 수용 가능 인원
   private Integer capacity;

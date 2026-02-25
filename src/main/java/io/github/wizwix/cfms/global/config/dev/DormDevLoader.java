@@ -22,18 +22,21 @@ public class DormDevLoader extends BaseDevLoader<DormRoom> {
 
   @Override
   public void load() {
-    if (repo.count() > 0) return;
     processItems(room -> {
       if (!repo.existsByRoomNumber(room.getRoomNumber())) {
         repo.save(room);
+        log.info("Loaded dev dorm room: ({} / {} / {})", room.getRoomNumber(), room.getGender(), room.getFloor());
       }
     });
-    log.info("Loaded dev dorm rooms: {} rooms", repo.count());
   }
 
   @Override
   public void unload() {
-    repo.deleteAll();
-    log.info("Unloaded dev dorm rooms");
+    processItems(room -> repo.findByRoomNumber(room.getRoomNumber()).ifPresent(existing -> {
+      if (room.getGender() == existing.getGender() && room.getFloor().equals(existing.getFloor())) {
+        repo.delete(existing);
+        log.info("Unloaded dev dorm room: ({} / {} / {})", existing.getRoomNumber(), existing.getGender(), existing.getFloor());
+      }
+    }));
   }
 }

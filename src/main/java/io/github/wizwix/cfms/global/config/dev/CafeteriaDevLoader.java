@@ -45,19 +45,14 @@ public class CafeteriaDevLoader implements DevDataLoader {
 
   @Override
   public void load() {
-    if (storeRepo.count() > 0) return;
     loadStores();
     loadMeals();
-    log.info("Loaded dev cafeteria data: {} stores, {} meals", storeRepo.count(), mealRepo.count());
   }
 
   @Override
   public void unload() {
-    mealItemRepo.deleteAll();
-    mealRepo.deleteAll();
-    menuRepo.deleteAll();
-    storeRepo.deleteAll();
-    log.info("Unloaded dev cafeteria data");
+    unloadMeals();
+    unloadStores();
   }
 
   private void loadStores() {
@@ -65,8 +60,11 @@ public class CafeteriaDevLoader implements DevDataLoader {
     if (root == null) return;
 
     for (JsonNode node : root) {
+      String name = node.get("name").asText();
+      if (storeRepo.existsByName(name)) continue;
+
       CafeteriaStore store = new CafeteriaStore();
-      store.setName(node.get("name").asText());
+      store.setName(name);
       store.setDescription(node.get("description").asText());
       store.setCategory(node.get("category").asText());
       store.setRepresentative(node.get("representative").asText());
@@ -83,18 +81,7 @@ public class CafeteriaDevLoader implements DevDataLoader {
         menu.setPopular(menuNode.get("popular").asBoolean());
         menuRepo.save(menu);
       }
-    }
-  }
-
-  private JsonNode readJson(String path) {
-    try {
-      Resource resource = resourceLoader.getResource("classpath:" + path);
-      try (InputStream is = resource.getInputStream()) {
-        return mapper.readTree(is);
-      }
-    } catch (Exception e) {
-      log.error("Error reading JSON from {}", path, e);
-      return null;
+      log.info("Loaded dev cafeteria store: ({} / {} / {})", store.getName(), store.getCategory(), store.getRepresentative());
     }
   }
 
@@ -105,9 +92,12 @@ public class CafeteriaDevLoader implements DevDataLoader {
     LocalDate today = LocalDate.now();
 
     for (JsonNode node : root) {
+      MealType mealType = MealType.valueOf(node.get("mealType").asText());
+      if (mealRepo.existsByDateAndMealType(today, mealType)) continue;
+
       CafeteriaMeal meal = new CafeteriaMeal();
       meal.setDate(today);
-      meal.setMealType(MealType.valueOf(node.get("mealType").asText()));
+      meal.setMealType(mealType);
       meal.setTime(node.get("time").asText());
       meal.setIcon(node.get("icon").asText());
       mealRepo.save(meal);
@@ -121,6 +111,51 @@ public class CafeteriaDevLoader implements DevDataLoader {
         item.setDiscountLabel(itemNode.get("discountLabel").isNull() ? null : itemNode.get("discountLabel").asText());
         mealItemRepo.save(item);
       }
+      log.info("Loaded dev cafeteria meal: ({} / {} / {})", mealType, meal.getTime(), meal.getIcon());
+    }
+  }
+
+  private void unloadStores() {
+    JsonNode root = readJson("data/dev/cafeteria-stores.jsonc");
+    if (root == null) return;
+
+    for (JsonNode node : root) {
+      String name = node.get("name").asText();
+      storeRepo.findByName(name).ifPresent(existing -> {
+        if (existing.getCategory().equals(node.get("category").asText())) {
+          menuRepo.deleteByStore(existing);
+          storeRepo.delete(existing);
+          log.info("Unloaded dev cafeteria store: ({} / {})", existing.getName(), existing.getCategory());
+        }
+      });
+    }
+  }
+
+  private void unloadMeals() {
+    JsonNode root = readJson("data/dev/cafeteria-meals.jsonc");
+    if (root == null) return;
+
+    LocalDate today = LocalDate.now();
+
+    for (JsonNode node : root) {
+      MealType mealType = MealType.valueOf(node.get("mealType").asText());
+      mealRepo.findByDateAndMealType(today, mealType).ifPresent(existing -> {
+        mealItemRepo.deleteByMeal(existing);
+        mealRepo.delete(existing);
+        log.info("Unloaded dev cafeteria meal: ({} / {})", mealType, today);
+      });
+    }
+  }
+
+  private JsonNode readJson(String path) {
+    try {
+      Resource resource = resourceLoader.getResource("classpath:" + path);
+      try (InputStream is = resource.getInputStream()) {
+        return mapper.readTree(is);
+      }
+    } catch (Exception e) {
+      log.error("Error reading JSON from {}", path, e);
+      return null;
     }
   }
 }
