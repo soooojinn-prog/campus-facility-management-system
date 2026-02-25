@@ -1,10 +1,10 @@
 package io.github.wizwix.cfms.service;
 
 import io.github.wizwix.cfms.dto.request.counseling.RequestCounselingReservation;
-import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselor;
 import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselingReservation;
-import io.github.wizwix.cfms.model.Counselor;
+import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselor;
 import io.github.wizwix.cfms.model.CounselingReservation;
+import io.github.wizwix.cfms.model.Counselor;
 import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.model.enums.CounselingDepartment;
 import io.github.wizwix.cfms.model.enums.ReservationStatus;
@@ -27,30 +27,19 @@ public class CounselingService implements ICounselingService {
   private final CounselorRepository counselorRepo;
   private final CounselingReservationRepository reservationRepo;
 
-  /// 부서별 상담사 목록
+  /// 상담 예약 취소 — PENDING만 취소 가능
   @Override
-  @Transactional(readOnly = true)
-  public List<ResponseCounselor> getCounselors(CounselingDepartment dept) {
-    List<Counselor> counselors = dept != null
-        ? counselorRepo.findByDepartment(dept)
-        : counselorRepo.findAll();
-    return counselors.stream()
-        .map(c -> new ResponseCounselor(c.getId(), c.getName(), c.getDepartment(), c.getPosition(), c.getSpecialization()))
-        .toList();
-  }
-
-  /// 해당 상담사+날짜의 예약 현황 — 공개 API (타임라인 표시용)
-  /// CANCELLED 제외, PENDING/APPROVED만 반환
-  @Override
-  @Transactional(readOnly = true)
-  public List<ResponseCounselingReservation> getSlots(Long counselorId, LocalDate date) {
-    Counselor counselor = counselorRepo.findById(counselorId)
-        .orElseThrow(() -> new IllegalArgumentException("상담사를 찾을 수 없습니다."));
-    List<CounselingReservation> reservations = reservationRepo.findByCounselorAndDate(counselor, date);
-    return reservations.stream()
-        .filter(r -> r.getStatus() != ReservationStatus.CANCELLED && r.getStatus() != ReservationStatus.REJECTED)
-        .map(r -> toResponse(r))
-        .toList();
+  public void cancelReservation(User user, Long id) {
+    CounselingReservation reservation = reservationRepo.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+    if (!reservation.getUser().getId().equals(user.getId())) {
+      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
+    }
+    if (reservation.getStatus() != ReservationStatus.PENDING) {
+      throw new IllegalArgumentException("대기 중인 예약만 취소할 수 있습니다.");
+    }
+    reservation.setStatus(ReservationStatus.CANCELLED);
+    reservationRepo.save(reservation);
   }
 
   /// 상담 예약 신청 — 시간 충돌 검사 후 PENDING 상태로 생성
@@ -94,6 +83,18 @@ public class CounselingService implements ICounselingService {
     return toResponse(reservation);
   }
 
+  /// 부서별 상담사 목록
+  @Override
+  @Transactional(readOnly = true)
+  public List<ResponseCounselor> getCounselors(CounselingDepartment dept) {
+    List<Counselor> counselors = dept != null
+        ? counselorRepo.findByDepartment(dept)
+        : counselorRepo.findAll();
+    return counselors.stream()
+        .map(c -> new ResponseCounselor(c.getId(), c.getName(), c.getDepartment(), c.getPosition(), c.getSpecialization()))
+        .toList();
+  }
+
   /// 내 상담 예약 목록 — 마이페이지 상담 탭
   @Override
   @Transactional(readOnly = true)
@@ -104,19 +105,18 @@ public class CounselingService implements ICounselingService {
     return reservations.stream().map(this::toResponse).toList();
   }
 
-  /// 상담 예약 취소 — PENDING만 취소 가능
+  /// 해당 상담사+날짜의 예약 현황 — 공개 API (타임라인 표시용)
+  /// CANCELLED 제외, PENDING/APPROVED만 반환
   @Override
-  public void cancelReservation(User user, Long id) {
-    CounselingReservation reservation = reservationRepo.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
-    if (!reservation.getUser().getId().equals(user.getId())) {
-      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
-    }
-    if (reservation.getStatus() != ReservationStatus.PENDING) {
-      throw new IllegalArgumentException("대기 중인 예약만 취소할 수 있습니다.");
-    }
-    reservation.setStatus(ReservationStatus.CANCELLED);
-    reservationRepo.save(reservation);
+  @Transactional(readOnly = true)
+  public List<ResponseCounselingReservation> getSlots(Long counselorId, LocalDate date) {
+    Counselor counselor = counselorRepo.findById(counselorId)
+        .orElseThrow(() -> new IllegalArgumentException("상담사를 찾을 수 없습니다."));
+    List<CounselingReservation> reservations = reservationRepo.findByCounselorAndDate(counselor, date);
+    return reservations.stream()
+        .filter(r -> r.getStatus() != ReservationStatus.CANCELLED && r.getStatus() != ReservationStatus.REJECTED)
+        .map(r -> toResponse(r))
+        .toList();
   }
 
   private ResponseCounselingReservation toResponse(CounselingReservation r) {

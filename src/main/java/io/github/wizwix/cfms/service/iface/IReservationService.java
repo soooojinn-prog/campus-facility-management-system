@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IReservationService {
-  ResponseReservation createReservation(String userNumber, RequestReservation req);
-
   void cancelReservation(String userNumber, Long reservationId);
+
+  ResponseReservation createReservation(String userNumber, RequestReservation req);
 
   List<ResponseReservation> getMyReservations(String userNumber);
 

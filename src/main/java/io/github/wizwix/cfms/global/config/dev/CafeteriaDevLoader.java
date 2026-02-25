@@ -55,66 +55,6 @@ public class CafeteriaDevLoader implements DevDataLoader {
     unloadStores();
   }
 
-  private void loadStores() {
-    JsonNode root = readJson("data/dev/cafeteria-stores.jsonc");
-    if (root == null) return;
-
-    for (JsonNode node : root) {
-      String name = node.get("name").asText();
-      if (storeRepo.existsByName(name)) continue;
-
-      CafeteriaStore store = new CafeteriaStore();
-      store.setName(name);
-      store.setDescription(node.get("description").asText());
-      store.setCategory(node.get("category").asText());
-      store.setRepresentative(node.get("representative").asText());
-      store.setHours(node.get("hours").asText());
-      storeRepo.save(store);
-
-      for (JsonNode menuNode : node.get("menus")) {
-        CafeteriaStoreMenu menu = new CafeteriaStoreMenu();
-        menu.setStore(store);
-        menu.setName(menuNode.get("name").asText());
-        menu.setPrice(menuNode.get("price").asInt());
-        menu.setDiscountPrice(menuNode.get("discountPrice").isNull() ? null : menuNode.get("discountPrice").asInt());
-        menu.setDiscountLabel(menuNode.get("discountLabel").isNull() ? null : menuNode.get("discountLabel").asText());
-        menu.setPopular(menuNode.get("popular").asBoolean());
-        menuRepo.save(menu);
-      }
-      log.info("Loaded dev cafeteria store: ({} / {} / {})", store.getName(), store.getCategory(), store.getRepresentative());
-    }
-  }
-
-  private void loadMeals() {
-    JsonNode root = readJson("data/dev/cafeteria-meals.jsonc");
-    if (root == null) return;
-
-    LocalDate today = LocalDate.now();
-
-    for (JsonNode node : root) {
-      MealType mealType = MealType.valueOf(node.get("mealType").asText());
-      if (mealRepo.existsByDateAndMealType(today, mealType)) continue;
-
-      CafeteriaMeal meal = new CafeteriaMeal();
-      meal.setDate(today);
-      meal.setMealType(mealType);
-      meal.setTime(node.get("time").asText());
-      meal.setIcon(node.get("icon").asText());
-      mealRepo.save(meal);
-
-      for (JsonNode itemNode : node.get("items")) {
-        CafeteriaMealItem item = new CafeteriaMealItem();
-        item.setMeal(meal);
-        item.setName(itemNode.get("name").asText());
-        item.setPrice(itemNode.get("price").asInt());
-        item.setDiscountPrice(itemNode.get("discountPrice").isNull() ? null : itemNode.get("discountPrice").asInt());
-        item.setDiscountLabel(itemNode.get("discountLabel").isNull() ? null : itemNode.get("discountLabel").asText());
-        mealItemRepo.save(item);
-      }
-      log.info("Loaded dev cafeteria meal: ({} / {} / {})", mealType, meal.getTime(), meal.getIcon());
-    }
-  }
-
   private void unloadStores() {
     JsonNode root = readJson("data/dev/cafeteria-stores.jsonc");
     if (root == null) return;
@@ -147,6 +87,36 @@ public class CafeteriaDevLoader implements DevDataLoader {
     }
   }
 
+  private void loadStores() {
+    JsonNode root = readJson("data/dev/cafeteria-stores.jsonc");
+    if (root == null) return;
+
+    for (JsonNode node : root) {
+      String name = node.get("name").asText();
+      if (storeRepo.existsByName(name)) continue;
+
+      CafeteriaStore store = new CafeteriaStore();
+      store.setName(name);
+      store.setDescription(node.get("description").asText());
+      store.setCategory(node.get("category").asText());
+      store.setRepresentative(node.get("representative").asText());
+      store.setHours(node.get("hours").asText());
+      storeRepo.save(store);
+
+      for (JsonNode menuNode : node.get("menus")) {
+        CafeteriaStoreMenu menu = new CafeteriaStoreMenu();
+        menu.setStore(store);
+        menu.setName(menuNode.get("name").asText());
+        menu.setPrice(menuNode.get("price").asInt());
+        menu.setDiscountPrice(menuNode.get("discountPrice").isNull() ? null : menuNode.get("discountPrice").asInt());
+        menu.setDiscountLabel(menuNode.get("discountLabel").isNull() ? null : menuNode.get("discountLabel").asText());
+        menu.setPopular(menuNode.get("popular").asBoolean());
+        menuRepo.save(menu);
+      }
+      log.info("Loaded dev cafeteria store: ({} / {} / {})", store.getName(), store.getCategory(), store.getRepresentative());
+    }
+  }
+
   private JsonNode readJson(String path) {
     try {
       Resource resource = resourceLoader.getResource("classpath:" + path);
@@ -156,6 +126,36 @@ public class CafeteriaDevLoader implements DevDataLoader {
     } catch (Exception e) {
       log.error("Error reading JSON from {}", path, e);
       return null;
+    }
+  }
+
+  private void loadMeals() {
+    JsonNode root = readJson("data/dev/cafeteria-meals.jsonc");
+    if (root == null) return;
+
+    LocalDate today = LocalDate.now();
+
+    for (JsonNode node : root) {
+      MealType mealType = MealType.valueOf(node.get("mealType").asText());
+      if (mealRepo.existsByDateAndMealType(today, mealType)) continue;
+
+      CafeteriaMeal meal = new CafeteriaMeal();
+      meal.setDate(today);
+      meal.setMealType(mealType);
+      meal.setTime(node.get("time").asText());
+      meal.setIcon(node.get("icon").asText());
+      mealRepo.save(meal);
+
+      for (JsonNode itemNode : node.get("items")) {
+        CafeteriaMealItem item = new CafeteriaMealItem();
+        item.setMeal(meal);
+        item.setName(itemNode.get("name").asText());
+        item.setPrice(itemNode.get("price").asInt());
+        item.setDiscountPrice(itemNode.get("discountPrice").isNull() ? null : itemNode.get("discountPrice").asInt());
+        item.setDiscountLabel(itemNode.get("discountLabel").isNull() ? null : itemNode.get("discountLabel").asText());
+        mealItemRepo.save(item);
+      }
+      log.info("Loaded dev cafeteria meal: ({} / {} / {})", mealType, meal.getTime(), meal.getIcon());
     }
   }
 }

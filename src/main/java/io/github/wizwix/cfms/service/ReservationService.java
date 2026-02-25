@@ -28,10 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class ReservationService implements IReservationService {
-  private final ReservationRepository reservationRepo;
-  private final RoomRepository roomRepo;
-  private final UserRepository userRepo;
-
   /// ACTIVE_STATUSES: 시간 충돌 검사 + 타임라인 조회에 사용
   ///   PENDING/APPROVED 상태인 예약만 "활성 예약"으로 간주
   ///   CANCELLED/REJECTED는 충돌 대상에서 제외
@@ -40,6 +36,24 @@ public class ReservationService implements IReservationService {
   ///   REJECTED도 포함하여 거절 사유를 사용자에게 보여줌
   ///   CANCELLED는 사용자가 직접 취소한 것이므로 제외 (필요 시 포함 가능)
   private static final List<ReservationStatus> VISIBLE_STATUSES = List.of(ReservationStatus.PENDING, ReservationStatus.APPROVED, ReservationStatus.REJECTED);
+  private final ReservationRepository reservationRepo;
+  private final RoomRepository roomRepo;
+  private final UserRepository userRepo;
+
+  @Override
+  public void cancelReservation(String userNumber, Long reservationId) {
+    Reservation reservation = reservationRepo.findById(reservationId)
+        .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+    if (!reservation.getUser().getNumber().equals(userNumber)) {
+      throw new IllegalStateException("본인의 예약만 취소할 수 있습니다.");
+    }
+    if (reservation.getStatus() != ReservationStatus.PENDING) {
+      throw new IllegalStateException("승인 대기 중인 예약만 취소할 수 있습니다.");
+    }
+    reservation.setStatus(ReservationStatus.CANCELLED);
+    reservation.setUpdatedAt(LocalDateTime.now());
+    reservationRepo.save(reservation);
+  }
 
   @Override
   public ResponseReservation createReservation(String userNumber, RequestReservation req) {
@@ -74,21 +88,6 @@ public class ReservationService implements IReservationService {
 
     Reservation saved = reservationRepo.save(reservation);
     return toResponse(saved);
-  }
-
-  @Override
-  public void cancelReservation(String userNumber, Long reservationId) {
-    Reservation reservation = reservationRepo.findById(reservationId)
-        .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
-    if (!reservation.getUser().getNumber().equals(userNumber)) {
-      throw new IllegalStateException("본인의 예약만 취소할 수 있습니다.");
-    }
-    if (reservation.getStatus() != ReservationStatus.PENDING) {
-      throw new IllegalStateException("승인 대기 중인 예약만 취소할 수 있습니다.");
-    }
-    reservation.setStatus(ReservationStatus.CANCELLED);
-    reservation.setUpdatedAt(LocalDateTime.now());
-    reservationRepo.save(reservation);
   }
 
   @Override

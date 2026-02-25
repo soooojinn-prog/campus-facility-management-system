@@ -9,9 +9,9 @@ import {AdminPage} from './page/AdminPage.jsx';
 import {BuildingPage} from './page/BuildingPage.jsx';
 import {CafeteriaPage} from './page/CafeteriaPage.jsx';
 import {CampusMapPage} from './page/CampusMapPage.jsx';
+import {CounselingPage} from './page/CounselingPage.jsx';
 import {DormitoryPage} from './page/DormitoryPage.jsx';
 import {MyPage} from './page/MyPage.jsx';
-import {CounselingPage} from './page/CounselingPage.jsx';
 
 createRoot(document.getElementById('root')).render(<StrictMode>
   <BrowserRouter>

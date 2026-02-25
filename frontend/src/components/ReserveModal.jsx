@@ -61,7 +61,8 @@ export function ReserveModal({buildingName, room, selectedDay, startHour, onClos
         <div className="mb-3">
           <label className="form-label">예약 주체</label>
           <input type="text" className="form-control"
-                 value={currentUser ? `${currentUser.name}(${ROLE_LABELS[currentUser.role] || currentUser.role})` : ''} readOnly
+                 value={currentUser ? `${currentUser.name}(${ROLE_LABELS[currentUser.role] || currentUser.role})` : ''}
+                 readOnly
                  style={{background: '#F7FAFC'}}/>
         </div>
         <div className="row mb-3">

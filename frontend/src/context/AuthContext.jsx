@@ -14,9 +14,10 @@ export function AuthProvider({children}) {
   // 새로고침 시 JWT 쿠키가 남아있으면 세션 복원
   useEffect(() => {
     fetchMyProfile()
-      .then(user => setCurrentUser(user))
-      .catch(() => {}) // 401이면 비로그인 상태 유지
-      .finally(() => setLoading(false));
+        .then(user => setCurrentUser(user))
+        .catch(() => {
+        }) // 401이면 비로그인 상태 유지
+        .finally(() => setLoading(false));
   }, []);
 
   function login(user) {

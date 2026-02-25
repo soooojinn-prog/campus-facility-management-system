@@ -9,6 +9,11 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
+  /// 호실+날짜별 예약 조회 (타임라인 UI용)
+  /// Between: dayStart <= start_time <= dayEnd
+  List<Reservation> findByRoomIdAndStartTimeBetweenAndStatusIn(
+      Long roomId, LocalDateTime dayStart, LocalDateTime dayEnd, List<ReservationStatus> statuses);
+
   /// 시간 충돌(overlap) 검사용 쿼리
   /// JPA 메서드 네이밍 해석:
   ///   findByRoomId                  → WHERE room_id = ?
@@ -19,11 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   ///       "StartTimeLessThan(endTime)" = DB의 start_time이 새 예약의 endTime보다 작은 것
   List<Reservation> findByRoomIdAndStartTimeLessThanAndEndTimeGreaterThanAndStatusIn(
       Long roomId, LocalDateTime endTime, LocalDateTime startTime, List<ReservationStatus> statuses);
-
-  /// 호실+날짜별 예약 조회 (타임라인 UI용)
-  /// Between: dayStart <= start_time <= dayEnd
-  List<Reservation> findByRoomIdAndStartTimeBetweenAndStatusIn(
-      Long roomId, LocalDateTime dayStart, LocalDateTime dayEnd, List<ReservationStatus> statuses);
 
   /// 내 예약 조회 — User 엔티티의 number 필드(학번/교번) 기준
   /// JPA가 Reservation → User 관계를 자동 조인하여 user.number = ? 로 변환

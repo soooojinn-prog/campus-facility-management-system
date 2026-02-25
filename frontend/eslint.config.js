@@ -6,27 +6,27 @@ import {defineConfig, globalIgnores} from 'eslint/config';
 import globals from 'globals';
 
 export default defineConfig([
-    globalIgnores(['dist']),
-    js.configs.recommended,
-    reactHooks.configs.flat.recommended,
-    {
-      files: ['**/*.{js,jsx}'],
-      plugins: {
-        'react-refresh': reactRefresh,
-      },
-      languageOptions: {
-        ecmaVersion: 2020,
-        globals: globals.browser,
-        parserOptions: {
-          ecmaVersion: 'latest',
-          ecmaFeatures: {jsx: true},
-          sourceType: 'module',
-        },
-      },
-      rules: {
-        ...reactRefresh.configs.recommended.rules,
-        'no-unused-vars': ['error', {varsIgnorePattern: '^[A-Z_]'}],
+  globalIgnores(['dist']),
+  js.configs.recommended,
+  reactHooks.configs.flat.recommended,
+  {
+    files: ['**/*.{js,jsx}'],
+    plugins: {
+      'react-refresh': reactRefresh,
+    },
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: {jsx: true},
+        sourceType: 'module',
       },
     },
-    eslintConfigPrettier
+    rules: {
+      ...reactRefresh.configs.recommended.rules,
+      'no-unused-vars': ['error', {varsIgnorePattern: '^[A-Z_]'}],
+    },
+  },
+  eslintConfigPrettier,
 ]);

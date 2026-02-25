@@ -31,7 +31,8 @@ export function Header() {
             <span className="user-role">{roleLabel}</span>
             <span className="user-name">{currentUser.name}님 환영합니다</span>
             <Link to="/mypage" className="btn btn-outline-light btn-sm">마이페이지</Link>
-            {currentUser.role === 'ROLE_ADMIN' && <Link to="/admin" className="btn btn-outline-light btn-sm">관리페이지</Link>}
+            {currentUser.role === 'ROLE_ADMIN' &&
+                <Link to="/admin" className="btn btn-outline-light btn-sm">관리페이지</Link>}
             <button className="btn btn-outline-light btn-sm" onClick={logout}>로그아웃</button>
           </div>)}
         </div>

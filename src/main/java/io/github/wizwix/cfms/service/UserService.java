@@ -11,7 +11,6 @@ import io.github.wizwix.cfms.dto.response.auth.ResponseUserProfile;
 import io.github.wizwix.cfms.dto.response.auth.ResponseUserSimpleInfo;
 import io.github.wizwix.cfms.global.security.JwtUtils;
 import io.github.wizwix.cfms.model.User;
-import io.github.wizwix.cfms.model.enums.Gender;
 import io.github.wizwix.cfms.model.enums.UserRole;
 import io.github.wizwix.cfms.repo.UserRepository;
 import io.github.wizwix.cfms.service.iface.IUserService;

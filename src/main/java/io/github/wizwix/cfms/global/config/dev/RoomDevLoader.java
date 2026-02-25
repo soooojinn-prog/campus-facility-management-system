@@ -1,9 +1,5 @@
 package io.github.wizwix.cfms.global.config.dev;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.wizwix.cfms.global.config.dev.base.BaseDevLoader;
-import io.github.wizwix.cfms.model.Room;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.wizwix.cfms.global.config.dev.base.DevDataLoader;
@@ -26,17 +22,18 @@ import java.util.Optional;
 /// BaseDevLoader를 사용하지 않는 이유:
 ///   rooms.jsonc의 "building" 필드가 Building 엔티티가 아닌 slug(String)이므로
 ///   Jackson 자동 역직렬화 불가 → JsonNode로 수동 파싱
-/// @Order(2): BuildingDevLoader(@Order(1)) 이후 실행 보장
+///
+/// @Order(2): BuildingDevLoader(@ Order ( 1)) 이후 실행 보장
 ///   DevDataOrchestrator가 List<DevDataLoader>를 순회할 때 @Order 값 기준 정렬됨
 @Component("roomDevLoader")
 @Profile("dev")
 @Order(2)
 @Slf4j
 public class RoomDevLoader implements DevDataLoader {
-  private final ResourceLoader resourceLoader;
   private final BuildingRepository buildingRepo;
-  private final RoomRepository roomRepo;
   private final ObjectMapper mapper;
+  private final ResourceLoader resourceLoader;
+  private final RoomRepository roomRepo;
 
   public RoomDevLoader(ResourceLoader resourceLoader, ObjectMapper mapper, BuildingRepository buildingRepo, RoomRepository roomRepo) {
     this.resourceLoader = resourceLoader;

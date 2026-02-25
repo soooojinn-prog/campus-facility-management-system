@@ -125,7 +125,8 @@ function ClubTab() {
   async function openDescription(description) {
     setModalInfo(description);
   }
-  async function onModalClose(){
+
+  async function onModalClose() {
     setModalInfo(null);
   }
 
@@ -178,7 +179,8 @@ function ClubTab() {
                           )}
                         </td>
                       </tr>
-                      {modalInfo && (<DescriptionModal name={a.name} description={a.description} onClose={onModalClose} />)}
+                      {modalInfo && (
+                          <DescriptionModal name={a.name} description={a.description} onClose={onModalClose}/>)}
                     </>
                 ))}
                 </tbody>

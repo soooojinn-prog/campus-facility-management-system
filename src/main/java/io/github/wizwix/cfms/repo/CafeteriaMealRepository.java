@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CafeteriaMealRepository extends JpaRepository<CafeteriaMeal, Long> {
-  List<CafeteriaMeal> findByDate(LocalDate date);
-
   boolean existsByDateAndMealType(LocalDate date, MealType mealType);
+
+  List<CafeteriaMeal> findByDate(LocalDate date);
 
   Optional<CafeteriaMeal> findByDateAndMealType(LocalDate date, MealType mealType);
 }

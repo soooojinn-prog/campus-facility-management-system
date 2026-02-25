@@ -35,25 +35,25 @@ public class CounselingReservation {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "counselor_id", nullable = false)
   private Counselor counselor;
-  /// 예약한 사용자
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  /// 예약 생성 시각
+  private LocalDateTime createdAt;
   /// 상담 날짜
   private LocalDate date;
-  /// 상담 시작 시간
-  private LocalTime startTime;
   /// 상담 종료 시간
   private LocalTime endTime;
+  /// 메모
+  @Column(length = 1000)
+  private String memo;
+  /// 상담 시작 시간
+  private LocalTime startTime;
   /// 예약 상태 (PENDING/APPROVED/REJECTED/CANCELLED)
   @Enumerated(EnumType.STRING)
   private ReservationStatus status;
   /// 상담 주제
   @Column(length = 500)
   private String topic;
-  /// 메모
-  @Column(length = 1000)
-  private String memo;
-  /// 예약 생성 시각
-  private LocalDateTime createdAt;
+  /// 예약한 사용자
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 }

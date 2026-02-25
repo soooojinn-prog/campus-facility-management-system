@@ -133,7 +133,11 @@ export function AuthModal({onClose}) {
           <div className="mb-3">
             <label className="form-label">성별 선택</label>
             <div className="role-cards">
-              {[{key: 'MALE', icon: '\uD83D\uDE4B\u200D\u2642\uFE0F', label: '남성'}, {key: 'FEMALE', icon: '\uD83D\uDE4B\u200D\u2640\uFE0F', label: '여성'}].map(g => (<div
+              {[{key: 'MALE', icon: '\uD83D\uDE4B\u200D\u2642\uFE0F', label: '남성'}, {
+                key: 'FEMALE',
+                icon: '\uD83D\uDE4B\u200D\u2640\uFE0F',
+                label: '여성',
+              }].map(g => (<div
                   key={g.key}
                   className={`role-card${selectedGender === g.key ? ' selected' : ''}`}
                   onClick={() => setSelectedGender(g.key)}

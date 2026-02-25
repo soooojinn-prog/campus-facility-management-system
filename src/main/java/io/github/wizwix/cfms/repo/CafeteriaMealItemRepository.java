@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CafeteriaMealItemRepository extends JpaRepository<CafeteriaMealItem, Long> {
-  List<CafeteriaMealItem> findByMealIn(List<CafeteriaMeal> meals);
-
   void deleteByMeal(CafeteriaMeal meal);
+
+  List<CafeteriaMealItem> findByMealIn(List<CafeteriaMeal> meals);
 }

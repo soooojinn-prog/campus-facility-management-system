@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CafeteriaStoreMenuRepository extends JpaRepository<CafeteriaStoreMenu, Long> {
-  List<CafeteriaStoreMenu> findByStoreIn(List<CafeteriaStore> stores);
-
   void deleteByStore(CafeteriaStore store);
+
+  List<CafeteriaStoreMenu> findByStoreIn(List<CafeteriaStore> stores);
 }

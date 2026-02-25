@@ -11,6 +11,7 @@ import java.io.IOException;
 
 /// Room.building 필드의 JSONC 역직렬화 시 slug(String) → Building 엔티티 변환
 /// Spring Boot의 ObjectMapper가 SpringHandlerInstantiator를 사용하므로
+///
 /// @Component로 등록하면 Jackson이 자동으로 Spring 빈을 사용함
 @Component
 public class BuildingSlugDeserializer extends JsonDeserializer<Building> {
