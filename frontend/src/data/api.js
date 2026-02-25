@@ -85,6 +85,13 @@ export async function logoutApi() {
   await fetch(`${BASE}/auth/logout`, {method: 'POST'});
 }
 
+// ── 동아리 관련 ──
+export async function fetchClubs(status) {
+  const res = await fetch(`${BASE}/admin/clubs?status=${status}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
 // ── 기숙사 관련 ──
 
 /// 기숙사 호실 목록 (층별) — gender: "MALE" or "FEMALE"

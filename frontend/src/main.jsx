@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/index.css';
 import {Header} from './components/Header.jsx';
 import {AuthProvider} from './context/AuthContext.jsx';
+import {AdminPage} from './page/AdminPage.jsx';
 import {BuildingPage} from './page/BuildingPage.jsx';
 import {CafeteriaPage} from './page/CafeteriaPage.jsx';
 import {CampusMapPage} from './page/CampusMapPage.jsx';
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(<StrictMode>
       <Header/>
       <Routes>
         <Route path="/" element={<CampusMapPage/>}/>
+        <Route path="/admin" element={<AdminPage/>}/>
         <Route path="/building/:buildingKey" element={<BuildingPage/>}/>
         <Route path="/cafeteria" element={<CafeteriaPage/>}/>
         <Route path="/dormitory" element={<DormitoryPage/>}/>
