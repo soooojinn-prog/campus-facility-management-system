@@ -65,11 +65,9 @@ public class CafeteriaDevLoader implements DevDataLoader {
     for (JsonNode node : root) {
       String name = node.get("name").asText();
       storeRepo.findByName(name).ifPresent(existing -> {
-        if (existing.getCategory().equals(node.get("category").asText())) {
-          menuRepo.deleteByStore(existing);
-          storeRepo.delete(existing);
-          log.info("Unloaded dev cafeteria store: ({} / {})", existing.getName(), existing.getCategory());
-        }
+        menuRepo.deleteByStore(existing);
+        storeRepo.delete(existing);
+        log.info("Unloaded dev cafeteria store: ({} / {})", existing.getName(), existing.getCategory());
       });
     }
   }

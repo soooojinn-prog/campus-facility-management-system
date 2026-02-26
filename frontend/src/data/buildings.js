@@ -43,7 +43,8 @@ export const BUILDING_POLYGONS = [{
   key: 'library',
   name: '도서관',
   info: '열람실 · 자료실 · 스터디룸',
-  rentable: false,
+  rentable: true,
+  customRoute: '/library',
   points: '418,131 481,111 501,136 499,153 436,175 417,153',
 }, {
   key: 'dormitory',

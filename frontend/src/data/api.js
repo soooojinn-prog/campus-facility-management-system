@@ -148,3 +148,217 @@ export async function cancelDormApplication(id) {
   const res = await fetch(`${BASE}/dorms/${id}`, {method: 'DELETE'});
   if (!res.ok) throw new Error(await res.text());
 }
+
+// ── 관리자 관련 ──
+
+/// 동아리 개설 신청 목록 조회 — ROLE_ADMIN 필요
+export async function fetchAdminClubs(status = 'PENDING') {
+  const res = await fetch(`${BASE}/admin/clubs?status=${status}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 동아리 개설 승인/거절 — ROLE_ADMIN 필요
+export async function updateAdminClubStatus(id, data) {
+  const res = await fetch(`${BASE}/admin/clubs/${id}/status`, {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+/// 시설 예약 목록 조회 — ROLE_ADMIN 필요
+export async function fetchAdminReservations(status = 'PENDING') {
+  const res = await fetch(`${BASE}/admin/reservations?status=${status}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 시설 예약 승인/거절 — ROLE_ADMIN 필요
+export async function updateAdminReservationStatus(id, data) {
+  const res = await fetch(`${BASE}/admin/reservations/${id}/status`, {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+/// 기숙사 신청 목록 조회 — ROLE_ADMIN 필요
+export async function fetchAdminDorms(status = 'PENDING') {
+  const res = await fetch(`${BASE}/admin/dorms?status=${status}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 기숙사 신청 승인/거절 — ROLE_ADMIN 필요
+export async function updateAdminDormStatus(id, data) {
+  const res = await fetch(`${BASE}/admin/dorms/${id}/status`, {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// ── 시설 예약 (마이페이지) ──
+
+/// 내 강의실 예약 내역 조회 — 로그인 필요
+export async function fetchMyReservations() {
+  const res = await fetch(`${BASE}/reservations/me`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 강의실 예약 취소 — PENDING만 가능, 로그인 필요
+export async function cancelReservation(id) {
+  const res = await fetch(`${BASE}/reservations/${id}`, {method: 'DELETE'});
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// ── 상담 예약 관련 ──
+
+/// 상담사 목록 — dept: "ACADEMIC" | "STUDENT" | "CAREER" (null이면 전체)
+export async function fetchCounselors(dept) {
+  const q = dept ? `?dept=${dept}` : '';
+  const res = await fetch(`${BASE}/counseling/counselors${q}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 해당 상담사+날짜의 예약 현황 — 공개 API
+export async function fetchCounselingSlots(counselorId, date) {
+  const res = await fetch(`${BASE}/counseling/slots?counselorId=${counselorId}&date=${date}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 상담 예약 신청 — 로그인 필요
+export async function createCounselingReservation(data) {
+  const res = await fetch(`${BASE}/counseling/reservations`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 내 상담 예약 내역 — 로그인 필요
+export async function fetchMyCounselingReservations() {
+  const res = await fetch(`${BASE}/counseling/reservations/me`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+/// 상담 예약 취소 — PENDING만 가능, 로그인 필요
+export async function cancelCounselingReservation(id) {
+  const res = await fetch(`${BASE}/counseling/reservations/${id}`, {method: 'DELETE'});
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// ── 도서관 관련 ──
+
+// 백엔드 에러 응답에서 message 필드 추출 헬퍼
+async function parseErrorMessage(res, fallback) {
+  try {
+    const text = await res.text();
+    const json = JSON.parse(text);
+    return json.message || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+/// 열람실 목록 조회
+export async function fetchReadingRooms(buildingId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/reading-rooms`);
+  if (!res.ok) throw new Error('열람실 정보를 불러오지 못했습니다.');
+  return res.json();
+}
+
+/// 열람실 좌석 배치도 조회
+export async function fetchReadingRoomSeats(buildingId, roomId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/reading-rooms/${roomId}/seats`);
+  if (!res.ok) throw new Error('좌석 정보를 불러오지 못했습니다.');
+  return res.json();
+}
+
+/// 열람실 좌석 예약 — 로그인 필요
+export async function reserveSeat(buildingId, roomId, seatNo) {
+  const res = await fetch(
+      `${BASE}/buildings/${buildingId}/library/reading-rooms/${roomId}/seats/${seatNo}/reserve`,
+      {method: 'POST', headers: {'Content-Type': 'application/json'}}
+  );
+  if (!res.ok) throw new Error(await parseErrorMessage(res, '좌석 예약에 실패했습니다.'));
+}
+
+/// 도서 검색 — q: 검색어, publisher: 출판사, category: 카테고리
+export async function searchBooks(buildingId, {q = '', publisher = '', category = ''} = {}) {
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (publisher) params.set('publisher', publisher);
+  if (category) params.set('category', category);
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/books?${params}`);
+  if (!res.ok) throw new Error('도서 검색에 실패했습니다.');
+  return res.json();
+}
+
+/// 도서 예약 — 로그인 필요
+export async function reserveBook(buildingId, bookId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/books/${bookId}/reserve`, {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+  });
+  if (!res.ok) throw new Error('도서 예약에 실패했습니다.');
+}
+
+/// 스터디룸 목록 조회
+export async function fetchStudyRooms(buildingId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/study-rooms`);
+  if (!res.ok) throw new Error('스터디룸 정보를 불러오지 못했습니다.');
+  return res.json();
+}
+
+/// 스터디룸 예약 현황 (시간 슬롯) 조회
+export async function fetchStudyRoomSlots(buildingId, roomId, date) {
+  const res = await fetch(
+      `${BASE}/buildings/${buildingId}/library/study-rooms/${roomId}/slots?date=${date}`
+  );
+  if (!res.ok) throw new Error('예약 현황을 불러오지 못했습니다.');
+  return res.json();
+}
+
+/// 스터디룸 예약 — 로그인 필요
+export async function reserveStudyRoom(buildingId, roomId, {date, startHour}) {
+  const res = await fetch(
+      `${BASE}/buildings/${buildingId}/library/study-rooms/${roomId}/reserve`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({date, startHour}),
+      }
+  );
+  if (!res.ok) throw new Error(await parseErrorMessage(res, '스터디룸 예약에 실패했습니다.'));
+}
+
+/// 도서관 혼잡도 조회
+export async function fetchCongestion(buildingId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/congestion`);
+  if (!res.ok) throw new Error('혼잡도 정보를 불러오지 못했습니다.');
+  return res.json();
+}
+
+/// 도서관 공지사항 목록 조회
+export async function fetchNotices(buildingId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/notices`);
+  if (!res.ok) throw new Error('공지사항을 불러오지 못했습니다.');
+  return res.json();
+}
+
+/// 도서관 공지사항 상세 조회
+export async function fetchNotice(buildingId, noticeId) {
+  const res = await fetch(`${BASE}/buildings/${buildingId}/library/notices/${noticeId}`);
+  if (!res.ok) throw new Error('공지 상세를 불러오지 못했습니다.');
+  return res.json();
+}

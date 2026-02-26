@@ -461,33 +461,11 @@ body { background: #F5F7FA; font-family: 'Noto Sans KR', sans-serif; min-height:
 
 .mypage-empty { background: #FFF; border: 1px solid #E2E8F0; border-radius: 10px; color: #A0AEC0; font-size: .95rem; padding: 48px; text-align: center; }
 
-.mypage-sidebar { background: #FFF; border-right: 1px solid #E2E8F0; min-width: 240px; width: 240px; }
-
-.mypage-sidebar-item { border-bottom: 1px solid #F0F0F0; color: #4A5568; cursor: pointer; font-size: .92rem; font-weight: 500; padding: 18px 28px; transition: all .2s; }
-
-.mypage-sidebar-item:hover { background: #F7FAFC; color: #2C5282; }
-
-.mypage-sidebar-item.active { background: #1A365D; color: #FFF; font-weight: 700; }
-
-.mypage-content { background: #FAFBFC; flex: 1; padding: 32px 40px; }
-
-.mypage-section-header { border-bottom: 2px solid #1A365D; margin-bottom: 24px; padding-bottom: 16px; }
-
-.mypage-section-header h3 { color: #1A365D; font-size: 1.5rem; font-weight: 900; }
-
-.mypage-section-sub { color: #718096; font-size: .85rem; margin-top: 4px; }
-
-.mypage-loading { color: #A0AEC0; font-size: .95rem; padding: 48px; text-align: center; }
-
-.mypage-empty { background: #FFF; border: 1px solid #E2E8F0; border-radius: 10px; color: #A0AEC0; font-size: .95rem; padding: 48px; text-align: center; }
-
 .mypage-profile-card { background: #FFF; border: 1px solid #E2E8F0; border-radius: 10px; margin-bottom: 28px; padding: 24px; }
 
 .mypage-profile-row { align-items: center; border-bottom: 1px solid #F0F0F0; display: flex; font-size: .9rem; padding: 12px 0; }
 
 .mypage-profile-row:last-child { border-bottom: none; }
-
-.mypage-label { color: #718096; font-weight: 600; min-width: 120px; }
 
 .mypage-label { color: #718096; font-weight: 600; min-width: 120px; }
 
@@ -571,3 +549,6 @@ body { background: #F5F7FA; font-family: 'Noto Sans KR', sans-serif; min-height:
 
   .counsel-timeline-side { padding: 16px; }
 }
+
+/* ── 도서관 로딩 스피너 ── */
+@keyframes lib-spin { to { transform: rotate(360deg); } }

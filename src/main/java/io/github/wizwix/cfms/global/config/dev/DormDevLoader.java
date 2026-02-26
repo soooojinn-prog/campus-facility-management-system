@@ -33,10 +33,8 @@ public class DormDevLoader extends BaseDevLoader<DormRoom> {
   @Override
   public void unload() {
     processItems(room -> repo.findByRoomNumber(room.getRoomNumber()).ifPresent(existing -> {
-      if (room.getGender() == existing.getGender() && room.getFloor().equals(existing.getFloor())) {
-        repo.delete(existing);
-        log.info("Unloaded dev dorm room: ({} / {} / {})", existing.getRoomNumber(), existing.getGender(), existing.getFloor());
-      }
+      repo.delete(existing);
+      log.info("Unloaded dev dorm room: ({} / {} / {})", existing.getRoomNumber(), existing.getGender(), existing.getFloor());
     }));
   }
 }

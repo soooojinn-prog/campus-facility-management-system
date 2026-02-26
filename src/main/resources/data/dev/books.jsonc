@@ -1,0 +1,27 @@
+[
+  // 교양
+  {"title": "캠퍼스 생활 가이드", "author": "홍길동", "publisher": "서울테크출판", "category": "교양", "available": true, "viewCount": 120},
+  // 컴퓨터/IT
+  {"title": "자료구조 입문", "author": "김자료", "publisher": "IT북스", "category": "컴퓨터/IT", "available": true, "viewCount": 340},
+  {"title": "운영체제 개론", "author": "박시스템", "publisher": "컴퓨터사이언스", "category": "컴퓨터/IT", "available": false, "viewCount": 410},
+  {"title": "데이터베이스 설계", "author": "이디비", "publisher": "DB프레스", "category": "컴퓨터/IT", "available": true, "viewCount": 290},
+  {"title": "웹 프로그래밍 실습", "author": "최웹", "publisher": "프론트북", "category": "컴퓨터/IT", "available": true, "viewCount": 180},
+  {"title": "자바 프로그래밍", "author": "정자바", "publisher": "JAVABOOK", "category": "컴퓨터/IT", "available": true, "viewCount": 500},
+  {"title": "스프링 부트 실전", "author": "한스프링", "publisher": "SpringPress", "category": "컴퓨터/IT", "available": false, "viewCount": 620},
+  {"title": "리액트 빠르게 배우기", "author": "오리액트", "publisher": "ReactBooks", "category": "컴퓨터/IT", "available": true, "viewCount": 430},
+  {"title": "알고리즘 문제 해결", "author": "유알고", "publisher": "코딩출판", "category": "컴퓨터/IT", "available": true, "viewCount": 710},
+  {"title": "네트워크 기초", "author": "신네트", "publisher": "NET프레스", "category": "컴퓨터/IT", "available": true, "viewCount": 260},
+  // AI/ML
+  {"title": "인공지능 개론", "author": "박인공", "publisher": "AI프레스", "category": "AI/ML", "available": true, "viewCount": 900},
+  {"title": "머신러닝 실습", "author": "이머신", "publisher": "ML북스", "category": "AI/ML", "available": false, "viewCount": 850},
+  {"title": "딥러닝 첫걸음", "author": "김딥", "publisher": "DL프레스", "category": "AI/ML", "available": true, "viewCount": 780},
+  // 수학
+  {"title": "확률과 통계", "author": "최통계", "publisher": "수학출판", "category": "수학", "available": true, "viewCount": 310},
+  {"title": "선형대수", "author": "정선형", "publisher": "수학출판", "category": "수학", "available": true, "viewCount": 270},
+  // 인문/사회
+  {"title": "인문학 산책", "author": "문인문", "publisher": "교양서적", "category": "인문/사회", "available": true, "viewCount": 90},
+  {"title": "철학의 질문들", "author": "윤철학", "publisher": "교양서적", "category": "인문/사회", "available": true, "viewCount": 150},
+  {"title": "경제학 원론", "author": "강경제", "publisher": "사회과학", "category": "인문/사회", "available": false, "viewCount": 220},
+  {"title": "심리학 이해", "author": "배심리", "publisher": "사회과학", "category": "인문/사회", "available": true, "viewCount": 140},
+  {"title": "글쓰기와 발표", "author": "남글쓰기", "publisher": "대학필독", "category": "인문/사회", "available": true, "viewCount": 60}
+]

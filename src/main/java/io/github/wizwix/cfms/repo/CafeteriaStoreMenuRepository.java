@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface CafeteriaStoreMenuRepository extends JpaRepository<CafeteriaStoreMenu, Long> {
-  void deleteByStore(CafeteriaStore store);
-
   /// Spring Data JPA의 커스텀 derived delete 메서드는
   /// 기본 제공 delete()와 달리 @Transactional이 자동 적용되지 않음
   @Transactional

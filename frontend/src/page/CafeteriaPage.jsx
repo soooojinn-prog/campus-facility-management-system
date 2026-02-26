@@ -157,9 +157,7 @@ function MealSection({meals}) {
           </div>
         </div>
       </div>
-</div>
-)
-
+  )
 }
 
 /// 푸드코트 — 좌측 가게 목록 + 우측 메뉴 상세
@@ -246,7 +244,5 @@ function FoodCourtSection({stores, selectedStore, onSelectStore, store}) {
           )}
         </div>
       </div>
-</div>
-)
-
+  )
 }

@@ -12,6 +12,11 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext.jsx';
+import {
+  fetchAdminClubs, updateAdminClubStatus,
+  fetchAdminReservations, updateAdminReservationStatus,
+  fetchAdminDorms, updateAdminDormStatus,
+} from '../data/api.js';
 
 const TABS = [
   {key: 'clubs', label: '동아리 신청 관리'},
@@ -98,16 +103,7 @@ function ClubStatusModal({club, onClose, onRefresh}) {
     setSubmitting(true);
 
     try {
-      const resp = await fetch(`/api/admin/clubs/${club.id}/status`, {
-        method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({status, rejectReason: status === 'REJECTED' ? reason : null}),
-      });
-
-      if (!resp.ok) {
-        // noinspection ExceptionCaughtLocallyJS
-        throw new Error('처리 중 오류 발생');
-      }
+      await updateAdminClubStatus(club.id, {status, rejectReason: status === 'REJECTED' ? reason : null});
 
       alert('처리가 완료되었습니다');
       onRefresh();
@@ -154,8 +150,7 @@ function ClubTab() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const resp = await fetch('/api/admin/clubs?status=PENDING');
-      setApps(await resp.json());
+      setApps(await fetchAdminClubs());
     } catch (err) {
       console.error(err);
     } finally {
@@ -216,15 +211,7 @@ function ReservationStatusModal({res, onClose, onRefresh}) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const resp = await fetch(`/api/admin/reservations/${res.id}/status`, {
-        method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({status, rejectReason: status === 'REJECTED' ? reason : null}),
-      });
-      if (!resp.ok) {
-        // noinspection ExceptionCaughtLocallyJS
-        throw new Error('오류 발생');
-      }
+      await updateAdminReservationStatus(res.id, {status, rejectReason: status === 'REJECTED' ? reason : null});
       onRefresh();
       onClose();
     } catch (err) {
@@ -261,8 +248,7 @@ function ReservationTab() {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/reservations?status=PENDING');
-      setData(await res.json());
+      setData(await fetchAdminReservations());
     } finally {
       setLoading(false);
     }
@@ -318,11 +304,7 @@ function DormStatusModal({app, onClose, onRefresh}) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await fetch(`/api/admin/dorms/${app.id}/status`, {
-        method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({status}),
-      });
+      await updateAdminDormStatus(app.id, {status});
       onRefresh();
       onClose();
     } catch {
@@ -353,8 +335,7 @@ function DormTab() {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/dorms?status=PENDING');
-      setData(await res.json());
+      setData(await fetchAdminDorms());
     } finally {
       setLoading(false);
     }

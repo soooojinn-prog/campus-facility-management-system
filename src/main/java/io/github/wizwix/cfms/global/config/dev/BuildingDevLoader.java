@@ -34,11 +34,9 @@ public class BuildingDevLoader extends BaseDevLoader<Building> {
 
   @Override
   public void unload() {
-    processItems(building -> repo.findBySlug(building.getSlug()).ifPresent(existingBuilding -> {
-      if (building.getName().equals(existingBuilding.getName()) && building.getInfo().equals(existingBuilding.getInfo())) {
-        repo.delete(existingBuilding);
-        log.info("Unloaded dev building: ({} / {} / {})", building.getName(), building.getSlug(), building.getInfo());
-      }
+    processItems(building -> repo.findBySlug(building.getSlug()).ifPresent(existing -> {
+      repo.delete(existing);
+      log.info("Unloaded dev building: ({} / {} / {})", existing.getName(), existing.getSlug(), existing.getInfo());
     }));
   }
 }

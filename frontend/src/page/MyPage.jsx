@@ -70,13 +70,7 @@ export function MyPage() {
           {tab === 'counseling' && <CounselingTab/>}
         </div>
       </div>
-  <div className="mypage-content">
-    {tab === 'profile' && <ProfileTab/>}
-    {tab === 'dorm' && <DormTab/>}
-  </div>;
-</div>
-)
-
+  )
 }
 
 // 개인정보 탭 — 프로필 카드(읽기전용) + 수정 폼
@@ -178,9 +172,7 @@ function ProfileTab() {
           </form>
         </div>
       </div>
-</div>
-)
-
+  )
 }
 
 // 기숙사 신청 내역 탭 — 테이블 형태

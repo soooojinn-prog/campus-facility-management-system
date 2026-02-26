@@ -42,11 +42,9 @@ public class UserDevLoader extends BaseDevLoader<User> {
 
   @Override
   public void unload() {
-    processItems(user -> repo.findByNumber(user.getNumber()).ifPresent(existingUser -> {
-      if (encoder.matches(user.getPassword(), existingUser.getPassword()) && existingUser.getEmail().equals(user.getEmail())) {
-        repo.delete(existingUser);
-        log.info("Unloaded dev user: ({} / {} / {})", existingUser.getNumber(), user.getPassword(), existingUser.getRole());
-      }
+    processItems(user -> repo.findByNumber(user.getNumber()).ifPresent(existing -> {
+      repo.delete(existing);
+      log.info("Unloaded dev user: ({} / {} / {})", existing.getNumber(), existing.getName(), existing.getRole());
     }));
   }
 }
