@@ -177,7 +177,7 @@ function ClubTab() {
   const [selectedClub, setSelectedClub] = useState(null);
   const [viewDesc, setViewDesc] = useState(null);
 
-  const loadData = useCallback( async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchClubs('PENDING');
@@ -188,7 +188,8 @@ function ClubTab() {
   }, []);
 
   useEffect(() => {
-    loadData().then(() => {});
+    loadData().then(() => {
+    });
   }, [loadData]);
 
   if (loading) return <div className="mypage-loading">데이터를 불러오는 중...</div>;

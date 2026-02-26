@@ -1,0 +1,368 @@
+[
+  {
+    "name": "한솥도시락",
+    "description": "든든한 한 끼, 다양한 도시락 메뉴",
+    "category": "한식",
+    "representative": "치킨마요 도시락",
+    "hours": "10:00 ~ 20:00",
+    "menus": [
+      {
+        "name": "치킨마요 도시락",
+        "price": 4500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "제육 도시락",
+        "price": 5000,
+        "discountPrice": 4500,
+        "discountLabel": "이번 주 특가",
+        "popular": false
+      },
+      {
+        "name": "불고기 도시락",
+        "price": 5500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "참치김치 도시락",
+        "price": 4800,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "김치볶음밥",
+        "price": 4000,
+        "discountPrice": 3500,
+        "discountLabel": "학생 할인",
+        "popular": false
+      }
+    ]
+  },
+  {
+    "name": "엄마손 분식",
+    "description": "추억의 맛, 학교 앞 분식집",
+    "category": "분식",
+    "representative": "떡볶이 + 튀김 세트",
+    "hours": "09:00 ~ 20:00",
+    "menus": [
+      {
+        "name": "떡볶이",
+        "price": 3000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "순대",
+        "price": 3000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "떡볶이 + 튀김 세트",
+        "price": 4500,
+        "discountPrice": 4000,
+        "discountLabel": "세트 할인",
+        "popular": true
+      },
+      {
+        "name": "김밥",
+        "price": 2500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "라볶이",
+        "price": 4000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "오므라이스",
+        "price": 5000,
+        "discountPrice": 4200,
+        "discountLabel": "점심 할인",
+        "popular": false
+      }
+    ]
+  },
+  {
+    "name": "면사랑",
+    "description": "칼국수부터 짬뽕까지, 면 요리 전문",
+    "category": "면류",
+    "representative": "해물칼국수",
+    "hours": "10:30 ~ 19:30",
+    "menus": [
+      {
+        "name": "해물칼국수",
+        "price": 5500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "짬뽕",
+        "price": 6000,
+        "discountPrice": 5000,
+        "discountLabel": "오픈 기념",
+        "popular": false
+      },
+      {
+        "name": "비빔국수",
+        "price": 4500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "수제비",
+        "price": 5000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "만두국",
+        "price": 5000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      }
+    ]
+  },
+  {
+    "name": "치킨플러스",
+    "description": "바삭한 치킨과 사이드 메뉴",
+    "category": "치킨",
+    "representative": "후라이드치킨",
+    "hours": "11:00 ~ 20:30",
+    "menus": [
+      {
+        "name": "후라이드치킨",
+        "price": 8000,
+        "discountPrice": 7000,
+        "discountLabel": "학생 특가",
+        "popular": true
+      },
+      {
+        "name": "양념치킨",
+        "price": 8500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "치킨텐더",
+        "price": 5000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "치즈볼",
+        "price": 3000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "감자튀김",
+        "price": 2500,
+        "discountPrice": 2000,
+        "discountLabel": "사이드 할인",
+        "popular": false
+      }
+    ]
+  },
+  {
+    "name": "바삭돈까스",
+    "description": "수제 돈까스 전문점",
+    "category": "돈까스",
+    "representative": "등심돈까스",
+    "hours": "10:30 ~ 20:00",
+    "menus": [
+      {
+        "name": "등심돈까스",
+        "price": 5500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "치즈돈까스",
+        "price": 6500,
+        "discountPrice": 5800,
+        "discountLabel": "인기 메뉴 할인",
+        "popular": true
+      },
+      {
+        "name": "생선까스",
+        "price": 5000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "왕돈까스",
+        "price": 7000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "카레돈까스",
+        "price": 6000,
+        "discountPrice": 5500,
+        "discountLabel": "학생 할인",
+        "popular": false
+      },
+      {
+        "name": "미니돈까스 + 우동 세트",
+        "price": 6500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      }
+    ]
+  },
+  {
+    "name": "화덕피자",
+    "description": "갓 구운 화덕피자와 파스타",
+    "category": "양식",
+    "representative": "마르게리타 피자",
+    "hours": "10:00 ~ 20:30",
+    "menus": [
+      {
+        "name": "마르게리타 피자",
+        "price": 6500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "페퍼로니 피자",
+        "price": 7000,
+        "discountPrice": 6000,
+        "discountLabel": "베스트 할인",
+        "popular": false
+      },
+      {
+        "name": "크림파스타",
+        "price": 5500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "토마토파스타",
+        "price": 5500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "갈릭브레드",
+        "price": 2500,
+        "discountPrice": 2000,
+        "discountLabel": "세트 추가 시",
+        "popular": false
+      }
+    ]
+  },
+  {
+    "name": "정든밥상",
+    "description": "집밥 느낌 그대로, 한식 백반 전문",
+    "category": "백반",
+    "representative": "된장찌개 백반",
+    "hours": "11:00 ~ 19:00",
+    "menus": [
+      {
+        "name": "된장찌개 백반",
+        "price": 4500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "김치찌개 백반",
+        "price": 4500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "제육백반",
+        "price": 5000,
+        "discountPrice": 4500,
+        "discountLabel": "오늘의 추천",
+        "popular": false
+      },
+      {
+        "name": "순두부찌개 백반",
+        "price": 4500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "불고기 백반",
+        "price": 5500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      }
+    ]
+  },
+  {
+    "name": "캠퍼스 카페",
+    "description": "커피와 음료, 간단한 베이커리",
+    "category": "카페",
+    "representative": "아메리카노",
+    "hours": "08:00 ~ 21:00",
+    "menus": [
+      {
+        "name": "아메리카노",
+        "price": 2000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": true
+      },
+      {
+        "name": "카페라떼",
+        "price": 2800,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "바닐라라떼",
+        "price": 3200,
+        "discountPrice": 2700,
+        "discountLabel": "이달의 음료",
+        "popular": false
+      },
+      {
+        "name": "크로플",
+        "price": 3000,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      },
+      {
+        "name": "머핀",
+        "price": 2500,
+        "discountPrice": null,
+        "discountLabel": null,
+        "popular": false
+      }
+    ]
+  }
+]

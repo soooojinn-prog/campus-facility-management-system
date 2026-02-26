@@ -40,6 +40,12 @@ export async function createReservation(data) {
   return res.json();
 }
 
+// TODO: 백엔드 SemesterController 자체가 없음 — 구현 필요
+export async function fetchCurrentSemester() {
+  const res = await fetch(`${BASE}/semesters/current`);
+  return res.json();
+}
+
 // ── 식당 관련 ──
 
 /// 오늘의 학식 — date 없으면 서버에서 오늘 날짜로 조회
@@ -69,13 +75,13 @@ export async function loginApi(userNumber, password) {
   return res.json();
 }
 
-/// 회원가입 — 백엔드 RequestRegister DTO: { userNumber, name, password, email, gender }
+/// 회원가입 — 백엔드 RequestRegister DTO: { userNumber, name, password, email }
 /// 응답: 201 Created (body 없음), 가입 후 별도 로그인 필요
-export async function signupApi(userNumber, password, name, email, gender) {
+export async function signupApi(userNumber, password, name, email) {
   const res = await fetch(`${BASE}/auth/register`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({userNumber, name, password, email, gender}),
+    body: JSON.stringify({userNumber, name, password, email}),
   });
   if (!res.ok) throw new Error(await res.text());
 }
@@ -83,13 +89,6 @@ export async function signupApi(userNumber, password, name, email, gender) {
 /// 로그아웃 — 백엔드에서 JWT 쿠키를 만료시킴
 export async function logoutApi() {
   await fetch(`${BASE}/auth/logout`, {method: 'POST'});
-}
-
-// ── 동아리 관련 ──
-export async function fetchClubs(status) {
-  const res = await fetch(`${BASE}/admin/clubs?status=${status}`);
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
 }
 
 // ── 기숙사 관련 ──
@@ -147,64 +146,5 @@ export async function fetchMyDormApplications() {
 /// 기숙사 신청 취소 — PENDING만 가능, 로그인 필요
 export async function cancelDormApplication(id) {
   const res = await fetch(`${BASE}/dorms/${id}`, {method: 'DELETE'});
-  if (!res.ok) throw new Error(await res.text());
-}
-
-/// 내 강의실 예약 내역 조회 — 로그인 필요
-/// 응답: [{ id, roomCode, buildingName, userName, clubName, startTime, endTime, status, purpose, rejectReason, createdAt }]
-export async function fetchMyReservations() {
-  const res = await fetch(`${BASE}/reservations/me`);
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-/// 강의실 예약 취소 — PENDING만 가능, 로그인 필요
-export async function cancelReservation(id) {
-  const res = await fetch(`${BASE}/reservations/${id}`, {method: 'DELETE'});
-  if (!res.ok) throw new Error(await res.text());
-}
-
-// ── 상담 예약 관련 ──
-
-/// 상담사 목록 — dept: "ACADEMIC" | "STUDENT" | "CAREER" (null이면 전체)
-/// 응답: [{ id, name, department, position, specialization }]
-export async function fetchCounselors(dept) {
-  const q = dept ? `?dept=${dept}` : '';
-  const res = await fetch(`${BASE}/counseling/counselors${q}`);
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-/// 해당 상담사+날짜의 예약 현황 — 공개 API
-/// 응답: [{ id, counselorName, department, date, startTime, endTime, status, topic, memo, createdAt }]
-export async function fetchCounselingSlots(counselorId, date) {
-  const res = await fetch(`${BASE}/counseling/slots?counselorId=${counselorId}&date=${date}`);
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-/// 상담 예약 신청 — 로그인 필요
-/// data: { counselorId, date, startTime, endTime, topic, memo }
-export async function createCounselingReservation(data) {
-  const res = await fetch(`${BASE}/counseling/reservations`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-/// 내 상담 예약 내역 — 로그인 필요
-/// 응답: [{ id, counselorName, department, date, startTime, endTime, status, topic, memo, createdAt }]
-export async function fetchMyCounselingReservations() {
-  const res = await fetch(`${BASE}/counseling/reservations/me`);
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-/// 상담 예약 취소 — PENDING만 가능, 로그인 필요
-export async function cancelCounselingReservation(id) {
-  const res = await fetch(`${BASE}/counseling/reservations/${id}`, {method: 'DELETE'});
   if (!res.ok) throw new Error(await res.text());
 }

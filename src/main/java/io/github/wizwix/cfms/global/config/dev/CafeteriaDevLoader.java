@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @Profile("dev")
@@ -45,8 +46,10 @@ public class CafeteriaDevLoader implements DevDataLoader {
 
   @Override
   public void load() {
+    if (storeRepo.count() > 0) return;
     loadStores();
     loadMeals();
+    log.info("Loaded dev cafeteria data: {} stores, {} meals", storeRepo.count(), mealRepo.count());
   }
 
   @Override
@@ -71,19 +74,22 @@ public class CafeteriaDevLoader implements DevDataLoader {
     }
   }
 
+  /// meal 데이터 정리.
+  /// 기존에는 LocalDate.now()로 '오늘' 데이터만 삭제했으나,
+  /// 앱을 다른 날짜에 실행했던 데이터가 남는 문제가 있어서
+  /// mealType 기준으로 모든 날짜의 데이터를 삭제하도록 변경.
   private void unloadMeals() {
     JsonNode root = readJson("data/dev/cafeteria-meals.jsonc");
     if (root == null) return;
 
-    LocalDate today = LocalDate.now();
-
     for (JsonNode node : root) {
       MealType mealType = MealType.valueOf(node.get("mealType").asText());
-      mealRepo.findByDateAndMealType(today, mealType).ifPresent(existing -> {
+      List<CafeteriaMeal> meals = mealRepo.findByMealType(mealType);
+      for (CafeteriaMeal existing : meals) {
         mealItemRepo.deleteByMeal(existing);
         mealRepo.delete(existing);
-        log.info("Unloaded dev cafeteria meal: ({} / {})", mealType, today);
-      });
+        log.info("Unloaded dev cafeteria meal: ({} / {})", mealType, existing.getDate());
+      }
     }
   }
 

@@ -14,4 +14,7 @@ public interface CafeteriaMealRepository extends JpaRepository<CafeteriaMeal, Lo
   List<CafeteriaMeal> findByDate(LocalDate date);
 
   Optional<CafeteriaMeal> findByDateAndMealType(LocalDate date, MealType mealType);
+
+  /// unload 시 날짜 무관하게 mealType으로 전체 조회 (이전 날짜 잔존 데이터 정리용)
+  List<CafeteriaMeal> findByMealType(MealType mealType);
 }

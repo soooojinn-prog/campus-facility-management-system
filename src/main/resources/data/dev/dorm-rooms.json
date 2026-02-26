@@ -1,0 +1,752 @@
+[
+  {
+    "floor": 1,
+    "roomNumber": "M101",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M102",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M103",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M104",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M105",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M106",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M107",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M108",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M109",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M110",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M111",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M112",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M113",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M114",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "M115",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M201",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M202",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M203",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M204",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M205",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M206",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M207",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M208",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M209",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M210",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M211",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M212",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M213",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M214",
+    "gender": "MALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "M215",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M301",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M302",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M303",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M304",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M305",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M306",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M307",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M308",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M309",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M310",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M311",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M312",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M313",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M314",
+    "gender": "MALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "M315",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M401",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M402",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M403",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M404",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M405",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M406",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M407",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M408",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M409",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M410",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M411",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M412",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M413",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M414",
+    "gender": "MALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "M415",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M501",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M502",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M503",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M504",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M505",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M506",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M507",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M508",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M509",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M510",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M511",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M512",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M513",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M514",
+    "gender": "MALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "M515",
+    "gender": "MALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F101",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F102",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F103",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F104",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F105",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F106",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F107",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F108",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F109",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F110",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F111",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F112",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F113",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F114",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 1,
+    "roomNumber": "F115",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F201",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F202",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F203",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F204",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F205",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F206",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F207",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F208",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F209",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F210",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F211",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F212",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F213",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F214",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 2,
+    "roomNumber": "F215",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F301",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F302",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F303",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F304",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F305",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F306",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F307",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F308",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F309",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F310",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F311",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F312",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F313",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F314",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 3,
+    "roomNumber": "F315",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F401",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F402",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F403",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F404",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F405",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F406",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F407",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F408",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F409",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F410",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F411",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F412",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F413",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F414",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 4,
+    "roomNumber": "F415",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F501",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F502",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F503",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F504",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F505",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F506",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F507",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F508",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F509",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F510",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F511",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F512",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F513",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F514",
+    "gender": "FEMALE"
+  },
+  {
+    "floor": 5,
+    "roomNumber": "F515",
+    "gender": "FEMALE"
+  }
+]

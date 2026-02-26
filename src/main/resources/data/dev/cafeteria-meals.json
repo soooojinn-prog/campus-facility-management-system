@@ -1,0 +1,83 @@
+[
+  {
+    "mealType": "BREAKFAST",
+    "time": "08:00 ~ 09:30",
+    "icon": "\uD83C\uDF05",
+    "items": [
+      {
+        "name": "토스트 & 스크램블 에그",
+        "price": 2500,
+        "discountPrice": null,
+        "discountLabel": null
+      },
+      {
+        "name": "미역국 + 쌀밥 정식",
+        "price": 3000,
+        "discountPrice": null,
+        "discountLabel": null
+      },
+      {
+        "name": "시리얼 & 우유",
+        "price": 1500,
+        "discountPrice": 1000,
+        "discountLabel": "조식 특가"
+      }
+    ]
+  },
+  {
+    "mealType": "LUNCH",
+    "time": "11:30 ~ 13:30",
+    "icon": "☀\uFE0F",
+    "items": [
+      {
+        "name": "돈까스 정식",
+        "price": 4500,
+        "discountPrice": null,
+        "discountLabel": null
+      },
+      {
+        "name": "김치찌개 + 쌀밥",
+        "price": 4000,
+        "discountPrice": 3500,
+        "discountLabel": "이번 주 할인"
+      },
+      {
+        "name": "비빔밥",
+        "price": 4000,
+        "discountPrice": null,
+        "discountLabel": null
+      },
+      {
+        "name": "우동",
+        "price": 3500,
+        "discountPrice": null,
+        "discountLabel": null
+      }
+    ]
+  },
+  {
+    "mealType": "DINNER",
+    "time": "17:00 ~ 19:00",
+    "icon": "\uD83C\uDF19",
+    "items": [
+      {
+        "name": "제육볶음 정식",
+        "price": 4500,
+        "discountPrice": 3800,
+        "discountLabel": "석식 할인"
+      },
+      {
+        "name": "된장찌개 + 쌀밥",
+        "price": 4000,
+        "discountPrice": null,
+        "discountLabel": null
+      },
+      {
+        "name": "라면 + 김밥 세트",
+        "price": 3500,
+        "discountPrice": null,
+        "discountLabel": null
+      }
+    ]
+  }
+]
