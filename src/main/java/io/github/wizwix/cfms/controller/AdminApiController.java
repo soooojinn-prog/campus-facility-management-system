@@ -19,7 +19,7 @@ public class AdminApiController {
           {
             "id": 1,
             "name": "동아리_이름",
-            "description": "엄청 긴 소개문asdf",
+            "description": "엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf엄청 긴 소개문asdf",
             "slug": "test",
             "president": "회장님",
             "status": "PENDING",
