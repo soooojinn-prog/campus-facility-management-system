@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.LongAdder;
 
 @Component
 @Profile("dev")
@@ -27,24 +28,27 @@ public class UserDevLoader extends BaseDevLoader<User> {
 
   @Override
   public void load() {
+    LongAdder adder = new LongAdder();
     processItems(user -> {
       if (!repo.existsByNumber(user.getNumber())) {
-        String rawPassword = user.getPassword();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         user.setEnabled(true);
 
         repo.save(user);
-        log.info("Loaded dev user: ({} / {} / {})", user.getNumber(), rawPassword, user.getRole());
+        adder.increment();
       }
     });
+    log.info("Dev Profile: Loaded {} users", adder.sum());
   }
 
   @Override
   public void unload() {
+    LongAdder adder = new LongAdder();
     processItems(user -> repo.findByNumber(user.getNumber()).ifPresent(existing -> {
       repo.delete(existing);
-      log.info("Unloaded dev user: ({} / {} / {})", existing.getNumber(), existing.getName(), existing.getRole());
+      adder.increment();
     }));
+    log.info("Dev Profile: Unloaded {} users", adder.sum());
   }
 }

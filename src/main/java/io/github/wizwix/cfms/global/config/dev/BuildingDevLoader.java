@@ -10,6 +10,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.LongAdder;
+
 @Component("buildingDevLoader")
 @Profile("dev")
 @Order(1)
@@ -24,19 +26,23 @@ public class BuildingDevLoader extends BaseDevLoader<Building> {
 
   @Override
   public void load() {
+    LongAdder adder = new LongAdder();
     processItems(building -> {
       if (!repo.existsBySlug(building.getSlug())) {
         repo.save(building);
-        log.info("Loaded dev building: ({} / {} / {})", building.getName(), building.getSlug(), building.getInfo());
+        adder.increment();
       }
     });
+    log.info("Dev Profile: Loaded {} buildings", adder.sum());
   }
 
   @Override
   public void unload() {
+    LongAdder adder = new LongAdder();
     processItems(building -> repo.findBySlug(building.getSlug()).ifPresent(existing -> {
       repo.delete(existing);
-      log.info("Unloaded dev building: ({} / {} / {})", existing.getName(), existing.getSlug(), existing.getInfo());
+      adder.increment();
     }));
+    log.info("Dev Profile: Unloaded {} buildings", adder.sum());
   }
 }

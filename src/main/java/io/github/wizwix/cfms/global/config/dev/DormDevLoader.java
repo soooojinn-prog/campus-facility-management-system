@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.LongAdder;
+
 @Component
 @Profile("dev")
 @Slf4j
@@ -22,16 +24,19 @@ public class DormDevLoader extends BaseDevLoader<DormRoom> {
 
   @Override
   public void load() {
+    LongAdder adder = new LongAdder();
     processItems(room -> {
       if (!repo.existsByRoomNumber(room.getRoomNumber())) {
         repo.save(room);
-        log.info("Loaded dev dorm room: ({} / {} / {})", room.getRoomNumber(), room.getGender(), room.getFloor());
+        adder.increment();
       }
     });
+    log.info("Dev Profile: Loaded {} dorms", adder.sum());
   }
 
   @Override
   public void unload() {
+
     processItems(room -> repo.findByRoomNumber(room.getRoomNumber()).ifPresent(existing -> {
       repo.delete(existing);
       log.info("Unloaded dev dorm room: ({} / {} / {})", existing.getRoomNumber(), existing.getGender(), existing.getFloor());

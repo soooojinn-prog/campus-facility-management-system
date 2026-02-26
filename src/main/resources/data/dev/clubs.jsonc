@@ -1,0 +1,50 @@
+[
+  {
+    "createdAt": "2026-01-15T12:56:05",
+    "description": "순수문학을 읽고 그에 대해 토의하는 동아리입니다.",
+    "name": "순수문학 연구 동아리",
+    "president": "26001002",
+    "slug": "literature",
+    "status": "PENDING"
+  },
+  {
+    "createdAt": "2026-01-15T12:56:05",
+    "description": "최신 AI 트렌드에 대해 토의하고 이를 직접 시험해보는 동아리입니다.",
+    "name": "AI 연구회",
+    "president": "26001002",
+    "slug": "ai",
+    "status": "APPROVED"
+  },
+  {
+    "createdAt": "2026-01-15T12:56:05",
+    "description": "<개설이 거부된 동아리 1>",
+    "name": "<거부된 동아리 1>",
+    "president": "26001002",
+    "slug": "wxoebeiof",
+    "status": "REJECTED"
+  },
+  {
+    "createdAt": "2026-01-15T12:56:05",
+    "description": "현대문학에 대해 토의하는 동아리입니다",
+    "name": "현대문학 탐구 동아리",
+    "president": "26001002",
+    "slug": "modernlit",
+    "status": "PENDING"
+  },
+  {
+    "createdAt": "2026-01-15T12:56:05",
+    "description": "<개설이 거부된 동아리 2>",
+    "name": "<거부된 동아리 2>",
+    "president": "26001002",
+    "slug": "jsbuwidn",
+    "status": "REJECTED"
+  },
+  {
+    "createdAt": "2026-01-15T12:56:05",
+    "description": "축구를 사랑하는 사람들의 모임입니다",
+    "name": "볼 키커스",
+    "president": "26001002",
+    "slug": "ballkick",
+    "status": "PENDING"
+  }
+]

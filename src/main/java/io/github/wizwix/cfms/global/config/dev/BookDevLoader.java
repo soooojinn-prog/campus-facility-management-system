@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.LongAdder;
+
 @Component
 @Profile("dev")
 @Slf4j
@@ -22,19 +24,23 @@ public class BookDevLoader extends BaseDevLoader<Book> {
 
   @Override
   public void load() {
+    LongAdder adder = new LongAdder();
     processItems(book -> {
       if (!repo.existsByTitleAndAuthor(book.getTitle(), book.getAuthor())) {
         repo.save(book);
-        log.info("Loaded dev book: ({} / {} / {})", book.getTitle(), book.getAuthor(), book.getPublisher());
+        adder.increment();
       }
     });
+    log.info("Dev Profile: Loaded {} books", adder.sum());
   }
 
   @Override
   public void unload() {
+    LongAdder adder = new LongAdder();
     processItems(book -> repo.findByTitleAndAuthor(book.getTitle(), book.getAuthor()).ifPresent(existing -> {
       repo.delete(existing);
-      log.info("Unloaded dev book: ({} / {} / {})", existing.getTitle(), existing.getAuthor(), existing.getPublisher());
+      adder.increment();
     }));
+    log.info("Dev Profile: Unloaded {} books", adder.sum());
   }
 }
