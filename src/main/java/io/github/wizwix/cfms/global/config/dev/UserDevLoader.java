@@ -6,6 +6,7 @@ import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.repo.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.LongAdder;
 @Component
 @Profile("dev")
 @Slf4j
+@Order(1)
 public class UserDevLoader extends BaseDevLoader<User> {
   private final PasswordEncoder encoder;
   private final UserRepository repo;

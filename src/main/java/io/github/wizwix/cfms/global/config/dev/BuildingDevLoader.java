@@ -14,8 +14,8 @@ import java.util.concurrent.atomic.LongAdder;
 
 @Component("buildingDevLoader")
 @Profile("dev")
-@Order(1)
 @Slf4j
+@Order(2)
 public class BuildingDevLoader extends BaseDevLoader<Building> {
   private final BuildingRepository repo;
 

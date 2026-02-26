@@ -36,7 +36,7 @@ public class Room {
   private Long id;
   /// 방 번호 (e.g. '104호')
   private String name;
-  /// 방이 속한 건물 — JSONC에서 slug(String)로 참조, Jackson이 BuildingSlugDeserializer로 자동 변환
+  /// 방이 속한 건물 (e.g. '강의동 1')
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonDeserialize(using = BuildingSlugDeserializer.class)
   private Building building;
@@ -47,4 +47,8 @@ public class Room {
   /// 방 유형
   @Enumerated(EnumType.STRING)
   private RoomType type;
+
+  public String getFullName() {
+    return (building != null ? building.getName() : "") + " " + name;
+  }
 }
