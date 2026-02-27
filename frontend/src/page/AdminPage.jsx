@@ -13,9 +13,12 @@ import {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext.jsx';
 import {
-  fetchAdminClubs, updateAdminClubStatus,
-  fetchAdminReservations, updateAdminReservationStatus,
-  fetchAdminDorms, updateAdminDormStatus,
+  fetchAdminClubs,
+  fetchAdminDorms,
+  fetchAdminReservations,
+  updateAdminClubStatus,
+  updateAdminDormStatus,
+  updateAdminReservationStatus,
 } from '../data/api.js';
 
 const TABS = [

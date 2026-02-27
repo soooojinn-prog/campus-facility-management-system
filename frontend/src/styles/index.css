@@ -551,4 +551,6 @@ body { background: #F5F7FA; font-family: 'Noto Sans KR', sans-serif; min-height:
 }
 
 /* ── 도서관 로딩 스피너 ── */
-@keyframes lib-spin { to { transform: rotate(360deg); } }
+@keyframes lib-spin {
+  to { transform: rotate(360deg); }
+}

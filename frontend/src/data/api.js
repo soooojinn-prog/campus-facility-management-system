@@ -289,7 +289,7 @@ export async function fetchReadingRoomSeats(buildingId, roomId) {
 export async function reserveSeat(buildingId, roomId, seatNo) {
   const res = await fetch(
       `${BASE}/buildings/${buildingId}/library/reading-rooms/${roomId}/seats/${seatNo}/reserve`,
-      {method: 'POST', headers: {'Content-Type': 'application/json'}}
+      {method: 'POST', headers: {'Content-Type': 'application/json'}},
   );
   if (!res.ok) throw new Error(await parseErrorMessage(res, '좌석 예약에 실패했습니다.'));
 }
@@ -323,7 +323,7 @@ export async function fetchStudyRooms(buildingId) {
 /// 스터디룸 예약 현황 (시간 슬롯) 조회
 export async function fetchStudyRoomSlots(buildingId, roomId, date) {
   const res = await fetch(
-      `${BASE}/buildings/${buildingId}/library/study-rooms/${roomId}/slots?date=${date}`
+      `${BASE}/buildings/${buildingId}/library/study-rooms/${roomId}/slots?date=${date}`,
   );
   if (!res.ok) throw new Error('예약 현황을 불러오지 못했습니다.');
   return res.json();
@@ -337,7 +337,7 @@ export async function reserveStudyRoom(buildingId, roomId, {date, startHour}) {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({date, startHour}),
-      }
+      },
   );
   if (!res.ok) throw new Error(await parseErrorMessage(res, '스터디룸 예약에 실패했습니다.'));
 }

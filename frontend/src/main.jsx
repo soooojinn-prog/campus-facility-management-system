@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/index.css';
 import {Header} from './components/Header.jsx';
 import {AuthProvider} from './context/AuthContext.jsx';
+import {BUILDING_POLYGONS} from './data/buildings.js';
 import {AdminPage} from './page/AdminPage.jsx';
 import {BuildingPage} from './page/BuildingPage.jsx';
 import {CafeteriaPage} from './page/CafeteriaPage.jsx';
@@ -13,7 +14,6 @@ import {CounselingPage} from './page/CounselingPage.jsx';
 import {DormitoryPage} from './page/DormitoryPage.jsx';
 import {LibraryPage} from './page/LibraryPage.jsx';
 import {MyPage} from './page/MyPage.jsx';
-import {BUILDING_POLYGONS} from './data/buildings.js';
 
 createRoot(document.getElementById('root')).render(<StrictMode>
   <BrowserRouter>
