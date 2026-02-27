@@ -1,0 +1,17 @@
+name: Check PR is up-to-date
+on:
+  pull_request_target:
+    branches: [ main ]
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Handle Pull Request
+        if: github.event_name != 'push'
+        uses: Automattic/action-pr-is-up-to-date@v2
+        with:
+          token: ${{ secrets.API_TOKEN_GITHUB }}
+          tags: latest
+          description-ok: PR이 최신 커밋에 기반하고 있습니다
+          description-fail: PR이 최신 커밋에 기반하고 있지 않습니다. 최신 커밋을 기반으로 Rebase 해주세요.
