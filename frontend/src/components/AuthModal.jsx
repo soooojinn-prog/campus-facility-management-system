@@ -73,8 +73,9 @@ export function AuthModal({onClose}) {
       return;
     }
 
+    const roleMap = {'학생': 'ROLE_STUDENT', '교수': 'ROLE_PROFESSOR'};
     try {
-      await signupApi(signupId, signupPw, signupName, signupEmail, selectedGender);
+      await signupApi(signupId, signupPw, signupName, signupEmail, selectedGender, roleMap[selectedRole]);
       alert(`회원가입이 완료되었습니다!\n${signupName}님, 로그인해주세요.`);
       setTab('login');
     } catch (e) {

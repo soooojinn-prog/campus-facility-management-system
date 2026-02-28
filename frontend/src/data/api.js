@@ -110,7 +110,15 @@ export async function applyDorm(data) {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    try {
+      const json = JSON.parse(await res.text());
+      throw new Error(json.message || '기숙사 신청에 실패했습니다.');
+    } catch (e) {
+      if (e instanceof SyntaxError) throw new Error('기숙사 신청에 실패했습니다.');
+      throw e;
+    }
+  }
   return res.json();
 }
 
@@ -375,4 +383,22 @@ export async function fetchMyStudyRoomReservations(buildingId) {
   const res = await fetch(`${BASE}/buildings/${buildingId}/library/study-rooms/reservations/me`);
   if (!res.ok) throw new Error(await res.text());
   return res.json();
+}
+
+/// 열람실 좌석 예약 취소 — 로그인 필요
+export async function cancelSeatReservation(buildingId, reservationId) {
+  const res = await fetch(
+      `${BASE}/buildings/${buildingId}/library/reading-rooms/reservations/${reservationId}`,
+      {method: 'DELETE'},
+  );
+  if (!res.ok) throw new Error(await parseErrorMessage(res, '좌석 예약 취소에 실패했습니다.'));
+}
+
+/// 스터디룸 예약 취소 — 로그인 필요
+export async function cancelStudyRoomReservation(buildingId, reservationId) {
+  const res = await fetch(
+      `${BASE}/buildings/${buildingId}/library/study-rooms/reservations/${reservationId}`,
+      {method: 'DELETE'},
+  );
+  if (!res.ok) throw new Error(await parseErrorMessage(res, '스터디룸 예약 취소에 실패했습니다.'));
 }

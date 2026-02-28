@@ -87,6 +87,14 @@ public class UserService implements IUserService {
   public void register(RequestRegister request) {
     if (userRepository.findByNumber(request.userNumber()).isPresent())
       throw new IllegalArgumentException("이미 존재하는 학번/교번입니다.");
+    if (userRepository.findByEmail(request.email()).isPresent())
+      throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+
+    // 요청된 역할이 유효하면 사용, 그 외엔 ROLE_STUDENT 기본값
+    UserRole role = UserRole.ROLE_STUDENT;
+    if (request.role() != null) {
+      try { role = UserRole.valueOf(request.role()); } catch (IllegalArgumentException ignored) {}
+    }
 
     User user = new User();
     user.setNumber(request.userNumber());
@@ -94,12 +102,11 @@ public class UserService implements IUserService {
     user.setPassword(passwordEncoder.encode(request.password()));
     user.setEmail(request.email());
     user.setCreatedAt(LocalDateTime.now());
-    user.setRole(UserRole.ROLE_STUDENT);
+    user.setRole(role);
     if (request.gender() != null) {
       user.setGender(request.gender());
     }
 
-    // `.save` is redundant but I'll make sure the line exists
     userRepository.save(user);
   }
 
