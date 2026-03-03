@@ -5,14 +5,15 @@ import io.github.wizwix.cfms.dto.response.dorm.ResponseDormApplyResult;
 import io.github.wizwix.cfms.dto.response.dorm.ResponseDormFloor;
 import io.github.wizwix.cfms.dto.response.dorm.ResponseDormMyApplication;
 import io.github.wizwix.cfms.dto.response.dorm.ResponseDormRoom;
-import io.github.wizwix.cfms.model.DormApplication;
-import io.github.wizwix.cfms.model.DormRoom;
+import io.github.wizwix.cfms.exception.NotFoundException;
 import io.github.wizwix.cfms.model.User;
+import io.github.wizwix.cfms.model.dorm.DormApplication;
+import io.github.wizwix.cfms.model.dorm.DormRoom;
 import io.github.wizwix.cfms.model.enums.DormApplicationStatus;
 import io.github.wizwix.cfms.model.enums.Gender;
-import io.github.wizwix.cfms.repo.DormApplicationRepository;
-import io.github.wizwix.cfms.repo.DormRoomRepository;
 import io.github.wizwix.cfms.repo.UserRepository;
+import io.github.wizwix.cfms.repo.dorm.DormApplicationRepository;
+import io.github.wizwix.cfms.repo.dorm.DormRoomRepository;
 import io.github.wizwix.cfms.service.iface.IDormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,12 @@ public class DormService implements IDormService {
   private final UserRepository userRepo;
 
   @Override
-  public ResponseDormApplyResult apply(User currentUser, RequestDormApply request) {
-    DormRoom room = dormRoomRepo.findById(request.roomId())
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 호실입니다."));
+  public ResponseDormApplyResult apply(String userNumber, RequestDormApply request) {
+    User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new NotFoundException("존재하지 않는 호실입니다."));
+    DormRoom room = dormRoomRepo.findById(request.roomId()).orElseThrow(() -> new NotFoundException("존재하지 않는 호실입니다."));
 
     // 성별 일치 검사
-    if (currentUser.getGender() != room.getGender()) {
+    if (user.getGender() != room.getGender()) {
       throw new IllegalArgumentException("본인의 성별에 맞는 기숙사만 신청할 수 있습니다.");
     }
 
@@ -46,7 +47,7 @@ public class DormService implements IDormService {
 
     // 중복 신청 검사
     List<DormApplicationStatus> activeStatuses = List.of(DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED);
-    if (dormAppRepo.existsByApplicantAndSemesterAndStatusIn(currentUser, semester, activeStatuses)) {
+    if (dormAppRepo.existsByApplicantAndSemesterAndStatusIn(user, semester, activeStatuses)) {
       throw new IllegalArgumentException("이미 해당 학기에 기숙사를 신청하셨습니다.");
     }
 
@@ -60,9 +61,8 @@ public class DormService implements IDormService {
     // partner 처리
     User partner = null;
     if (request.partnerNumber() != null && !request.partnerNumber().isBlank()) {
-      partner = userRepo.findByNumberAndEnabledTrue(request.partnerNumber())
-          .orElseThrow(() -> new IllegalArgumentException("같이 신청할 인원의 학번이 존재하지 않습니다."));
-      if (partner.getId().equals(currentUser.getId())) {
+      partner = userRepo.findByNumberAndEnabledTrue(request.partnerNumber()).orElseThrow(() -> new IllegalArgumentException("같이 신청할 인원의 학번이 존재하지 않습니다."));
+      if (partner.getId().equals(user.getId())) {
         throw new IllegalArgumentException("본인의 학번은 입력할 수 없습니다.");
       }
       if (partner.getGender() != room.getGender()) {
@@ -84,7 +84,7 @@ public class DormService implements IDormService {
 
     DormApplication application = new DormApplication();
     application.setRoom(room);
-    application.setApplicant(currentUser);
+    application.setApplicant(user);
     application.setPartner(partner);
     application.setSemester(semester);
     application.setPeriod(request.period());
@@ -92,9 +92,7 @@ public class DormService implements IDormService {
     application.setCreatedAt(LocalDateTime.now());
     dormAppRepo.save(application);
 
-    String message = partner != null
-        ? room.getRoomNumber() + "호에 " + currentUser.getName() + ", " + partner.getName() + " 같이 신청이 완료되었습니다."
-        : room.getRoomNumber() + "호에 신청이 완료되었습니다.";
+    String message = partner != null ? room.getRoomNumber() + "호에 " + user.getName() + ", " + partner.getName() + " 같이 신청이 완료되었습니다." : room.getRoomNumber() + "호에 신청이 완료되었습니다.";
 
     return new ResponseDormApplyResult(application.getId(), room.getRoomNumber(), message);
   }
@@ -102,9 +100,9 @@ public class DormService implements IDormService {
   /// 기숙사 신청 취소 — PENDING만 가능
   /// 본인 신청인지 확인 후, status를 CANCELLED로 변경 (DB 삭제 아님)
   @Override
-  public void cancelApplication(User user, Long applicationId) {
-    DormApplication app = dormAppRepo.findById(applicationId)
-        .orElseThrow(() -> new IllegalArgumentException("신청 내역을 찾을 수 없습니다."));
+  public void cancelApplication(String number, Long applicationId) {
+    User user = userRepo.findByNumber(number).orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
+    DormApplication app = dormAppRepo.findById(applicationId).orElseThrow(() -> new NotFoundException("신청 내역을 찾을 수 없습니다."));
     if (!app.getApplicant().getId().equals(user.getId())) {
       throw new IllegalArgumentException("본인의 신청만 취소할 수 있습니다.");
     }
@@ -122,9 +120,7 @@ public class DormService implements IDormService {
 
     // 승인된 신청 기준으로 각 호실별 입주 인원 계산
     List<DormApplicationStatus> activeStatuses = List.of(DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED);
-    List<DormApplication> applications = rooms.isEmpty()
-        ? List.of()
-        : dormAppRepo.findByRoomInAndSemesterAndStatusIn(rooms, semester, activeStatuses);
+    List<DormApplication> applications = rooms.isEmpty() ? List.of() : dormAppRepo.findByRoomInAndSemesterAndStatusIn(rooms, semester, activeStatuses);
 
     // roomId → 입주 인원 수 및 입주자 이름
     Map<Long, Integer> occupancyMap = new HashMap<>();
@@ -149,10 +145,7 @@ public class DormService implements IDormService {
       floorMap.computeIfAbsent(room.getFloor(), k -> new ArrayList<>()).add(dto);
     }
 
-    return floorMap.entrySet().stream()
-        .sorted(Map.Entry.comparingByKey())
-        .map(e -> new ResponseDormFloor(e.getKey(), e.getValue()))
-        .toList();
+    return floorMap.entrySet().stream().sorted(Map.Entry.comparingByKey()).map(e -> new ResponseDormFloor(e.getKey(), e.getValue())).toList();
   }
 
   /// 현재 학기 문자열 (간단히 연도-학기로 생성)
@@ -167,25 +160,17 @@ public class DormService implements IDormService {
   /// partner가 있으면 이름을 그대로 반환 (마스킹 없음 — 본인 신청이므로)
   @Override
   @Transactional(readOnly = true)
-  public List<ResponseDormMyApplication> getMyApplications(User user) {
-    List<DormApplicationStatus> visibleStatuses = List.of(
-        DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED, DormApplicationStatus.REJECTED);
+  public List<ResponseDormMyApplication> getMyApplications(String userNumber) {
+    User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
+    List<DormApplicationStatus> visibleStatuses = List.of(DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED, DormApplicationStatus.REJECTED);
     List<DormApplication> apps = dormAppRepo.findByApplicantAndStatusIn(user, visibleStatuses);
-    return apps.stream().map(app -> new ResponseDormMyApplication(
-        app.getId(),
-        app.getRoom().getRoomNumber(),
-        app.getSemester(),
-        app.getPeriod(),
-        app.getStatus(),
-        app.getPartner() != null ? app.getPartner().getName() : null,
-        app.getCreatedAt()
-    )).toList();
+    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getPartner() != null ? app.getPartner().getName() : null, app.getCreatedAt())).toList();
   }
 
-  /// 이름 가운데 글자를 O로 마스킹 (개인정보 보호)
+  /// 이름 가운데 글자를 ○로 마스킹 (개인정보 보호)
   private String maskName(String name) {
     if (name == null || name.length() < 2) return name;
-    if (name.length() == 2) return name.charAt(0) + "O";
-    return name.charAt(0) + "O" + name.substring(2);
+    if (name.length() == 2) return name.charAt(0) + "○";
+    return name.charAt(0) + "○" + name.substring(2);
   }
 }

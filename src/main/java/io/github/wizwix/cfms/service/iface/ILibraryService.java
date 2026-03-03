@@ -10,36 +10,29 @@ import java.util.List;
 import java.util.Map;
 
 public interface ILibraryService {
+  ResponseLibraryCongestion getCongestion();
 
-  // 4. 혼잡도
-  ResponseLibraryCongestion getCongestion(Long buildingId);
-
-  // 6. 내 예약 조회 (마이페이지용)
   List<Map<String, Object>> getMySeatReservations(String userNumber);
 
   List<Map<String, Object>> getMyStudyRoomReservations(String userNumber);
 
-  ResponseLibraryNotice getNotice(Long buildingId, Long noticeId);
+  ResponseLibraryNotice getNotice(Long noticeId);
 
-  // 5. 공지사항
-  List<ResponseLibraryNotice> getNotices(Long buildingId);
+  List<ResponseLibraryNotice> getNotices();
 
-  ResponseLibraryReadingRoom getReadingRoomSeats(Long buildingId, Long roomId);
+  ResponseLibraryReadingRoom getReadingRoomSeats(Long roomId);
 
-  // 1. 열람실
-  List<ResponseLibraryReadingRoom> getReadingRooms(Long buildingId);
+  List<ResponseLibraryReadingRoom> getReadingRooms();
 
-  ResponseLibraryStudyRoom getStudyRoomSlots(Long buildingId, Long roomId, String date);
+  ResponseLibraryStudyRoom getStudyRoomSlots(Long roomId, String date);
 
-  // 3. 스터디룸
-  List<ResponseLibraryStudyRoom> getStudyRooms(Long buildingId);
+  List<ResponseLibraryStudyRoom> getStudyRooms();
 
-  void reserveBook(Long buildingId, Long bookId);
+  void reserveBook(Long bookId, String userNumber);
 
-  void reserveSeat(Long buildingId, Long roomId, Integer seatNo, String userNumber);
+  void reserveSeat(Long roomId, Integer seatNo, String userNumber);
 
-  void reserveStudyRoom(Long buildingId, Long roomId, String date, Integer startHour, String userNumber);
+  void reserveStudyRoom(Long roomId, String date, Integer startHour, String userNumber);
 
-  // 2. 도서 검색
-  List<ResponseLibraryBook> searchBooks(Long buildingId, String query, String publisher, String category);
+  List<ResponseLibraryBook> searchBooks(String q, String publisher, String category);
 }

@@ -2,7 +2,7 @@ package io.github.wizwix.cfms.controller;
 
 import io.github.wizwix.cfms.dto.response.building.ResponseBuilding;
 import io.github.wizwix.cfms.dto.response.room.ResponseRoom;
-import io.github.wizwix.cfms.service.BuildingService;
+import io.github.wizwix.cfms.service.iface.IBuildingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +16,12 @@ import java.util.List;
 @RequestMapping("/api/buildings")
 @RequiredArgsConstructor
 public class BuildingApiController {
-  private final BuildingService buildingService;
+  private final IBuildingService buildingService;
 
   /// 전체 건물 목록 조회
   @GetMapping
   public ResponseEntity<List<ResponseBuilding>> listAll() {
-    return ResponseEntity.ok(buildingService.getBuildingList());
+    return ResponseEntity.ok(buildingService.listAll());
   }
 
   /// 건물의 방 목록

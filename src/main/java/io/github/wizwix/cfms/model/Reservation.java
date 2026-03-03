@@ -1,5 +1,6 @@
 package io.github.wizwix.cfms.model;
 
+import io.github.wizwix.cfms.model.club.Club;
 import io.github.wizwix.cfms.model.enums.ReservationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

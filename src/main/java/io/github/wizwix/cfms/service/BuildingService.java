@@ -19,20 +19,20 @@ public class BuildingService implements IBuildingService {
   private final BuildingRepository buildingRepository;
   private final RoomRepository roomRepository;
 
-  public List<ResponseBuilding> getBuildingList() {
-    var list = new ArrayList<ResponseBuilding>();
-    buildingRepository.findAll().forEach(b -> {
-      var resp = new ResponseBuilding(b.getId(), b.getName(), b.getSlug(), b.getInfo(), b.getPoints(), b.getType(), b.getRentable());
-      list.add(resp);
-    });
-    return list;
-  }
-
   @Override
   public List<ResponseRoom> getRoomsBySlug(String slug) {
     List<ResponseRoom> list = new ArrayList<>();
     roomRepository.getRoomsByBuildingSlug(slug).forEach(r -> {
       var resp = new ResponseRoom(r.getId(), r.getBuilding().getName(), r.getName(), r.getFloor(), r.getType(), r.getCapacity());
+      list.add(resp);
+    });
+    return list;
+  }
+
+  public List<ResponseBuilding> listAll() {
+    var list = new ArrayList<ResponseBuilding>();
+    buildingRepository.findAll().forEach(b -> {
+      var resp = new ResponseBuilding(b.getId(), b.getName(), b.getSlug(), b.getInfo(), b.getPoints(), b.getType(), b.getRentable());
       list.add(resp);
     });
     return list;

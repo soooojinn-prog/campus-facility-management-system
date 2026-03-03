@@ -41,9 +41,7 @@ public class RoomDevLoader extends BaseDevLoader<Room> {
   protected void configureMapper(ObjectMapper mapper) {
     SimpleModule module = new SimpleModule();
     // String -> Building 변환
-    module.addDeserializer(Building.class, new EntityReferenceDeserializer<>(
-        building -> buildingRepo.findBySlug(building).orElseThrow(() -> new RuntimeException("Building[" + building + "] not found"))
-    ));
+    module.addDeserializer(Building.class, new EntityReferenceDeserializer<>(building -> buildingRepo.findBySlug(building).orElseThrow(() -> new RuntimeException("Building[" + building + "] not found"))));
     mapper.registerModule(module);
   }
 

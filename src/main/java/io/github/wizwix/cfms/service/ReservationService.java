@@ -44,8 +44,7 @@ public class ReservationService implements IReservationService {
 
   @Override
   public void cancelReservation(String userNumber, Long reservationId) {
-    Reservation reservation = reservationRepo.findById(reservationId)
-        .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+    Reservation reservation = reservationRepo.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
     if (!reservation.getUser().getNumber().equals(userNumber)) {
       throw new IllegalStateException("본인의 예약만 취소할 수 있습니다.");
     }
@@ -59,10 +58,8 @@ public class ReservationService implements IReservationService {
 
   @Override
   public ResponseReservation createReservation(String userNumber, RequestReservation req) {
-    User user = userRepo.findByNumber(userNumber)
-        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    Room room = roomRepo.findById(req.roomId())
-        .orElseThrow(() -> new IllegalArgumentException("호실을 찾을 수 없습니다."));
+    User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    Room room = roomRepo.findById(req.roomId()).orElseThrow(() -> new IllegalArgumentException("호실을 찾을 수 없습니다."));
 
     /// 시간 충돌 검사 — "겹침(overlap)" 조건:
     ///   기존 예약의 startTime < 새 예약의 endTime AND 기존 예약의 endTime > 새 예약의 startTime
@@ -71,9 +68,7 @@ public class ReservationService implements IReservationService {
     ///   주의: JPA 메서드명에서 파라미터 순서가 직관과 다름
     ///         ..LessThan(endTime) = DB.startTime < endTime
     ///         ..GreaterThan(startTime) = DB.endTime > startTime
-    List<Reservation> conflicts = reservationRepo
-        .findByRoomIdAndStartTimeLessThanAndEndTimeGreaterThanAndStatusIn(
-            room.getId(), req.endTime(), req.startTime(), ACTIVE_STATUSES);
+    List<Reservation> conflicts = reservationRepo.findByRoomIdAndStartTimeLessThanAndEndTimeGreaterThanAndStatusIn(room.getId(), req.endTime(), req.startTime(), ACTIVE_STATUSES);
     if (!conflicts.isEmpty()) {
       throw new IllegalStateException("선택한 시간에 이미 예약이 존재합니다.");
     }
@@ -95,9 +90,7 @@ public class ReservationService implements IReservationService {
   @Override
   @Transactional(readOnly = true)
   public List<ResponseReservation> getMyReservations(String userNumber) {
-    return reservationRepo.findByUserNumberAndStatusIn(userNumber, VISIBLE_STATUSES).stream()
-        .map(this::toResponse)
-        .toList();
+    return reservationRepo.findByUserNumberAndStatusIn(userNumber, VISIBLE_STATUSES).stream().map(this::toResponse).toList();
   }
 
   /// 관리자용 — 상태별 전체 예약 조회
@@ -105,9 +98,7 @@ public class ReservationService implements IReservationService {
   @Override
   @Transactional(readOnly = true)
   public List<ResponseReservation> getReservationsByStatus(ReservationStatus status) {
-    return reservationRepo.findByStatus(status).stream()
-        .map(this::toResponse)
-        .toList();
+    return reservationRepo.findByStatus(status).stream().map(this::toResponse).toList();
   }
 
   @Override
@@ -115,9 +106,7 @@ public class ReservationService implements IReservationService {
   public List<ResponseReservation> getRoomReservations(Long roomId, LocalDate date) {
     LocalDateTime dayStart = date.atStartOfDay();
     LocalDateTime dayEnd = date.atTime(LocalTime.MAX);
-    return reservationRepo.findByRoomIdAndStartTimeBetweenAndStatusIn(roomId, dayStart, dayEnd, ACTIVE_STATUSES).stream()
-        .map(this::toResponse)
-        .toList();
+    return reservationRepo.findByRoomIdAndStartTimeBetweenAndStatusIn(roomId, dayStart, dayEnd, ACTIVE_STATUSES).stream().map(this::toResponse).toList();
   }
 
   /// 관리자용 — 예약 승인/거절 처리
@@ -133,13 +122,11 @@ public class ReservationService implements IReservationService {
   ///   (별도 알림 시스템 없이, ResponseReservation.rejectReason 필드로 전달)
   @Override
   public void updateReservationStatus(Long id, ReservationStatus status, String rejectReason, String adminNumber) {
-    Reservation reservation = reservationRepo.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+    Reservation reservation = reservationRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
     if (reservation.getStatus() != ReservationStatus.PENDING) {
       throw new IllegalStateException("승인 대기 중인 예약만 처리할 수 있습니다.");
     }
-    User admin = userRepo.findByNumber(adminNumber)
-        .orElseThrow(() -> new IllegalArgumentException("관리자를 찾을 수 없습니다."));
+    User admin = userRepo.findByNumber(adminNumber).orElseThrow(() -> new IllegalArgumentException("관리자를 찾을 수 없습니다."));
     reservation.setStatus(status);
     reservation.setRejectReason(status == ReservationStatus.REJECTED ? rejectReason : null);
     reservation.setProcessedBy(admin);
@@ -148,18 +135,6 @@ public class ReservationService implements IReservationService {
   }
 
   private ResponseReservation toResponse(Reservation r) {
-    return new ResponseReservation(
-        r.getId(),
-        r.getRoom().getName(),
-        r.getRoom().getBuilding().getName(),
-        r.getUser().getName(),
-        r.getClub() != null ? r.getClub().getName() : null,
-        r.getStartTime(),
-        r.getEndTime(),
-        r.getStatus(),
-        r.getPurpose(),
-        r.getRejectReason(),
-        r.getCreatedAt()
-    );
+    return new ResponseReservation(r.getId(), r.getRoom().getName(), r.getRoom().getBuilding().getName(), r.getUser().getName(), r.getClub() != null ? r.getClub().getName() : null, r.getStartTime(), r.getEndTime(), r.getStatus(), r.getPurpose(), r.getRejectReason(), r.getCreatedAt());
   }
 }

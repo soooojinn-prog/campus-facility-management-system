@@ -7,7 +7,7 @@ import io.github.wizwix.cfms.dto.request.auth.RequestPasswordResetVerify;
 import io.github.wizwix.cfms.dto.request.auth.RequestRegister;
 import io.github.wizwix.cfms.dto.response.auth.ResponseLogin;
 import io.github.wizwix.cfms.global.security.JwtUtils;
-import io.github.wizwix.cfms.service.UserService;
+import io.github.wizwix.cfms.service.iface.IUserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthApiController {
   private final JwtUtils jwtUtils;
-  private final UserService userService;
+  private final IUserService userService;
 
   /// 로그인
   @PostMapping("/login")
@@ -52,19 +52,19 @@ public class AuthApiController {
 
     resp.addCookie(cookie);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
     // `/`로 리다이렉션하는 것은 프론트엔드의 몫
   }
 
   /// 비밀번호 재설정 (3단계)
-  @PatchMapping("/password-reset")
-  public ResponseEntity<Void> passwordReset(@Valid @RequestBody RequestPasswordResetConfirm request) {
+  @PatchMapping("/password-reset/confirm")
+  public ResponseEntity<Void> passwordResetConfirm(@Valid @RequestBody RequestPasswordResetConfirm request) {
     userService.confirmPasswordReset(request);
     return ResponseEntity.ok().build();
   }
 
   /// 비밀번호 재설정 (1단계)
-  @PostMapping("/password-reset/request")
+  @PostMapping("/password-reset")
   public ResponseEntity<Void> passwordResetRequest(@Valid @RequestBody RequestPasswordResetRequest request) {
     userService.requestPasswordReset(request);
     return ResponseEntity.ok().build();

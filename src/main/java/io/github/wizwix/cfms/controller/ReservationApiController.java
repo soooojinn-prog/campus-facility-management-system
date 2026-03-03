@@ -3,6 +3,7 @@ package io.github.wizwix.cfms.controller;
 import io.github.wizwix.cfms.dto.request.reservation.RequestReservation;
 import io.github.wizwix.cfms.dto.response.reservation.ResponseReservation;
 import io.github.wizwix.cfms.service.iface.IReservationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -39,7 +40,7 @@ public class ReservationApiController {
   /// 시설 예약 신청 — PENDING 상태로 생성, 관리자 승인 후 APPROVED
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseReservation createReservation(Authentication auth, @RequestBody RequestReservation req) {
+  public ResponseReservation createReservation(Authentication auth, @RequestBody @Valid RequestReservation req) {
     return reservationService.createReservation(auth.getName(), req);
   }
 

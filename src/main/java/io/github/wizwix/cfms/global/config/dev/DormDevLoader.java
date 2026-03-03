@@ -2,8 +2,8 @@ package io.github.wizwix.cfms.global.config.dev;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.wizwix.cfms.global.config.dev.base.BaseDevLoader;
-import io.github.wizwix.cfms.model.DormRoom;
-import io.github.wizwix.cfms.repo.DormRoomRepository;
+import io.github.wizwix.cfms.model.dorm.DormRoom;
+import io.github.wizwix.cfms.repo.dorm.DormRoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;

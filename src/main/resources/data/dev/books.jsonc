@@ -4,164 +4,204 @@
     "author": "홍길동",
     "available": true,
     "category": "교양",
+    "location": "1층 교양 A-1",
     "publisher": "서울테크출판",
     "title": "캠퍼스 생활 가이드",
-    "viewCount": 120
+    "viewCount": 120,
+    "year": 2023
   },
   // 컴퓨터/IT
   {
     "author": "김자료",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-1",
     "publisher": "IT북스",
     "title": "자료구조 입문",
-    "viewCount": 340
+    "viewCount": 340,
+    "year": 2022
   },
   {
     "author": "박시스템",
     "available": false,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-2",
     "publisher": "컴퓨터사이언스",
     "title": "운영체제 개론",
-    "viewCount": 410
+    "viewCount": 410,
+    "year": 2021
   },
   {
     "author": "이디비",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-3",
     "publisher": "DB프레스",
     "title": "데이터베이스 설계",
-    "viewCount": 290
+    "viewCount": 290,
+    "year": 2022
   },
   {
     "author": "최웹",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-4",
     "publisher": "프론트북",
     "title": "웹 프로그래밍 실습",
-    "viewCount": 180
+    "viewCount": 180,
+    "year": 2023
   },
   {
     "author": "정자바",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-5",
     "publisher": "JAVABOOK",
     "title": "자바 프로그래밍",
-    "viewCount": 500
+    "viewCount": 500,
+    "year": 2020
   },
   {
     "author": "한스프링",
     "available": false,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-6",
     "publisher": "SpringPress",
     "title": "스프링 부트 실전",
-    "viewCount": 620
+    "viewCount": 620,
+    "year": 2023
   },
   {
     "author": "오리액트",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 B-7",
     "publisher": "ReactBooks",
     "title": "리액트 빠르게 배우기",
-    "viewCount": 430
+    "viewCount": 430,
+    "year": 2024
   },
   {
     "author": "유알고",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 C-1",
     "publisher": "코딩출판",
     "title": "알고리즘 문제 해결",
-    "viewCount": 710
+    "viewCount": 710,
+    "year": 2021
   },
   {
     "author": "신네트",
     "available": true,
     "category": "컴퓨터/IT",
+    "location": "3층 컴퓨터 C-2",
     "publisher": "NET프레스",
     "title": "네트워크 기초",
-    "viewCount": 260
+    "viewCount": 260,
+    "year": 2022
   },
   // AI/ML
   {
     "author": "박인공",
     "available": true,
     "category": "AI/ML",
+    "location": "3층 컴퓨터 D-1",
     "publisher": "AI프레스",
     "title": "인공지능 개론",
-    "viewCount": 900
+    "viewCount": 900,
+    "year": 2023
   },
   {
     "author": "이머신",
     "available": false,
     "category": "AI/ML",
+    "location": "3층 컴퓨터 D-2",
     "publisher": "ML북스",
     "title": "머신러닝 실습",
-    "viewCount": 850
+    "viewCount": 850,
+    "year": 2022
   },
   {
     "author": "김딥",
     "available": true,
     "category": "AI/ML",
+    "location": "3층 컴퓨터 D-3",
     "publisher": "DL프레스",
     "title": "딥러닝 첫걸음",
-    "viewCount": 780
+    "viewCount": 780,
+    "year": 2024
   },
   // 수학
   {
     "author": "최통계",
     "available": true,
     "category": "수학",
+    "location": "2층 자연과학 A-1",
     "publisher": "수학출판",
     "title": "확률과 통계",
-    "viewCount": 310
+    "viewCount": 310,
+    "year": 2020
   },
   {
     "author": "정선형",
     "available": true,
     "category": "수학",
+    "location": "2층 자연과학 A-2",
     "publisher": "수학출판",
     "title": "선형대수",
-    "viewCount": 270
+    "viewCount": 270,
+    "year": 2021
   },
   // 인문/사회
   {
     "author": "문인문",
     "available": true,
     "category": "인문/사회",
+    "location": "1층 교양 B-1",
     "publisher": "교양서적",
     "title": "인문학 산책",
-    "viewCount": 90
+    "viewCount": 90,
+    "year": 2019
   },
   {
     "author": "윤철학",
     "available": true,
     "category": "인문/사회",
+    "location": "1층 교양 B-2",
     "publisher": "교양서적",
     "title": "철학의 질문들",
-    "viewCount": 150
+    "viewCount": 150,
+    "year": 2020
   },
   {
     "author": "강경제",
     "available": false,
     "category": "인문/사회",
+    "location": "2층 사회과학 A-1",
     "publisher": "사회과학",
     "title": "경제학 원론",
-    "viewCount": 220
+    "viewCount": 220,
+    "year": 2018
   },
   {
     "author": "배심리",
     "available": true,
     "category": "인문/사회",
+    "location": "2층 사회과학 A-2",
     "publisher": "사회과학",
     "title": "심리학 이해",
-    "viewCount": 140
+    "viewCount": 140,
+    "year": 2021
   },
   {
     "author": "남글쓰기",
     "available": true,
     "category": "인문/사회",
+    "location": "1층 교양 B-3",
     "publisher": "대학필독",
     "title": "글쓰기와 발표",
-    "viewCount": 60
+    "viewCount": 60,
+    "year": 2022
   }
 ]

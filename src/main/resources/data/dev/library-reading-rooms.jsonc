@@ -1,0 +1,26 @@
+[
+  {
+    "name": "제1열람실",
+    "floor": "F2",
+    "totalSeats": 128,
+    "usedRate": 29
+  },
+  {
+    "name": "제2열람실",
+    "floor": "F3",
+    "totalSeats": 76,
+    "usedRate": 44
+  },
+  {
+    "name": "야간열람실",
+    "floor": "B1",
+    "totalSeats": 80,
+    "usedRate": 15
+  },
+  {
+    "name": "디지털열람실",
+    "floor": "F4",
+    "totalSeats": 60,
+    "usedRate": 92
+  }
+]

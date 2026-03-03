@@ -52,14 +52,14 @@ export async function fetchCurrentSemester() {
 /// 응답: { date, meals: [{ type, time, icon, items: [{ name, price, discount }] }] }
 export async function fetchTodayMeals(date) {
   const q = date ? `?date=${date}` : '';
-  const res = await fetch(`${BASE}/cafeteria/meals${q}`);
+  const res = await fetch(`${BASE}/cafeterias/meals${q}`);
   return res.json();
 }
 
 /// 푸드코트 가게 전체
 /// 응답: [{ id, name, desc, category, representative, hours, menu: [{ name, price, discount, popular }] }]
 export async function fetchFoodCourtStores() {
-  const res = await fetch(`${BASE}/cafeteria/foodcourt`);
+  const res = await fetch(`${BASE}/cafeterias/foodcourt`);
   return res.json();
 }
 
@@ -105,7 +105,7 @@ export async function fetchDormRooms(gender) {
 /// data: { roomId, semester, period, partnerNumber }
 /// 응답: { applicationId, roomNumber, message }
 export async function applyDorm(data) {
-  const res = await fetch(`${BASE}/dorms/apply`, {
+  const res = await fetch(`${BASE}/dorms/applications`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(data),
@@ -138,7 +138,7 @@ export async function updateMyProfile(data) {
 /// 내 기숙사 신청 내역 조회 — 로그인 필요
 /// 응답: [{ id, roomNumber, semester, period, status, partnerName, createdAt }]
 export async function fetchMyDormApplications() {
-  const res = await fetch(`${BASE}/dorms/my`);
+  const res = await fetch(`${BASE}/dorms/applications/me`);
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }

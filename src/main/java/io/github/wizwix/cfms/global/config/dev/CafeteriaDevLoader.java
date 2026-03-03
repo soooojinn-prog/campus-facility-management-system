@@ -4,15 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.wizwix.cfms.global.config.dev.base.DevDataLoader;
-import io.github.wizwix.cfms.model.CafeteriaMeal;
-import io.github.wizwix.cfms.model.CafeteriaMealItem;
-import io.github.wizwix.cfms.model.CafeteriaStore;
-import io.github.wizwix.cfms.model.CafeteriaStoreMenu;
-import io.github.wizwix.cfms.model.enums.MealType;
-import io.github.wizwix.cfms.repo.CafeteriaMealItemRepository;
-import io.github.wizwix.cfms.repo.CafeteriaMealRepository;
-import io.github.wizwix.cfms.repo.CafeteriaStoreMenuRepository;
-import io.github.wizwix.cfms.repo.CafeteriaStoreRepository;
+import io.github.wizwix.cfms.model.cafeteria.CafeteriaMeal;
+import io.github.wizwix.cfms.model.cafeteria.CafeteriaMealItem;
+import io.github.wizwix.cfms.model.cafeteria.CafeteriaStore;
+import io.github.wizwix.cfms.model.cafeteria.CafeteriaStoreMenu;
+import io.github.wizwix.cfms.model.enums.CafeteriaMealType;
+import io.github.wizwix.cfms.repo.cafeteria.CafeteriaMealItemRepository;
+import io.github.wizwix.cfms.repo.cafeteria.CafeteriaMealRepository;
+import io.github.wizwix.cfms.repo.cafeteria.CafeteriaStoreMenuRepository;
+import io.github.wizwix.cfms.repo.cafeteria.CafeteriaStoreRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
@@ -35,9 +35,7 @@ public class CafeteriaDevLoader implements DevDataLoader {
   private final ResourceLoader resourceLoader;
   private final CafeteriaStoreRepository storeRepo;
 
-  public CafeteriaDevLoader(ResourceLoader resourceLoader, ObjectMapper mapper,
-                            CafeteriaStoreRepository storeRepo, CafeteriaStoreMenuRepository menuRepo,
-                            CafeteriaMealRepository mealRepo, CafeteriaMealItemRepository mealItemRepo) {
+  public CafeteriaDevLoader(ResourceLoader resourceLoader, ObjectMapper mapper, CafeteriaStoreRepository storeRepo, CafeteriaStoreMenuRepository menuRepo, CafeteriaMealRepository mealRepo, CafeteriaMealItemRepository mealItemRepo) {
     this.resourceLoader = resourceLoader;
     this.mapper = mapper;
     this.storeRepo = storeRepo;
@@ -132,7 +130,7 @@ public class CafeteriaDevLoader implements DevDataLoader {
     LocalDate today = LocalDate.now();
 
     for (JsonNode node : root) {
-      MealType mealType = MealType.valueOf(node.get("mealType").asText());
+      CafeteriaMealType mealType = CafeteriaMealType.valueOf(node.get("mealType").asText());
       if (mealRepo.existsByDateAndMealType(today, mealType)) continue;
 
       CafeteriaMeal meal = new CafeteriaMeal();
@@ -206,7 +204,7 @@ public class CafeteriaDevLoader implements DevDataLoader {
     if (root == null) return;
 
     for (JsonNode node : root) {
-      MealType mealType = MealType.valueOf(node.get("mealType").asText());
+      CafeteriaMealType mealType = CafeteriaMealType.valueOf(node.get("mealType").asText());
       List<CafeteriaMeal> meals = mealRepo.findByMealType(mealType);
       for (CafeteriaMeal existing : meals) {
         mealItemRepo.deleteByMeal(existing);

@@ -1,0 +1,54 @@
+[
+  {
+    "name": "A101",
+    "floor": "F1",
+    "capacity": 4,
+    "amenities": [
+      "TV",
+      "화이트보드"
+    ],
+    "status": "AVAILABLE"
+  },
+  {
+    "name": "A102",
+    "floor": "F1",
+    "capacity": 6,
+    "amenities": [
+      "TV",
+      "화이트보드",
+      "빔프로젝터"
+    ],
+    "status": "AVAILABLE"
+  },
+  {
+    "name": "B201",
+    "floor": "F2",
+    "capacity": 8,
+    "amenities": [
+      "화이트보드",
+      "빔프로젝터"
+    ],
+    "status": "OCCUPIED"
+  },
+  {
+    "name": "B202",
+    "floor": "F2",
+    "capacity": 4,
+    "amenities": [
+      "TV"
+    ],
+    "status": "AVAILABLE"
+  },
+  {
+    "name": "C301",
+    "floor": "F3",
+    "capacity": 10,
+    "amenities": [
+      "TV",
+      "화이트보드",
+      "빔프로젝터",
+      "화상회의"
+    ],
+    "status": "MAINTENANCE"
+  }
+]

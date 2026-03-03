@@ -3,12 +3,9 @@ package io.github.wizwix.cfms.controller;
 import io.github.wizwix.cfms.dto.request.counseling.RequestCounselingReservation;
 import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselingReservation;
 import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselor;
-import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.model.enums.CounselingDepartment;
-import io.github.wizwix.cfms.repo.UserRepository;
-import io.github.wizwix.cfms.service.CounselingService;
+import io.github.wizwix.cfms.service.iface.ICounselingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,25 +24,19 @@ import java.util.List;
 @RequestMapping("/api/counseling")
 @RequiredArgsConstructor
 public class CounselingApiController {
-  private final CounselingService counselingService;
-  private final UserRepository userRepo;
+  private final ICounselingService counselingService;
 
   /// 상담 예약 취소 — PENDING만 가능 (인증 필요)
   @DeleteMapping("/reservations/{id}")
-  public ResponseEntity<Void> cancelReservation(Authentication auth, @PathVariable Long id) {
-    User user = userRepo.findByNumberAndEnabledTrue(auth.getName())
-        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    counselingService.cancelReservation(user, id);
-    return ResponseEntity.ok().build();
+  public ResponseEntity<Void> cancelReservation(@PathVariable Long id, Authentication auth) {
+    counselingService.cancelReservation(auth.getName(), id);
+    return ResponseEntity.noContent().build();
   }
 
   /// 상담 예약 신청 (인증 필요)
   @PostMapping("/reservations")
-  public ResponseEntity<ResponseCounselingReservation> createReservation(
-      Authentication auth, @RequestBody RequestCounselingReservation request) {
-    User user = userRepo.findByNumberAndEnabledTrue(auth.getName())
-        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    return ResponseEntity.ok(counselingService.createReservation(user, request));
+  public ResponseEntity<ResponseCounselingReservation> createReservation(@RequestBody RequestCounselingReservation req, Authentication auth) {
+    return ResponseEntity.ok(counselingService.createReservation(auth.getName(), req));
   }
 
   /// 상담사 목록 — 부서별 필터 (공개)
@@ -56,17 +47,13 @@ public class CounselingApiController {
 
   /// 해당 상담사+날짜의 예약 현황 (공개)
   @GetMapping("/slots")
-  public ResponseEntity<List<ResponseCounselingReservation>> getSlots(
-      @RequestParam Long counselorId,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+  public ResponseEntity<List<ResponseCounselingReservation>> getSlots(@RequestParam Long counselorId, @RequestParam LocalDate date) {
     return ResponseEntity.ok(counselingService.getSlots(counselorId, date));
   }
 
   /// 내 상담 예약 목록 (인증 필요)
   @GetMapping("/reservations/me")
   public ResponseEntity<List<ResponseCounselingReservation>> myReservations(Authentication auth) {
-    User user = userRepo.findByNumberAndEnabledTrue(auth.getName())
-        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    return ResponseEntity.ok(counselingService.getMyReservations(user));
+    return ResponseEntity.ok(counselingService.getMyReservations(auth.getName()));
   }
 }

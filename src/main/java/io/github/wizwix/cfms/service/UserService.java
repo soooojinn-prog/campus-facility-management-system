@@ -40,10 +40,12 @@ public class UserService implements IUserService {
     if (optUser.isEmpty()) return; // Return HTTP 200 when user was not found
     User user = optUser.get();
 
-    if (user.getPasswordResetToken() == null || !passwordEncoder.matches(request.token(), user.getPasswordResetToken()))
+    if (user.getPasswordResetToken() == null || !passwordEncoder.matches(request.token(), user.getPasswordResetToken())) {
       throw new IllegalArgumentException("Invalid reset token");
-    if (user.getPasswordResetTokenExpiry() == null || user.getPasswordResetTokenExpiry().isBefore(LocalDateTime.now()))
+    }
+    if (user.getPasswordResetTokenExpiry() == null || user.getPasswordResetTokenExpiry().isBefore(LocalDateTime.now())) {
       throw new IllegalArgumentException("Reset token expired");
+    }
 
     user.setPassword(passwordEncoder.encode(request.newPassword()));
 
@@ -59,34 +61,28 @@ public class UserService implements IUserService {
   @Override
   @Transactional(readOnly = true)
   public ResponseUserProfile getProfile(String userNumber) {
-    User user = userRepository.findByNumberAndEnabledTrue(userNumber)
-        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    return new ResponseUserProfile(user.getId(), user.getName(), user.getNumber(),
-        user.getEmail(), user.getRole(), user.getGender(), user.getCreatedAt());
+    User user = userRepository.findByNumberAndEnabledTrue(userNumber).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    return new ResponseUserProfile(user.getId(), user.getName(), user.getNumber(), user.getEmail(), user.getRole(), user.getGender(), user.getCreatedAt());
   }
 
   @Override
   public ResponseLogin login(RequestLogin login) {
     User user = userRepository.findByNumberAndEnabledTrue(login.userNumber()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-    if (!passwordEncoder.matches(login.password(), user.getPassword()))
+    if (!passwordEncoder.matches(login.password(), user.getPassword())) {
       throw new IllegalArgumentException("Invalid password");
+    }
     String token = jwtUtils.generateToken(user.getNumber(), List.of(user.getRole().name()));
 
-    ResponseUserSimpleInfo userInfo = new ResponseUserSimpleInfo(
-        user.getId(),
-        user.getName(),
-        user.getNumber(),
-        user.getRole(),
-        user.getGender()
-    );
+    ResponseUserSimpleInfo userInfo = new ResponseUserSimpleInfo(user.getId(), user.getName(), user.getNumber(), user.getRole(), user.getGender());
 
     return new ResponseLogin(token, userInfo);
   }
 
   @Override
   public void register(RequestRegister request) {
-    if (userRepository.findByNumber(request.userNumber()).isPresent())
+    if (userRepository.findByNumber(request.userNumber()).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 학번/교번입니다.");
+    }
 
     User user = new User();
     user.setNumber(request.userNumber());
@@ -124,8 +120,7 @@ public class UserService implements IUserService {
   /// newPassword, email, gender 중 값이 있는 필드만 선택적으로 업데이트
   @Override
   public void updateProfile(String userNumber, RequestUserUpdate request) {
-    User user = userRepository.findByNumberAndEnabledTrue(userNumber)
-        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    User user = userRepository.findByNumberAndEnabledTrue(userNumber).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     // 기존 비밀번호 필수 검증 — 본인 확인 용도
     if (request.oldPassword() == null || !passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
       throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
@@ -147,11 +142,12 @@ public class UserService implements IUserService {
   public void verifyPasswordReset(RequestPasswordResetVerify request) {
     User user = userRepository.findByNumberAndEnabledTrue(request.userNumber()).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-    if (user.getPasswordResetToken() == null)
-      throw new IllegalArgumentException("No reset token found");
-    if (!passwordEncoder.matches(request.token(), user.getPasswordResetToken()))
+    if (user.getPasswordResetToken() == null) {throw new IllegalArgumentException("No reset token found");}
+    if (!passwordEncoder.matches(request.token(), user.getPasswordResetToken())) {
       throw new IllegalArgumentException("Invalid reset token");
-    if (user.getPasswordResetTokenExpiry() == null || user.getPasswordResetTokenExpiry().isBefore(LocalDateTime.now()))
+    }
+    if (user.getPasswordResetTokenExpiry() == null || user.getPasswordResetTokenExpiry().isBefore(LocalDateTime.now())) {
       throw new IllegalArgumentException("Reset token expired");
+    }
   }
 }

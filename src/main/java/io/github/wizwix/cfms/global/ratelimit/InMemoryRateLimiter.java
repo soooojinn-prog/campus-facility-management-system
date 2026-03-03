@@ -15,10 +15,8 @@ public class InMemoryRateLimiter {
   public boolean isAllowed(String key) {
     long now = System.currentTimeMillis();
     attempts.compute(key, (k, attempt) -> {
-      if (attempt == null || now - attempt.startTime > WINDOW_MS)
-        return new Attempt(1, now);
-      if (attempt.count >= MAX_ATTEMPTS)
-        return attempt;
+      if (attempt == null || now - attempt.startTime > WINDOW_MS) {return new Attempt(1, now);}
+      if (attempt.count >= MAX_ATTEMPTS) {return attempt;}
       attempt.count++;
       return attempt;
     });

@@ -8,6 +8,22 @@
     "password": "123",
     "role": "ROLE_STUDENT"
   },
+  {
+    "email": "student2@university.ac.kr",
+    "gender": "MALE",
+    "name": "이태백",
+    "number": "26001004",
+    "password": "123",
+    "role": "ROLE_STUDENT"
+  },
+  {
+    "email": "student3@university.ac.kr",
+    "gender": "FEMALE",
+    "name": "홍란",
+    "number": "26001006",
+    "password": "123",
+    "role": "ROLE_STUDENT"
+  },
   // 교수
   {
     "email": "professor1@university.ac.kr",
@@ -17,10 +33,26 @@
     "password": "123",
     "role": "ROLE_PROFESSOR"
   },
+  {
+    "email": "professor2@university.ac.kr",
+    "gender": "FEMALE",
+    "name": "하율",
+    "number": "26100400",
+    "password": "123",
+    "role": "ROLE_PROFESSOR"
+  },
   // 관리자
   {
     "email": "admin1@university.ac.kr",
     "gender": "FEMALE",
+    "name": "박미래",
+    "number": "26999998",
+    "password": "123",
+    "role": "ROLE_ADMIN"
+  },
+  {
+    "email": "admin2@university.ac.kr",
+    "gender": "MALE",
     "name": "사군자",
     "number": "26999999",
     "password": "123",

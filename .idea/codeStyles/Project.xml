@@ -59,6 +59,9 @@
     <XML>
       <option name="XML_KEEP_BLANK_LINES" value="1" />
     </XML>
+    <editorconfig>
+      <option name="ENABLED" value="false" />
+    </editorconfig>
     <codeStyleSettings language="CSS">
       <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
       <indentOptions>

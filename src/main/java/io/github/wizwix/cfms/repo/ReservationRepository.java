@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-
   /// 호실+날짜별 예약 조회 (타임라인 UI용)
   /// Between: dayStart <= start_time <= dayEnd
   List<Reservation> findByRoomIdAndStartTimeBetweenAndStatusIn(

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.wizwix.cfms.global.config.dev.base.BaseDevLoader;
 import io.github.wizwix.cfms.global.config.dev.base.EntityReferenceDeserializer;
-import io.github.wizwix.cfms.model.Club;
 import io.github.wizwix.cfms.model.User;
-import io.github.wizwix.cfms.repo.ClubRepository;
+import io.github.wizwix.cfms.model.club.Club;
 import io.github.wizwix.cfms.repo.UserRepository;
+import io.github.wizwix.cfms.repo.club.ClubRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;
@@ -32,9 +32,7 @@ public class ClubDevLoader extends BaseDevLoader<Club> {
   protected void configureMapper(ObjectMapper mapper) {
     SimpleModule module = new SimpleModule();
     // String -> User 변환
-    module.addDeserializer(User.class, new EntityReferenceDeserializer<>(
-        president -> userRepo.findByNumber(president).orElseThrow(() -> new RuntimeException("User[" + president + "] not found"))
-    ));
+    module.addDeserializer(User.class, new EntityReferenceDeserializer<>(president -> userRepo.findByNumber(president).orElseThrow(() -> new RuntimeException("User[" + president + "] not found"))));
     // (추가로 필요한 부분이 있을 경우, 'addDeserializer' 사용
     mapper.registerModule(module);
   }

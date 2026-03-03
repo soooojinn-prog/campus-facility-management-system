@@ -5,8 +5,6 @@ logging:
     io.github.wizwix: DEBUG
   pattern.console: "%clr(%d{yy-MM-dd HH:mm:ss}){faint} %clr(%5p) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n"
 spring:
-  profiles:
-    active: dev
   application:
     name: campus-facility-management-system
   datasource:
@@ -41,5 +39,5 @@ spring:
     init:
       encoding: utf-8
 jwt:
-  secret: "${JWT_SECRET:your_default_very_long_random_string_here_for_dev_only}"
+  secret: "${JWT_SECRET:XnU6QEqivzFIBkPC70xQr5KI3y5HBbsUXnU6QEqivzFIBkPC70xQr5KI3y5HBbsU}"
   expiration: 3600000 # 1 hour

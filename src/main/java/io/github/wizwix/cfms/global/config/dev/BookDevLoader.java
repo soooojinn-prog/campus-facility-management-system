@@ -2,8 +2,8 @@ package io.github.wizwix.cfms.global.config.dev;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.wizwix.cfms.global.config.dev.base.BaseDevLoader;
-import io.github.wizwix.cfms.model.Book;
-import io.github.wizwix.cfms.repo.BookRepository;
+import io.github.wizwix.cfms.model.library.LibraryBook;
+import io.github.wizwix.cfms.repo.library.LibraryBookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;
@@ -14,11 +14,11 @@ import java.util.concurrent.atomic.LongAdder;
 @Component
 @Profile("dev")
 @Slf4j
-public class BookDevLoader extends BaseDevLoader<Book> {
-  private final BookRepository repo;
+public class BookDevLoader extends BaseDevLoader<LibraryBook> {
+  private final LibraryBookRepository repo;
 
-  public BookDevLoader(ResourceLoader loader, ObjectMapper mapper, BookRepository repo) {
-    super(loader, mapper, Book.class, "data/dev/books.jsonc");
+  public BookDevLoader(ResourceLoader loader, ObjectMapper mapper, LibraryBookRepository repo) {
+    super(loader, mapper, LibraryBook.class, "data/dev/books.jsonc");
     this.repo = repo;
   }
 
