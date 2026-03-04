@@ -344,8 +344,8 @@ function DormStatusModal({app, onClose, onRefresh}) {
   return (<AdminActionModal title="기숙사 신청 심사" onClose={onClose} onSubmit={handleSubmit} submitting={submitting}>
     <div className="p-3 mb-3 border rounded bg-light">
       <strong>호실:</strong> {app.roomNumber}<br/>
-      <strong>학기:</strong> {app.semester} ({app.period})<br/>
-      <strong>룸메이트:</strong> {app.partnerName || '없음'}
+      <strong>신청인:</strong> {app.partnerName ? `${app.applicantName}, ${app.partnerName}` : app.applicantName || '-'}<br/>
+      <strong>학기:</strong> {app.semester} ({app.period})
     </div>
     <div className="mb-3">
       <label className="form-label d-block">결정</label>
@@ -398,8 +398,8 @@ function DormTab() {
             <thead>
             <tr>
               <th>호실</th>
+              <th>신청인</th>
               <th>기간</th>
-              <th>룸메이트</th>
               <th>신청일</th>
               <th>상태</th>
               <th>관리</th>
@@ -410,8 +410,8 @@ function DormTab() {
               <td colSpan={6} style={{textAlign: 'center', color: '#A0AEC0'}}>데이터가 없습니다.</td>
             </tr>) : data.map(d => (<tr key={d.id}>
               <td>{d.roomNumber}</td>
+              <td>{d.partnerName ? `${d.applicantName}, ${d.partnerName}` : d.applicantName || '-'}</td>
               <td>{d.semester} ({d.period})</td>
-              <td>{d.partnerName || '없음'}</td>
               <td>{d.createdAt?.split('T')[0]}</td>
               <td><span className={`mypage-badge ${STATUS_CLASSES[d.status]}`}>{STATUS_MAP[d.status]}</span>
               </td>

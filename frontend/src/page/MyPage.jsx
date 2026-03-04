@@ -205,9 +205,9 @@ function DormTab() {
         <thead>
         <tr>
           <th>호실</th>
+          <th>신청인</th>
           <th>학기</th>
           <th>입주 기간</th>
-          <th>룸메이트</th>
           <th>상태</th>
           <th>신청일</th>
           <th></th>
@@ -216,9 +216,9 @@ function DormTab() {
         <tbody>
         {apps.map(a => (<tr key={a.id}>
           <td>{a.roomNumber}호</td>
+          <td>{a.partnerName ? `${a.applicantName}, ${a.partnerName}` : a.applicantName || '-'}</td>
           <td>{a.semester}</td>
           <td>{PERIOD_LABELS[a.period] || a.period}</td>
-          <td>{a.partnerName || '-'}</td>
           <td>
             {a.status === 'REJECTED' && a.rejectReason ?
                 <button className={`mypage-badge ${STATUS_CLASSES[a.status] || ''}`}

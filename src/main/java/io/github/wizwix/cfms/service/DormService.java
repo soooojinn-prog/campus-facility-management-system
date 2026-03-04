@@ -188,7 +188,7 @@ public class DormService implements IDormService {
     User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
     List<DormApplicationStatus> visibleStatuses = List.of(DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED, DormApplicationStatus.REJECTED);
     List<DormApplication> apps = dormAppRepo.findByApplicantAndStatusIn(user, visibleStatuses);
-    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getPartner() != null ? app.getPartner().getName() : null, app.getCreatedAt())).toList();
+    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName(), app.getPartner() != null ? app.getPartner().getName() : null, app.getCreatedAt())).toList();
   }
 
   /// 관리자 — 기숙사 신청 승인/거절 (PENDING만 처리 가능)
