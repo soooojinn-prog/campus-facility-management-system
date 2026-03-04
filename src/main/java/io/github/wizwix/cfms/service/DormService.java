@@ -132,7 +132,7 @@ public class DormService implements IDormService {
         app.getSemester(),
         app.getPeriod(),
         app.getStatus(),
-        app.getPartner() != null ? app.getPartner().getName() : null,
+        app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : "" ),
         app.getCreatedAt()
     )).toList();
   }
