@@ -126,15 +126,7 @@ public class DormService implements IDormService {
   @Override
   @Transactional(readOnly = true)
   public List<ResponseDormMyApplication> getDormApplicationsByStatus(DormApplicationStatus status) {
-    return dormAppRepo.findByStatus(status).stream().map(app -> new ResponseDormMyApplication(
-        app.getId(),
-        app.getRoom().getRoomNumber(),
-        app.getSemester(),
-        app.getPeriod(),
-        app.getStatus(),
-        app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : "" ),
-        app.getCreatedAt()
-    )).toList();
+    return dormAppRepo.findByStatus(status).stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : ""), app.getCreatedAt())).toList();
   }
 
   @Override
@@ -188,16 +180,14 @@ public class DormService implements IDormService {
     User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
     List<DormApplicationStatus> visibleStatuses = List.of(DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED, DormApplicationStatus.REJECTED);
     List<DormApplication> apps = dormAppRepo.findByApplicantAndStatusIn(user, visibleStatuses);
-    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName(), app.getPartner() != null ? app.getPartner().getName() : null, app.getCreatedAt())).toList();
+    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : ""), app.getCreatedAt())).toList();
   }
 
   /// 관리자 — 기숙사 신청 승인/거절 (PENDING만 처리 가능)
   @Override
   public void updateDormApplicationStatus(Long id, DormApplicationStatus status, String rejectReason, String adminNumber) {
-    DormApplication app = dormAppRepo.findById(id)
-        .orElseThrow(() -> new NotFoundException("신청 내역을 찾을 수 없습니다."));
-    User admin = userRepo.findByNumber(adminNumber)
-        .orElseThrow(() -> new NotFoundException("관리자를 찾을 수 없습니다."));
+    DormApplication app = dormAppRepo.findById(id).orElseThrow(() -> new NotFoundException("신청 내역을 찾을 수 없습니다."));
+    User admin = userRepo.findByNumber(adminNumber).orElseThrow(() -> new NotFoundException("관리자를 찾을 수 없습니다."));
     app.setStatus(status);
     app.setRejectReason(status == DormApplicationStatus.REJECTED ? rejectReason : null);
     app.setProcessedBy(admin);

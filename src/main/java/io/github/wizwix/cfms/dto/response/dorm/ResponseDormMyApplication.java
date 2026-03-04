@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /// @param semester     [String] 학기 (e.g. "2026-1")
 /// @param period       [DormPeriod] 입주 기간 (SEMESTER / YEAR)
 /// @param status       [DormApplicationStatus] 신청 상태 (PENDING / APPROVED / REJECTED)
-/// @param studentsName [String] 룸메이트 이름
+/// @param studentsName [String] 신청자, 룸메이트 이름
 /// @param createdAt    [LocalDateTime] 신청 일시
 public record ResponseDormMyApplication(Long id, String roomNumber, String semester, DormPeriod period,
                                         DormApplicationStatus status, String studentsName, LocalDateTime createdAt) {}

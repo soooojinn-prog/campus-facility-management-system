@@ -31,11 +31,9 @@ import {
 } from '../data/api.js';
 
 const TABS = [{key: 'profile', label: '개인정보'}, {key: 'dorm', label: '기숙사 신청'}, {
-  key: 'reservation',
-  label: '강의실 예약',
+  key: 'reservation', label: '강의실 예약',
 }, {key: 'counseling', label: '상담 예약'}, {key: 'seatReservation', label: '열람실 예약'}, {
-  key: 'studyReservation',
-  label: '스터디룸 예약',
+  key: 'studyReservation', label: '스터디룸 예약',
 }];
 
 const ROLE_LABELS = {ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '관리자'};
@@ -205,7 +203,7 @@ function DormTab() {
         <thead>
         <tr>
           <th>호실</th>
-          <th>신청인</th>
+          <th>학생</th>
           <th>학기</th>
           <th>입주 기간</th>
           <th>상태</th>
@@ -216,7 +214,7 @@ function DormTab() {
         <tbody>
         {apps.map(a => (<tr key={a.id}>
           <td>{a.roomNumber}호</td>
-          <td>{a.partnerName ? `${a.applicantName}, ${a.partnerName}` : a.applicantName || '-'}</td>
+          <td>{a.studentsName}</td>
           <td>{a.semester}</td>
           <td>{PERIOD_LABELS[a.period] || a.period}</td>
           <td>
@@ -432,33 +430,32 @@ function SeatReservationTab() {
       <h3>열람실 예약 내역</h3>
       <p className="mypage-section-sub">내 도서관 열람실 좌석 예약 현황입니다.</p>
     </div>
-    {list.length === 0 ? (<div className="mypage-empty">열람실 예약 내역이 없습니다.</div>) : (
-        <div className="table-responsive">
-          <table className="table mypage-table">
-            <thead>
-            <tr>
-              <th>층</th>
-              <th>열람실</th>
-              <th>좌석 번호</th>
-              <th>예약 날짜</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {list.map(r => (<tr key={r.id}>
-              <td>{r.floor}</td>
-              <td>{r.roomName}</td>
-              <td>{r.seatNo}번</td>
-              <td>{r.date}</td>
-              <td>
-                <button className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleCancel(r.id)}>취소
-                </button>
-              </td>
-            </tr>))}
-            </tbody>
-          </table>
-        </div>)}
+    {list.length === 0 ? (<div className="mypage-empty">열람실 예약 내역이 없습니다.</div>) : (<div className="table-responsive">
+      <table className="table mypage-table">
+        <thead>
+        <tr>
+          <th>층</th>
+          <th>열람실</th>
+          <th>좌석 번호</th>
+          <th>예약 날짜</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {list.map(r => (<tr key={r.id}>
+          <td>{r.floor}</td>
+          <td>{r.roomName}</td>
+          <td>{r.seatNo}번</td>
+          <td>{r.date}</td>
+          <td>
+            <button className="btn btn-outline-danger btn-sm"
+                    onClick={() => handleCancel(r.id)}>취소
+            </button>
+          </td>
+        </tr>))}
+        </tbody>
+      </table>
+    </div>)}
   </div>);
 }
 
@@ -493,32 +490,31 @@ function StudyReservationTab() {
       <h3>스터디룸 예약 내역</h3>
       <p className="mypage-section-sub">내 도서관 스터디룸 예약 현황입니다.</p>
     </div>
-    {list.length === 0 ? (<div className="mypage-empty">스터디룸 예약 내역이 없습니다.</div>) : (
-        <div className="table-responsive">
-          <table className="table mypage-table">
-            <thead>
-            <tr>
-              <th>층</th>
-              <th>호실</th>
-              <th>예약 날짜</th>
-              <th>시간</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {list.map(r => (<tr key={r.id}>
-              <td>{r.floor}</td>
-              <td>{r.roomName}</td>
-              <td>{r.date}</td>
-              <td>{String(r.startHour).padStart(2, '0')}:00 ~ {String(r.startHour + 1).padStart(2, '0')}:00</td>
-              <td>
-                <button className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleCancel(r.id)}>취소
-                </button>
-              </td>
-            </tr>))}
-            </tbody>
-          </table>
-        </div>)}
+    {list.length === 0 ? (<div className="mypage-empty">스터디룸 예약 내역이 없습니다.</div>) : (<div className="table-responsive">
+      <table className="table mypage-table">
+        <thead>
+        <tr>
+          <th>층</th>
+          <th>호실</th>
+          <th>예약 날짜</th>
+          <th>시간</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {list.map(r => (<tr key={r.id}>
+          <td>{r.floor}</td>
+          <td>{r.roomName}</td>
+          <td>{r.date}</td>
+          <td>{String(r.startHour).padStart(2, '0')}:00 ~ {String(r.startHour + 1).padStart(2, '0')}:00</td>
+          <td>
+            <button className="btn btn-outline-danger btn-sm"
+                    onClick={() => handleCancel(r.id)}>취소
+            </button>
+          </td>
+        </tr>))}
+        </tbody>
+      </table>
+    </div>)}
   </div>);
 }

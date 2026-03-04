@@ -16,7 +16,11 @@ import {createClub, fetchClubDetail, fetchClubMembers, fetchClubs, joinClub, upd
 
 const ROLE_LABELS = {ROLE_PRESIDENT: '회장', ROLE_VICE_PRESIDENT: '부회장', ROLE_MEMBER: '부원'};
 const STATUS_LABELS = {APPROVED: '승인됨', PENDING: '승인 대기', REJECTED: '거절됨'};
-const STATUS_BADGE = {APPROVED: 'mypage-badge-approved', PENDING: 'mypage-badge-pending', REJECTED: 'mypage-badge-rejected'};
+const STATUS_BADGE = {
+  APPROVED: 'mypage-badge-approved',
+  PENDING: 'mypage-badge-pending',
+  REJECTED: 'mypage-badge-rejected',
+};
 
 export function ClubPage() {
   const navigate = useNavigate();
@@ -52,7 +56,10 @@ export function ClubPage() {
 
         {/* 탭 */}
         <div className="building-tabs">
-          <button className={activeTab === 'list' ? 'active' : ''} onClick={() => { setActiveTab('list'); handleBackToList(); }}>
+          <button className={activeTab === 'list' ? 'active' : ''} onClick={() => {
+            setActiveTab('list');
+            handleBackToList();
+          }}>
             동아리 목록
           </button>
           <button className={activeTab === 'create' ? 'active' : ''} onClick={() => setActiveTab('create')}>
@@ -65,7 +72,10 @@ export function ClubPage() {
         {activeTab === 'list' && activeView === 'detail' && selectedSlug && (
             <ClubDetailView slug={selectedSlug} onBack={handleBackToList}/>
         )}
-        {activeTab === 'create' && <ClubCreateForm onCreated={() => { setActiveTab('list'); handleBackToList(); }}/>}
+        {activeTab === 'create' && <ClubCreateForm onCreated={() => {
+          setActiveTab('list');
+          handleBackToList();
+        }}/>}
       </div>
   );
 }
@@ -76,7 +86,9 @@ function ClubListView({onCardClick}) {
   const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { loadClubs(); }, []);
+  useEffect(() => {
+    loadClubs();
+  }, []);
 
   function loadClubs(q = '') {
     setLoading(true);
@@ -113,13 +125,31 @@ function ClubListView({onCardClick}) {
                            background: '#FFF', border: '1px solid #E2E8F0', borderRadius: '12px',
                            padding: '24px', cursor: 'pointer', transition: 'transform .15s, box-shadow .15s',
                          }}
-                         onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.08)'; }}
-                         onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}>
-                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
+                         onMouseEnter={e => {
+                           e.currentTarget.style.transform = 'translateY(-4px)';
+                           e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.08)';
+                         }}
+                         onMouseLeave={e => {
+                           e.currentTarget.style.transform = '';
+                           e.currentTarget.style.boxShadow = '';
+                         }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        marginBottom: '12px',
+                      }}>
                         <h4 style={{color: '#1A365D', fontSize: '1.1rem', fontWeight: 700, margin: 0}}>{club.name}</h4>
-                        <span className={`mypage-badge ${STATUS_BADGE[club.status]}`}>{STATUS_LABELS[club.status]}</span>
+                        <span
+                            className={`mypage-badge ${STATUS_BADGE[club.status]}`}>{STATUS_LABELS[club.status]}</span>
                       </div>
-                      <div style={{color: '#718096', fontSize: '.85rem', display: 'flex', flexDirection: 'column', gap: '4px'}}>
+                      <div style={{
+                        color: '#718096',
+                        fontSize: '.85rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '4px',
+                      }}>
                         <span>회장: {club.presidentName}</span>
                         <span>부원 수: {club.memberCount}명</span>
                         <span>개설일: {club.createdAt?.substring(0, 10)}</span>
@@ -148,9 +178,14 @@ function ClubDetailView({slug, onBack}) {
         .then(([detail, memberList]) => {
           setClub(detail);
           setMembers(memberList);
-          setEditForm({name: detail.name, description: detail.description || '', autoApprove: detail.autoApprove || false});
+          setEditForm({
+            name: detail.name,
+            description: detail.description || '',
+            autoApprove: detail.autoApprove || false,
+          });
         })
-        .catch(() => {})
+        .catch(() => {
+        })
         .finally(() => setLoading(false));
   }, [slug]);
 
@@ -158,7 +193,10 @@ function ClubDetailView({slug, onBack}) {
   const isMember = currentUser && members.some(m => m.userId === currentUser.id);
 
   async function handleJoin() {
-    if (!currentUser) { alert('로그인이 필요합니다.'); return; }
+    if (!currentUser) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     try {
       await joinClub(slug);
       alert(club.autoApprove ? '동아리에 가입되었습니다.' : '가입 신청이 완료되었습니다. 승인을 기다려주세요.');
@@ -167,7 +205,9 @@ function ClubDetailView({slug, onBack}) {
       setMembers(memberList);
       const detail = await fetchClubDetail(slug);
       setClub(detail);
-    } catch (err) { alert(err.message); }
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   async function handleKick(userId) {
@@ -177,7 +217,9 @@ function ClubDetailView({slug, onBack}) {
       setMembers(prev => prev.filter(m => m.userId !== userId));
       const detail = await fetchClubDetail(slug);
       setClub(detail);
-    } catch (err) { alert('추방에 실패했습니다.'); }
+    } catch (err) {
+      alert('추방에 실패했습니다.');
+    }
   }
 
   async function handleRoleChange(userId, newRole) {
@@ -189,7 +231,9 @@ function ClubDetailView({slug, onBack}) {
       if (!res.ok) throw new Error(await res.text());
       const updated = await res.json();
       setMembers(prev => prev.map(m => m.userId === userId ? updated : m));
-    } catch (err) { alert('역할 변경에 실패했습니다.'); }
+    } catch (err) {
+      alert('역할 변경에 실패했습니다.');
+    }
   }
 
   async function handleUpdateClub(e) {
@@ -199,10 +243,13 @@ function ClubDetailView({slug, onBack}) {
       setClub(updated);
       setEditing(false);
       alert('동아리 정보가 수정되었습니다.');
-    } catch (err) { alert(err.message); }
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
-  if (loading) return <div className="mypage-loading" style={{minHeight: 'calc(100vh - 280px)'}}>동아리 정보를 불러오는 중...</div>;
+  if (loading) return <div className="mypage-loading" style={{minHeight: 'calc(100vh - 280px)'}}>동아리 정보를 불러오는
+    중...</div>;
   if (!club) return <div className="mypage-empty" style={{margin: '48px'}}>동아리를 찾을 수 없습니다.</div>;
 
   return (
@@ -215,12 +262,22 @@ function ClubDetailView({slug, onBack}) {
 
           {/* 기본 정보 */}
           <div className="mypage-profile-card">
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px'}}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: '16px',
+            }}>
               <h3 style={{color: '#1A365D', fontSize: '1.5rem', fontWeight: 900, margin: 0}}>{club.name}</h3>
               <span className={`mypage-badge ${STATUS_BADGE[club.status]}`}>{STATUS_LABELS[club.status]}</span>
             </div>
             {club.description && (
-                <p style={{color: '#4A5568', fontSize: '.9rem', marginBottom: '16px', whiteSpace: 'pre-line'}}>{club.description}</p>
+                <p style={{
+                  color: '#4A5568',
+                  fontSize: '.9rem',
+                  marginBottom: '16px',
+                  whiteSpace: 'pre-line',
+                }}>{club.description}</p>
             )}
             <div style={{display: 'flex', gap: '24px', flexWrap: 'wrap', color: '#718096', fontSize: '.85rem'}}>
               <span>회장: <strong style={{color: '#2D3748'}}>{club.presidentName}</strong></span>
@@ -239,7 +296,8 @@ function ClubDetailView({slug, onBack}) {
 
             {/* 회장: 정보 수정 버튼 */}
             {isPresident && !editing && (
-                <button className="btn btn-outline-primary btn-sm" onClick={() => setEditing(true)} style={{marginTop: '12px', marginLeft: '8px'}}>
+                <button className="btn btn-outline-primary btn-sm" onClick={() => setEditing(true)}
+                        style={{marginTop: '12px', marginLeft: '8px'}}>
                   동아리 정보 수정
                 </button>
             )}
@@ -262,12 +320,14 @@ function ClubDetailView({slug, onBack}) {
                   </div>
                   <div className="mb-3 form-check">
                     <input type="checkbox" className="form-check-input" id="autoApproveEdit"
-                           checked={editForm.autoApprove} onChange={e => setEditForm({...editForm, autoApprove: e.target.checked})}/>
+                           checked={editForm.autoApprove}
+                           onChange={e => setEditForm({...editForm, autoApprove: e.target.checked})}/>
                     <label className="form-check-label" htmlFor="autoApproveEdit">가입 자동 승인</label>
                   </div>
                   <div style={{display: 'flex', gap: '8px'}}>
                     <button type="submit" className="btn btn-primary btn-sm">저장</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setEditing(false)}>취소</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setEditing(false)}>취소
+                    </button>
                   </div>
                 </form>
               </div>
@@ -295,7 +355,8 @@ function ClubDetailView({slug, onBack}) {
                         <tr key={m.userId}>
                           <td>{m.name}</td>
                           <td>{m.userNnumber}</td>
-                          <td><span className={`mypage-badge ${m.role === 'ROLE_PRESIDENT' ? 'mypage-badge-approved' : 'mypage-badge-pending'}`}>
+                          <td><span
+                              className={`mypage-badge ${m.role === 'ROLE_PRESIDENT' ? 'mypage-badge-approved' : 'mypage-badge-pending'}`}>
                             {ROLE_LABELS[m.role] || m.role}
                           </span></td>
                           <td>{m.joinedAt?.substring(0, 10)}</td>
@@ -303,13 +364,16 @@ function ClubDetailView({slug, onBack}) {
                               <td>
                                 {m.role !== 'ROLE_PRESIDENT' && (
                                     <div style={{display: 'flex', gap: '4px', flexWrap: 'wrap'}}>
-                                      <select className="form-select form-select-sm" style={{width: 'auto', fontSize: '.78rem'}}
+                                      <select className="form-select form-select-sm"
+                                              style={{width: 'auto', fontSize: '.78rem'}}
                                               value={m.role} onChange={e => handleRoleChange(m.userId, e.target.value)}>
                                         <option value="ROLE_MEMBER">부원</option>
                                         <option value="ROLE_VICE_PRESIDENT">부회장</option>
                                       </select>
-                                      <button className="btn btn-outline-danger btn-sm" style={{fontSize: '.75rem', padding: '2px 8px'}}
-                                              onClick={() => handleKick(m.userId)}>추방</button>
+                                      <button className="btn btn-outline-danger btn-sm"
+                                              style={{fontSize: '.75rem', padding: '2px 8px'}}
+                                              onClick={() => handleKick(m.userId)}>추방
+                                      </button>
                                     </div>
                                 )}
                               </td>
@@ -336,9 +400,18 @@ function ClubCreateForm({onCreated}) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    if (!currentUser) { alert('로그인이 필요합니다.'); return; }
-    if (!form.name.trim()) { setError('동아리 이름을 입력해주세요.'); return; }
-    if (!form.slug.trim()) { setError('동아리 고유 식별자(slug)를 입력해주세요.'); return; }
+    if (!currentUser) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    if (!form.name.trim()) {
+      setError('동아리 이름을 입력해주세요.');
+      return;
+    }
+    if (!form.slug.trim()) {
+      setError('동아리 고유 식별자(slug)를 입력해주세요.');
+      return;
+    }
     setSubmitting(true);
     try {
       await createClub(form);
@@ -379,7 +452,8 @@ function ClubCreateForm({onCreated}) {
               <div className="mb-3">
                 <label className="form-label">고유 식별자 (slug) <span className="text-danger">*</span></label>
                 <input type="text" className="form-control" placeholder="예: coding (영문, 최대 10자)"
-                       maxLength={10} value={form.slug} onChange={e => setForm({...form, slug: e.target.value.replace(/[^a-zA-Z0-9-]/g, '')})}/>
+                       maxLength={10} value={form.slug}
+                       onChange={e => setForm({...form, slug: e.target.value.replace(/[^a-zA-Z0-9-]/g, '')})}/>
                 <div className="form-text">URL에 사용되는 고유 식별자입니다. 영문과 숫자, 하이픈만 사용 가능합니다.</div>
               </div>
               <div className="mb-3">

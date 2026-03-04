@@ -4,7 +4,11 @@ const BASE = '/api';
 // 백엔드 에러 응답에서 message 필드만 추출 (JSON 파싱 실패 시 원문 반환)
 async function extractError(res) {
   const text = await res.text();
-  try { return JSON.parse(text).message || text; } catch { return text; }
+  try {
+    return JSON.parse(text).message || text;
+  } catch {
+    return text;
+  }
 }
 
 // ── 건물/시설 관련 ──
@@ -139,7 +143,7 @@ export async function updateMyProfile(data) {
 }
 
 /// 내 기숙사 신청 내역 조회 — 로그인 필요
-/// 응답: [{ id, roomNumber, semester, period, status, partnerName, createdAt }]
+/// 응답: [{ id, roomNumber, semester, period, status, studentsName, createdAt }]
 export async function fetchMyDormApplications() {
   const res = await fetch(`${BASE}/dorms/applications/me`);
   if (!res.ok) throw new Error(await extractError(res));
