@@ -148,7 +148,7 @@ export async function fetchMyDormApplications() {
 
 /// 기숙사 신청 취소 — PENDING만 가능, 로그인 필요
 export async function cancelDormApplication(id) {
-  const res = await fetch(`${BASE}/dorms/${id}`, {method: 'DELETE'});
+  const res = await fetch(`${BASE}/dorms/applications/${id}`, {method: 'DELETE'});
   if (!res.ok) throw new Error(await extractError(res));
 }
 

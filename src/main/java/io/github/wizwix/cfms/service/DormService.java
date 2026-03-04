@@ -71,6 +71,9 @@ public class DormService implements IDormService {
       if (partner.getId().equals(user.getId())) {
         throw new IllegalArgumentException("본인의 학번은 입력할 수 없습니다.");
       }
+      if (partner.getRole() == UserRole.ROLE_PROFESSOR) {
+        throw new IllegalArgumentException("교수는 기숙사 신청이 불가합니다.");
+      }
       if (partner.getGender() != room.getGender()) {
         throw new IllegalArgumentException("같이 신청하는 친구의 성별이 해당 기숙사와 일치하지 않습니다.");
       }
