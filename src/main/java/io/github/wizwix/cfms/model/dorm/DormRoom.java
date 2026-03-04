@@ -1,6 +1,7 @@
 package io.github.wizwix.cfms.model.dorm;
 
 import io.github.wizwix.cfms.model.enums.Gender;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class DormRoom {
   private Integer floor;
   /// 남자/여자 기숙사
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private Gender gender;
   /// 호실 번호 (e.g. "M101", "F203")
   private String roomNumber;

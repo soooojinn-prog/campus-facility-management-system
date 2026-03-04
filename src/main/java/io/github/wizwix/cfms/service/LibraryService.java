@@ -282,6 +282,28 @@ public class LibraryService implements ILibraryService {
   }
 
   @Override
+  @Transactional
+  public void cancelSeatReservation(String userNumber, Long reservationId) {
+    LibrarySeatReservation reservation = seatResRepo.findById(reservationId)
+        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
+    if (!reservation.getUserNumber().equals(userNumber)) {
+      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
+    }
+    seatResRepo.delete(reservation);
+  }
+
+  @Override
+  @Transactional
+  public void cancelStudyRoomReservation(String userNumber, Long reservationId) {
+    LibraryStudyRoomReservation reservation = studyResRepo.findById(reservationId)
+        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
+    if (!reservation.getUserNumber().equals(userNumber)) {
+      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
+    }
+    studyResRepo.delete(reservation);
+  }
+
+  @Override
   public List<ResponseLibraryBook> searchBooks(String query, String publisher, String category) {
     return bookRepo.findAll().stream().filter(b -> {
       boolean matchQ = query == null || query.isBlank() || b.getTitle().contains(query) || b.getAuthor().contains(query) || (b.getPublisher() != null && b.getPublisher().contains(query));

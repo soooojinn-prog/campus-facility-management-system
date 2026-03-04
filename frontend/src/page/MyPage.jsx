@@ -19,7 +19,8 @@ import {
   cancelCounselingReservation,
   cancelDormApplication,
   cancelReservation,
-  fetchBuildings,
+  cancelSeatReservation,
+  cancelStudyRoomReservation,
   fetchMyCounselingReservations,
   fetchMyDormApplications,
   fetchMyProfile,
@@ -422,23 +423,28 @@ function CounselingTab() {
 }
 
 // 열람실 예약 내역 탭 — 내가 예약한 좌석 목록 (로그인 기반)
-// API 경로에 buildingId 필요 → fetchBuildings()로 slug='library' 건물 ID를 동적 조회
 function SeatReservationTab() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchBuildings()
-        .then(buildings => {
-          const lib = buildings.find(b => b.slug === 'library');
-          if (!lib) throw new Error('도서관 건물을 찾을 수 없습니다.');
-          return fetchMySeatReservations(lib.id);
-        })
+    fetchMySeatReservations()
         .then(setList)
         .catch(e => setError(e.message))
         .finally(() => setLoading(false));
   }, []);
+
+  async function handleCancel(id) {
+    if (!confirm('정말 취소하시겠습니까?')) return;
+    try {
+      await cancelSeatReservation(id);
+      setList(prev => prev.filter(r => r.id !== id));
+      alert('열람실 좌석 예약이 취소되었습니다.');
+    } catch (err) {
+      alert(err.message);
+    }
+  }
 
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
@@ -456,19 +462,24 @@ function SeatReservationTab() {
               <table className="table mypage-table">
                 <thead>
                 <tr>
-                  <th>열람실</th>
                   <th>층</th>
+                  <th>열람실</th>
                   <th>좌석 번호</th>
                   <th>예약 날짜</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {list.map(r => (
                     <tr key={r.id}>
-                      <td>{r.roomName}</td>
                       <td>{r.floor}</td>
+                      <td>{r.roomName}</td>
                       <td>{r.seatNo}번</td>
                       <td>{r.date}</td>
+                      <td>
+                        <button className="btn btn-outline-danger btn-sm"
+                                onClick={() => handleCancel(r.id)}>취소</button>
+                      </td>
                     </tr>
                 ))}
                 </tbody>
@@ -479,24 +490,28 @@ function SeatReservationTab() {
   );
 }
 
-// 스터디룸 예약 내역 탭 — 내가 예약한 스터디룸 목록 (로그인 기반)
-// SeatReservationTab과 동일한 패턴: fetchBuildings → library slug → API 호출
 function StudyReservationTab() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchBuildings()
-        .then(buildings => {
-          const lib = buildings.find(b => b.slug === 'library');
-          if (!lib) throw new Error('도서관 건물을 찾을 수 없습니다.');
-          return fetchMyStudyRoomReservations(lib.id);
-        })
+    fetchMyStudyRoomReservations()
         .then(setList)
         .catch(e => setError(e.message))
         .finally(() => setLoading(false));
   }, []);
+
+  async function handleCancel(id) {
+    if (!confirm('정말 취소하시겠습니까?')) return;
+    try {
+      await cancelStudyRoomReservation(id);
+      setList(prev => prev.filter(r => r.id !== id));
+      alert('스터디룸 예약이 취소되었습니다.');
+    } catch (err) {
+      alert(err.message);
+    }
+  }
 
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
@@ -514,19 +529,24 @@ function StudyReservationTab() {
               <table className="table mypage-table">
                 <thead>
                 <tr>
-                  <th>호실</th>
                   <th>층</th>
+                  <th>호실</th>
                   <th>예약 날짜</th>
                   <th>시간</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {list.map(r => (
                     <tr key={r.id}>
-                      <td>{r.roomName}</td>
                       <td>{r.floor}</td>
+                      <td>{r.roomName}</td>
                       <td>{r.date}</td>
-                      <td>{String(r.startHour).padStart(2, '0')}:00 ~ {String(r.endHour).padStart(2, '0')}:00</td>
+                      <td>{String(r.startHour).padStart(2, '0')}:00 ~ {String(r.startHour + 1).padStart(2, '0')}:00</td>
+                      <td>
+                        <button className="btn btn-outline-danger btn-sm"
+                                onClick={() => handleCancel(r.id)}>취소</button>
+                      </td>
                     </tr>
                 ))}
                 </tbody>

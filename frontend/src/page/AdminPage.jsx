@@ -1,5 +1,5 @@
 // 관리자 페이지 - `/admin`
-// 좌측 사이드바 탭: 시설 예약 관리 / 동아리 신청 관리 / 기숙사 신청 관리 /
+// 좌측 사이드바 탭: 동아리 신청 관리 / 시설 예약 관리 / 기숙사 신청 관리 / 상담 예약 관리
 // 비로그인 시 메인 (`/`)로 리다이렉트
 // 레이아웃은 floor-list/floor-detail 패턴 재활용 (admin-sidebar/admin-content)
 //
@@ -8,15 +8,21 @@
 //   PATCH /api/admin/clubs/{id}/status: 개설 승인/거절 (status 변경)
 //   GET /api/admin/reservations?status=: 시설 예약 전체 목록
 //   PATCH /api/admin/reservations/{id}/status: 시설 예약 승인/거절
+//   GET /api/admin/dorms?status=: 기숙사 신청 목록
+//   PATCH /api/admin/dorms/{id}/status: 기숙사 신청 승인/거절
+//   GET /api/admin/counseling?status=: 상담 예약 목록
+//   PATCH /api/admin/counseling/{id}/status: 상담 예약 승인/거절
 
 import {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext.jsx';
 import {
   fetchAdminClubs,
+  fetchAdminCounseling,
   fetchAdminDorms,
   fetchAdminReservations,
   updateAdminClubStatus,
+  updateAdminCounselingStatus,
   updateAdminDormStatus,
   updateAdminReservationStatus,
 } from '../data/api.js';
@@ -25,6 +31,7 @@ const TABS = [
   {key: 'clubs', label: '동아리 신청 관리'},
   {key: 'reservations', label: '시설 예약 관리'},
   {key: 'dorms', label: '기숙사 신청 관리'},
+  {key: 'counseling', label: '상담 예약 관리'},
 ];
 
 const STATUS_CLASSES = {
@@ -41,7 +48,23 @@ const STATUS_MAP = {
   CANCELLED: '취소',
 };
 
+const DEPT_LABELS = {ACADEMIC: '교무처', STUDENT: '학생처', CAREER: '취업지원센터'};
+
 // ############ 공통 UI ############
+
+function StatusFilter({value, onChange}) {
+  return (
+      <div className="d-flex gap-2 mb-3">
+        {['PENDING', 'APPROVED', 'REJECTED'].map(s => (
+            <button key={s}
+                    className={`btn btn-sm ${value === s ? 'btn-primary' : 'btn-outline-secondary'}`}
+                    onClick={() => onChange(s)}>
+              {STATUS_MAP[s]}
+            </button>
+        ))}
+      </div>
+  );
+}
 
 function AdminActionModal({title, children, onClose, onSubmit, submitting}) {
   return (
@@ -89,6 +112,7 @@ export function AdminPage() {
           {tab === 'clubs' && <ClubTab/>}
           {tab === 'reservations' && <ReservationTab/>}
           {tab === 'dorms' && <DormTab/>}
+          {tab === 'counseling' && <CounselingTab/>}
         </div>
       </div>
   );
@@ -215,6 +239,7 @@ function ReservationStatusModal({res, onClose, onRefresh}) {
     setSubmitting(true);
     try {
       await updateAdminReservationStatus(res.id, {status, rejectReason: status === 'REJECTED' ? reason : null});
+      alert('처리가 완료되었습니다');
       onRefresh();
       onClose();
     } catch (err) {
@@ -228,18 +253,25 @@ function ReservationStatusModal({res, onClose, onRefresh}) {
       <AdminActionModal title="시설 예약 심사" onClose={onClose} onSubmit={handleSubmit} submitting={submitting}>
         <div className="p-3 mb-3 border rounded bg-light">
           <strong>장소:</strong> {res.buildingName} {res.roomCode}<br/>
-          <strong>일시:</strong> {res.startTime?.replace('T', ' ')} ~ {res.endTime?.split('T')[1]}<br/>
+          <strong>시작:</strong> {res.startTime?.replace('T', ' ')}<br/>
+          <strong>종료:</strong> {res.endTime?.replace('T', ' ')}<br/>
           <strong>목적:</strong> {res.purpose}
         </div>
         <div className="mb-3">
-          <label className="form-label d-block">승인 여부</label>
-          <select className="form-select" value={status} onChange={e => setStatus(e.target.value)}>
-            <option value="APPROVED">승인</option>
-            <option value="REJECTED">거절</option>
-          </select>
+          <label className="form-label d-block">결정</label>
+          <div className="btn-group w-100">
+            <input type="radio" className="btn-check" name="res_st" id="res_st_app" value="APPROVED"
+                   checked={status === 'APPROVED'} onChange={e => setStatus(e.target.value)}/>
+            <label className="btn btn-outline-success" htmlFor="res_st_app">승인</label>
+            <input type="radio" className="btn-check" name="res_st" id="res_st_rej" value="REJECTED"
+                   checked={status === 'REJECTED'} onChange={e => setStatus(e.target.value)}/>
+            <label className="btn btn-outline-danger" htmlFor="res_st_rej">거절</label>
+          </div>
         </div>
-        {status === 'REJECTED' && <textarea className="form-control" placeholder="거절 사유" value={reason}
-                                            onChange={e => setReason(e.target.value)} required/>}
+        {status === 'REJECTED' && (
+            <textarea className="form-control" placeholder="거절 사유를 입력하세요" value={reason}
+                      onChange={e => setReason(e.target.value)} required/>
+        )}
       </AdminActionModal>
   );
 }
@@ -247,20 +279,30 @@ function ReservationStatusModal({res, onClose, onRefresh}) {
 function ReservationTab() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [selected, setSelected] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('PENDING');
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (status) => {
+    setLoading(true);
+    setError('');
     try {
-      setData(await fetchAdminReservations());
+      setData(await fetchAdminReservations(status));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // noinspection JSIgnoredPromiseFromCall
-    load();
-  }, [load]);
+    load(statusFilter);
+  }, [load, statusFilter]);
+
+  function formatDateTime(dateStr) {
+    if (!dateStr) return '-';
+    return dateStr.substring(5, 16).replace('T', ' ');
+  }
 
   return (
       <div>
@@ -268,31 +310,43 @@ function ReservationTab() {
           <h3>시설 예약 관리</h3>
           <p>시설 대관 신청 목록입니다.</p>
         </div>
-        {loading ? <div className="mypage-loading">데이터를 불러오는 중...</div> : <table className="table mypage-table">
-          <thead>
-          <tr>
-            <th>장소</th>
-            <th>예약자</th>
-            <th>일시</th>
-            <th>상태</th>
-            <th>관리</th>
-          </tr>
-          </thead>
-          <tbody>
-          {data.map(r => (
-              <tr key={r.id}>
-                <td>{r.buildingName} {r.roomCode}</td>
-                <td>{r.userName} {r.clubName && <small className="text-muted">({r.clubName})</small>}</td>
-                <td>{r.startTime?.substring(5, 16).replace('T', ' ')}</td>
-                <td><span className={`mypage-badge ${STATUS_CLASSES[r.status]}`}>{STATUS_MAP[r.status]}</span></td>
-                <td>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => setSelected(r)}>처리</button>
-                </td>
-              </tr>
-          ))}
-          </tbody>
-        </table>}
-        {selected && <ReservationStatusModal res={selected} onClose={() => setSelected(null)} onRefresh={load}/>}
+        <StatusFilter value={statusFilter} onChange={setStatusFilter}/>
+        {loading ? <div className="mypage-loading">데이터를 불러오는 중...</div> :
+        error ? <div className="alert alert-danger">{error}</div> : (
+            <div className="table-responsive">
+              <table className="table mypage-table">
+                <thead>
+                <tr>
+                  <th>장소</th>
+                  <th>예약자</th>
+                  <th>시작일시</th>
+                  <th>종료일시</th>
+                  <th>상태</th>
+                  <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                {data.length === 0 ? (
+                    <tr><td colSpan={6} style={{textAlign: 'center', color: '#a0aec0'}}>데이터가 없습니다.</td></tr>
+                ) : data.map(r => (
+                    <tr key={r.id}>
+                      <td>{r.buildingName} {r.roomCode}</td>
+                      <td>{r.userName} {r.clubName && <small className="text-muted">({r.clubName})</small>}</td>
+                      <td>{formatDateTime(r.startTime)}</td>
+                      <td>{formatDateTime(r.endTime)}</td>
+                      <td><span className={`mypage-badge ${STATUS_CLASSES[r.status]}`}>{STATUS_MAP[r.status]}</span></td>
+                      <td>
+                        {r.status === 'PENDING' ? (
+                            <button className="btn btn-sm btn-outline-primary" onClick={() => setSelected(r)}>처리</button>
+                        ) : '-'}
+                      </td>
+                    </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
+        )}
+        {selected && <ReservationStatusModal res={selected} onClose={() => setSelected(null)} onRefresh={() => load(statusFilter)}/>}
       </div>
   );
 }
@@ -301,17 +355,19 @@ function ReservationTab() {
 
 function DormStatusModal({app, onClose, onRefresh}) {
   const [status, setStatus] = useState('APPROVED');
+  const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await updateAdminDormStatus(app.id, {status});
+      await updateAdminDormStatus(app.id, {status, rejectReason: status === 'REJECTED' ? reason : null});
+      alert('처리가 완료되었습니다');
       onRefresh();
       onClose();
-    } catch {
-      alert('실패');
+    } catch (err) {
+      alert(err.message);
     } finally {
       setSubmitting(false);
     }
@@ -319,14 +375,26 @@ function DormStatusModal({app, onClose, onRefresh}) {
 
   return (
       <AdminActionModal title="기숙사 신청 심사" onClose={onClose} onSubmit={handleSubmit} submitting={submitting}>
-        <div className="mb-3">
-          <p><strong>신청자:</strong> {app.userName || '학부생'}</p>
-          <p><strong>호실:</strong> {app.roomNumber} ({app.period})</p>
+        <div className="p-3 mb-3 border rounded bg-light">
+          <strong>호실:</strong> {app.roomNumber}<br/>
+          <strong>학기:</strong> {app.semester} ({app.period})<br/>
+          <strong>룸메이트:</strong> {app.partnerName || '없음'}
         </div>
-        <select className="form-select" value={status} onChange={e => setStatus(e.target.value)}>
-          <option value="APPROVED">승인</option>
-          <option value="REJECTED">거절</option>
-        </select>
+        <div className="mb-3">
+          <label className="form-label d-block">결정</label>
+          <div className="btn-group w-100">
+            <input type="radio" className="btn-check" name="dorm_st" id="dorm_st_app" value="APPROVED"
+                   checked={status === 'APPROVED'} onChange={e => setStatus(e.target.value)}/>
+            <label className="btn btn-outline-success" htmlFor="dorm_st_app">승인</label>
+            <input type="radio" className="btn-check" name="dorm_st" id="dorm_st_rej" value="REJECTED"
+                   checked={status === 'REJECTED'} onChange={e => setStatus(e.target.value)}/>
+            <label className="btn btn-outline-danger" htmlFor="dorm_st_rej">거절</label>
+          </div>
+        </div>
+        {status === 'REJECTED' && (
+            <textarea className="form-control" placeholder="거절 사유를 입력하세요" value={reason}
+                      onChange={e => setReason(e.target.value)} required/>
+        )}
       </AdminActionModal>
   );
 }
@@ -334,19 +402,25 @@ function DormStatusModal({app, onClose, onRefresh}) {
 function DormTab() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [selected, setSelected] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('PENDING');
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (status) => {
+    setLoading(true);
+    setError('');
     try {
-      setData(await fetchAdminDorms());
+      setData(await fetchAdminDorms(status));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    load(statusFilter);
+  }, [load, statusFilter]);
 
   return (
       <div>
@@ -354,31 +428,165 @@ function DormTab() {
           <h3>기숙사 신청 관리</h3>
           <p>기숙사 입주 신청을 관리합니다.</p>
         </div>
-        {loading ? <div className="mypage-loading">데이터를 불러오는 중...</div> : <table className="table mypage-table">
-          <thead>
-          <tr>
-            <th>호실</th>
-            <th>기간</th>
-            <th>룸메이트</th>
-            <th>신청일</th>
-            <th>관리</th>
-          </tr>
-          </thead>
-          <tbody>
-          {data.map(d => (
-              <tr key={d.id}>
-                <td>{d.roomNumber}</td>
-                <td>{d.semester} ({d.period})</td>
-                <td>{d.partnerName || '없음'}</td>
-                <td>{d.createdAt?.split('T')[0]}</td>
-                <td>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => setSelected(d)}>처리</button>
-                </td>
-              </tr>
-          ))}
-          </tbody>
-        </table>}
-        {selected && <DormStatusModal app={selected} onClose={() => setSelected(null)} onRefresh={load}/>}
+        <StatusFilter value={statusFilter} onChange={setStatusFilter}/>
+        {loading ? <div className="mypage-loading">데이터를 불러오는 중...</div> :
+        error ? <div className="alert alert-danger">{error}</div> : (
+            <div className="table-responsive">
+              <table className="table mypage-table">
+                <thead>
+                <tr>
+                  <th>호실</th>
+                  <th>기간</th>
+                  <th>룸메이트</th>
+                  <th>신청일</th>
+                  <th>상태</th>
+                  <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                {data.length === 0 ? (
+                    <tr><td colSpan={6} style={{textAlign: 'center', color: '#a0aec0'}}>데이터가 없습니다.</td></tr>
+                ) : data.map(d => (
+                    <tr key={d.id}>
+                      <td>{d.roomNumber}</td>
+                      <td>{d.semester} ({d.period})</td>
+                      <td>{d.partnerName || '없음'}</td>
+                      <td>{d.createdAt?.split('T')[0]}</td>
+                      <td><span className={`mypage-badge ${STATUS_CLASSES[d.status]}`}>{STATUS_MAP[d.status]}</span></td>
+                      <td>
+                        {d.status === 'PENDING' ? (
+                            <button className="btn btn-sm btn-outline-primary" onClick={() => setSelected(d)}>처리</button>
+                        ) : '-'}
+                      </td>
+                    </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
+        )}
+        {selected && <DormStatusModal app={selected} onClose={() => setSelected(null)} onRefresh={() => load(statusFilter)}/>}
+      </div>
+  );
+}
+
+// ############ 상담 예약 탭 ############
+
+function CounselingStatusModal({item, onClose, onRefresh}) {
+  const [status, setStatus] = useState('APPROVED');
+  const [reason, setReason] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await updateAdminCounselingStatus(item.id, {status, rejectReason: status === 'REJECTED' ? reason : null});
+      alert('처리가 완료되었습니다');
+      onRefresh();
+      onClose();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+      <AdminActionModal title="상담 예약 심사" onClose={onClose} onSubmit={handleSubmit} submitting={submitting}>
+        <div className="p-3 mb-3 border rounded bg-light">
+          <strong>상담사:</strong> {item.counselorName}<br/>
+          <strong>부서:</strong> {DEPT_LABELS[item.department] || item.department}<br/>
+          <strong>날짜:</strong> {item.date}<br/>
+          <strong>시간:</strong> {item.startTime?.substring(0, 5)} ~ {item.endTime?.substring(0, 5)}<br/>
+          <strong>주제:</strong> {item.topic || '-'}
+        </div>
+        <div className="mb-3">
+          <label className="form-label d-block">결정</label>
+          <div className="btn-group w-100">
+            <input type="radio" className="btn-check" name="coun_st" id="coun_st_app" value="APPROVED"
+                   checked={status === 'APPROVED'} onChange={e => setStatus(e.target.value)}/>
+            <label className="btn btn-outline-success" htmlFor="coun_st_app">승인</label>
+            <input type="radio" className="btn-check" name="coun_st" id="coun_st_rej" value="REJECTED"
+                   checked={status === 'REJECTED'} onChange={e => setStatus(e.target.value)}/>
+            <label className="btn btn-outline-danger" htmlFor="coun_st_rej">거절</label>
+          </div>
+        </div>
+        {status === 'REJECTED' && (
+            <textarea className="form-control" placeholder="거절 사유를 입력하세요" value={reason}
+                      onChange={e => setReason(e.target.value)} required/>
+        )}
+      </AdminActionModal>
+  );
+}
+
+function CounselingTab() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [selected, setSelected] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('PENDING');
+
+  const load = useCallback(async (status) => {
+    setLoading(true);
+    setError('');
+    try {
+      setData(await fetchAdminCounseling(status));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load(statusFilter);
+  }, [load, statusFilter]);
+
+  return (
+      <div>
+        <div className="mypage-section-header">
+          <h3>상담 예약 관리</h3>
+          <p>상담 예약 신청을 관리합니다.</p>
+        </div>
+        <StatusFilter value={statusFilter} onChange={setStatusFilter}/>
+        {loading ? <div className="mypage-loading">데이터를 불러오는 중...</div> :
+        error ? <div className="alert alert-danger">{error}</div> : (
+            <div className="table-responsive">
+              <table className="table mypage-table">
+                <thead>
+                <tr>
+                  <th>상담사</th>
+                  <th>부서</th>
+                  <th>날짜</th>
+                  <th>시간</th>
+                  <th>주제</th>
+                  <th>상태</th>
+                  <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                {data.length === 0 ? (
+                    <tr><td colSpan={7} style={{textAlign: 'center', color: '#a0aec0'}}>데이터가 없습니다.</td></tr>
+                ) : data.map(r => (
+                    <tr key={r.id}>
+                      <td>{r.counselorName}</td>
+                      <td>{DEPT_LABELS[r.department] || r.department}</td>
+                      <td>{r.date}</td>
+                      <td>{r.startTime?.substring(0, 5)} ~ {r.endTime?.substring(0, 5)}</td>
+                      <td>{r.topic || '-'}</td>
+                      <td><span className={`mypage-badge ${STATUS_CLASSES[r.status]}`}>{STATUS_MAP[r.status]}</span></td>
+                      <td>
+                        {r.status === 'PENDING' ? (
+                            <button className="btn btn-sm btn-outline-primary" onClick={() => setSelected(r)}>처리</button>
+                        ) : '-'}
+                      </td>
+                    </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
+        )}
+        {selected && <CounselingStatusModal item={selected} onClose={() => setSelected(null)} onRefresh={() => load(statusFilter)}/>}
       </div>
   );
 }

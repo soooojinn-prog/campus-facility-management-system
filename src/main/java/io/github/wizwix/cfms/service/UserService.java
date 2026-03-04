@@ -90,7 +90,10 @@ public class UserService implements IUserService {
     user.setPassword(passwordEncoder.encode(request.password()));
     user.setEmail(request.email());
     user.setCreatedAt(LocalDateTime.now());
-    user.setRole(UserRole.ROLE_STUDENT);
+    if (request.role() != null && request.role() == UserRole.ROLE_ADMIN) {
+      throw new IllegalArgumentException("관리자 계정은 직접 가입할 수 없습니다.");
+    }
+    user.setRole(request.role() != null ? request.role() : UserRole.ROLE_STUDENT);
     if (request.gender() != null) {
       user.setGender(request.gender());
     }

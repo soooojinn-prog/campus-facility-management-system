@@ -1,6 +1,7 @@
 package io.github.wizwix.cfms.model.counseling;
 
 import io.github.wizwix.cfms.model.enums.CounselingDepartment;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class Counselor {
   private String name;
   /// 소속 부서
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private CounselingDepartment department;
   /// 직위 (e.g. "교무처 상담관")
   private String position;

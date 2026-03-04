@@ -49,5 +49,6 @@ public class Club {
   private String slug;
   /// 동아리 상태 (개설 승인됨, 개설 승인 대기 중, 개설 승인 거부 됨)
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private ClubStatus status;
 }

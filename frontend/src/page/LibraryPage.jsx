@@ -3,7 +3,6 @@ import {useNavigate} from 'react-router-dom';
 import {AuthModal} from '../components/AuthModal.jsx';
 import {useAuth} from '../context/AuthContext.jsx';
 import {
-  fetchBuildings,
   fetchCongestion,
   fetchNotice,
   fetchNotices,
@@ -134,7 +133,7 @@ function BookRow({b}) {
 
 // 1. 열람실 현황
 
-function ReadingSection({buildingId, onNeedLogin}) {
+function ReadingSection({onNeedLogin}) {
   const {currentUser} = useAuth();
   const [rooms, setRooms] = useState([]);
   const [selectedId, setSelectedId] = useState(null); // 기본값 2F(제1열람실) = id 1
@@ -151,7 +150,7 @@ function ReadingSection({buildingId, onNeedLogin}) {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchReadingRooms(buildingId);
+      const data = await fetchReadingRooms();
       setRooms(data);
       // 기본값: id=1 (제1열람실 2F)
       await loadSeats(1, data);
@@ -161,7 +160,7 @@ function ReadingSection({buildingId, onNeedLogin}) {
     } finally {
       setLoading(false);
     }
-  }, [buildingId]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -172,7 +171,7 @@ function ReadingSection({buildingId, onNeedLogin}) {
     setSeatData(null);
     setLocalReserved({});
     try {
-      setSeatData(await fetchReadingRoomSeats(buildingId, id));
+      setSeatData(await fetchReadingRoomSeats(id));
     } catch {
       setSeatData(null);
     } finally {
@@ -200,7 +199,7 @@ function ReadingSection({buildingId, onNeedLogin}) {
     }
     // DB 저장 — reserveSeat API 호출 (서버에서도 1인1좌석 재검증)
     try {
-      await reserveSeat(buildingId, selectedId, seat.seatNo);
+      await reserveSeat(selectedId, seat.seatNo);
       // 즉시 UI 반영
       setLocalReserved(prev => ({...prev, [seat.seatNo]: 'RESERVED'}));
       setAlreadyReserved(true); // 이후 다른 좌석 클릭 차단
@@ -369,7 +368,7 @@ function ReadingSection({buildingId, onNeedLogin}) {
 
 // 2. 도서 검색
 
-function BooksSection({buildingId, onNeedLogin}) {
+function BooksSection({onNeedLogin}) {
   const {currentUser} = useAuth();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null); // null=미검색, []~=검색결과
@@ -385,7 +384,7 @@ function BooksSection({buildingId, onNeedLogin}) {
     setQuickMode('search');
     setResults(null);
     try {
-      setResults(await searchBooks(buildingId, {q, publisher, category}));
+      setResults(await searchBooks({q, publisher, category}));
     } catch (e) {
       setError(e.message);
     } finally {
@@ -399,7 +398,7 @@ function BooksSection({buildingId, onNeedLogin}) {
     setLoading(true);
     setError(null);
     try {
-      setResults(await searchBooks(buildingId, {q: ''}));
+      setResults(await searchBooks({q: ''}));
     } catch (e) {
       setError(e.message);
     } finally {
@@ -412,7 +411,7 @@ function BooksSection({buildingId, onNeedLogin}) {
     setLoading(true);
     setError(null);
     try {
-      const all = await searchBooks(buildingId, {q: ''});
+      const all = await searchBooks({q: ''});
       setResults(all.slice(0, 5));
     } catch (e) {
       setError(e.message);
@@ -574,7 +573,7 @@ function BooksSection({buildingId, onNeedLogin}) {
 
 // 3. 스터디룸 예약
 
-function StudySection({buildingId, onNeedLogin}) {
+function StudySection({onNeedLogin}) {
   const {currentUser} = useAuth();
   const [rooms, setRooms] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -595,13 +594,13 @@ function StudySection({buildingId, onNeedLogin}) {
     setLoading(true);
     setError(null);
     try {
-      setRooms(await fetchStudyRooms(buildingId));
+      setRooms(await fetchStudyRooms());
     } catch (e) {
       setError(e.message);
     } finally {
       setLoading(false);
     }
-  }, [buildingId]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -616,7 +615,7 @@ function StudySection({buildingId, onNeedLogin}) {
     setDone(false);
     setLocalOccupied([]);
     try {
-      setSlotData(await fetchStudyRoomSlots(buildingId, room.id, today));
+      setSlotData(await fetchStudyRoomSlots(room.id, today));
     } catch {
       setSlotData({occupiedSlots: []});
     } finally {
@@ -650,7 +649,7 @@ function StudySection({buildingId, onNeedLogin}) {
     setSelectedTime(t);
     setReserving(true);
     try {
-      await reserveStudyRoom(buildingId, selectedId, {date: today, startHour: parseInt(t)});
+      await reserveStudyRoom(selectedId, {date: today, startHour: parseInt(t)});
       setLocalOccupied(prev => [...prev, t]);
       setMyReservedTimes(prev => [...prev, t]); // 모든 방 시간대 추적
       setDone(true);
@@ -781,7 +780,7 @@ function StudySection({buildingId, onNeedLogin}) {
 
 // 4. 혼잡도
 
-function CongestionSection({buildingId}) {
+function CongestionSection() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -791,13 +790,13 @@ function CongestionSection({buildingId}) {
     setLoading(true);
     setError(null);
     try {
-      setData(await fetchCongestion(buildingId));
+      setData(await fetchCongestion());
     } catch (e) {
       setError(e.message);
     } finally {
       setLoading(false);
     }
-  }, [buildingId]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -907,7 +906,7 @@ function CongestionSection({buildingId}) {
 
 // 5. 공지사항
 
-function NoticesSection({buildingId}) {
+function NoticesSection() {
   const [notices, setNotices] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [detail, setDetail] = useState(null);
@@ -919,7 +918,7 @@ function NoticesSection({buildingId}) {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchNotices(buildingId);
+      const data = await fetchNotices();
       setNotices(data);
       if (data.length > 0) await handleSelect(data[0]);
     } catch (e) {
@@ -927,7 +926,7 @@ function NoticesSection({buildingId}) {
     } finally {
       setLoading(false);
     }
-  }, [buildingId]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -938,7 +937,7 @@ function NoticesSection({buildingId}) {
     setDetailLoading(true);
     setDetail(null);
     try {
-      setDetail(await fetchNotice(buildingId, notice.id));
+      setDetail(await fetchNotice(notice.id));
     } catch {
       setDetail(notice);
     } finally {
@@ -1013,31 +1012,21 @@ function NoticesSection({buildingId}) {
 
 export function LibraryPage({building}) {
   const navigate = useNavigate();
-  const [buildingId, setBuildingId] = useState(null);
   const [activeTab, setActiveTab] = useState('reading');
+  const [tabKey, setTabKey] = useState(0); // 같은 탭 재클릭 시 리셋용
   const [showAuth, setShowAuth] = useState(false); // 로그인 모달 제어
   const [summaryData, setSummaryData] = useState(null); // 상단 현황 데이터
   const now = new Date();
-
-  // 건물 ID 동적 조회 — DB 시딩 순서에 따라 ID가 달라지므로 slug로 조회
-  useEffect(() => {
-    fetchBuildings().then(buildings => {
-      const lib = buildings.find(b => b.slug === 'library');
-      if (lib) setBuildingId(lib.id);
-    }).catch(() => {
-    });
-  }, []);
 
   // 상단 "현재 이용 현황" 5줄 — 실제 API 데이터 기반
   // 열람실 4개(디지털/제2/제1/야간) + 스터디룸 가용 수를 한눈에 표시
   // name 기반 조회: DB ID 순서 변동에 안전 (DevLoader 시딩 순서 무관)
   useEffect(() => {
-    if (!buildingId) return;
     (async () => {
       try {
         const [rooms, studyRooms] = await Promise.all([
-          fetchReadingRooms(buildingId),
-          fetchStudyRooms(buildingId),
+          fetchReadingRooms(),
+          fetchStudyRooms(),
         ]);
         // ReadingSection의 rate 계산과 완전 동일: Math.min(round(usedSeats/totalSeats*100), 100)
         const calcRate = r => r ? Math.min(Math.round((r.usedSeats / r.totalSeats) * 100), 100) : 0;
@@ -1057,7 +1046,7 @@ export function LibraryPage({building}) {
       } catch { /* 실패해도 무시 — 하드코딩 fallback */
       }
     })();
-  }, [buildingId]);
+  }, []);
 
   // 로그인 필요 시 호출 — alert 이후 모달 띄우기
   function handleNeedLogin() {
@@ -1067,21 +1056,19 @@ export function LibraryPage({building}) {
   function renderTab() {
     switch (activeTab) {
       case 'reading':
-        return <ReadingSection buildingId={buildingId} onNeedLogin={handleNeedLogin}/>;
+        return <ReadingSection key={tabKey} onNeedLogin={handleNeedLogin}/>;
       case 'books':
-        return <BooksSection buildingId={buildingId} onNeedLogin={handleNeedLogin}/>;
+        return <BooksSection key={tabKey} onNeedLogin={handleNeedLogin}/>;
       case 'study':
-        return <StudySection buildingId={buildingId} onNeedLogin={handleNeedLogin}/>;
+        return <StudySection key={tabKey} onNeedLogin={handleNeedLogin}/>;
       case 'congestion':
-        return <CongestionSection buildingId={buildingId}/>;
+        return <CongestionSection key={tabKey}/>;
       case 'notices':
-        return <NoticesSection buildingId={buildingId}/>;
+        return <NoticesSection key={tabKey}/>;
       default:
         return null;
     }
   }
-
-  if (!buildingId) return <LoadingBox/>;
 
   return (
       <>
@@ -1180,7 +1167,10 @@ export function LibraryPage({building}) {
                 <button
                     key={tab.key}
                     className={activeTab === tab.key ? 'active' : ''}
-                    onClick={() => setActiveTab(tab.key)}
+                    onClick={() => {
+                      if (activeTab === tab.key) setTabKey(k => k + 1);
+                      else setActiveTab(tab.key);
+                    }}
                 >
                   {tab.label}
                 </button>

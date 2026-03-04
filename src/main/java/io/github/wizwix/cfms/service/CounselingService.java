@@ -113,6 +113,25 @@ public class CounselingService implements ICounselingService {
     return reservations.stream().filter(r -> r.getStatus() != ReservationStatus.CANCELLED && r.getStatus() != ReservationStatus.REJECTED).map(this::toResponse).toList();
   }
 
+  /// 관리자용 — 상태별 상담 예약 조회
+  @Override
+  @Transactional(readOnly = true)
+  public List<ResponseCounselingReservation> getReservationsByStatus(ReservationStatus status) {
+    return reservationRepo.findByStatus(status).stream().map(this::toResponse).toList();
+  }
+
+  /// 관리자용 — 상담 예약 승인/거절
+  @Override
+  public void updateReservationStatus(Long id, ReservationStatus status, String rejectReason, String adminNumber) {
+    CounselingReservation reservation = reservationRepo.findById(id)
+        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
+    if (reservation.getStatus() != ReservationStatus.PENDING) {
+      throw new IllegalStateException("승인 대기 중인 예약만 처리할 수 있습니다.");
+    }
+    reservation.setStatus(status);
+    reservationRepo.save(reservation);
+  }
+
   private ResponseCounselingReservation toResponse(CounselingReservation r) {
     return new ResponseCounselingReservation(r.getId(), r.getCounselor().getName(), r.getCounselor().getDepartment().name(), r.getDate(), r.getStartTime(), r.getEndTime(), r.getStatus(), r.getTopic(), r.getMemo(), r.getCreatedAt());
   }

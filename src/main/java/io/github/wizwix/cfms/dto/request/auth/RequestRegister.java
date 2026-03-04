@@ -1,6 +1,7 @@
 package io.github.wizwix.cfms.dto.request.auth;
 
 import io.github.wizwix.cfms.model.enums.Gender;
+import io.github.wizwix.cfms.model.enums.UserRole;
 import jakarta.validation.constraints.NotNull;
 
 /// 회원 가입 요청
@@ -13,4 +14,4 @@ import jakarta.validation.constraints.NotNull;
 /// @param password   [String] 비밀번호
 /// @param email      [String] 이메일 주소
 /// @param gender     [Gender] 성별
-public record RequestRegister(String userNumber, String name, String password, String email, @NotNull Gender gender) {}
+public record RequestRegister(String userNumber, String name, String password, String email, @NotNull Gender gender, UserRole role) {}

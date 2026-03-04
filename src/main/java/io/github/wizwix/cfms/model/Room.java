@@ -3,6 +3,7 @@ package io.github.wizwix.cfms.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.github.wizwix.cfms.global.jackson.BuildingSlugDeserializer;
 import io.github.wizwix.cfms.model.enums.RoomType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,6 +42,7 @@ public class Room {
   private Integer floor;
   /// 방 유형
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private RoomType type;
 
   public String getFullName() {

@@ -49,6 +49,7 @@ public class CounselingReservation {
   private LocalTime startTime;
   /// 예약 상태 (PENDING/APPROVED/REJECTED/CANCELLED)
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private ReservationStatus status;
   /// 상담 주제
   @Column(length = 500)

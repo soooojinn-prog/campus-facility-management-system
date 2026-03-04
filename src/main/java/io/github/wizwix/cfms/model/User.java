@@ -43,7 +43,7 @@ public class User {
   private Boolean enabled = true;
   /// 성별
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "varchar(50)")
   private Gender gender;
   /// 학번 or 교번 (e.g. '260004181')
   @Column(unique = true, nullable = false)
@@ -55,5 +55,6 @@ public class User {
   private LocalDateTime passwordResetTokenExpiry;
   /// 회원의 유형 (학생, 교수, 관리자)
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private UserRole role;
 }

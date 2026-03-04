@@ -3,6 +3,7 @@ package io.github.wizwix.cfms.model.dorm;
 import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.model.enums.DormApplicationStatus;
 import io.github.wizwix.cfms.model.enums.DormPeriod;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,6 +42,7 @@ public class DormApplication {
   private User partner;
   /// 입주 기간
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private DormPeriod period;
   /// 신청 호실
   @ManyToOne
@@ -50,5 +52,14 @@ public class DormApplication {
   private String semester;
   /// 신청 상태
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private DormApplicationStatus status;
+  /// 거절 사유 (관리자)
+  private String rejectReason;
+  /// 처리한 관리자
+  @ManyToOne
+  @JoinColumn(name = "processed_by_id")
+  private User processedBy;
+  /// 처리 시각
+  private LocalDateTime processedAt;
 }

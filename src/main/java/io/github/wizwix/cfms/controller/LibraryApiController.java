@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -98,6 +99,20 @@ public class LibraryApiController {
     Integer startHour = Integer.valueOf(body.get("startHour").toString());
     libraryService.reserveStudyRoom(roomId, date, startHour, auth.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  /// 열람실 좌석 예약 취소 — 로그인 필수
+  @DeleteMapping("/reading-rooms/reservations/{id}")
+  public ResponseEntity<Void> cancelSeatReservation(@PathVariable Long id, Authentication auth) {
+    libraryService.cancelSeatReservation(auth.getName(), id);
+    return ResponseEntity.noContent().build();
+  }
+
+  /// 스터디룸 예약 취소 — 로그인 필수
+  @DeleteMapping("/study-rooms/reservations/{id}")
+  public ResponseEntity<Void> cancelStudyRoomReservation(@PathVariable Long id, Authentication auth) {
+    libraryService.cancelStudyRoomReservation(auth.getName(), id);
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/books")

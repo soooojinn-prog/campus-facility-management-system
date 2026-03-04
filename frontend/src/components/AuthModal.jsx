@@ -74,7 +74,8 @@ export function AuthModal({onClose}) {
     }
 
     try {
-      await signupApi(signupId, signupPw, signupName, signupEmail, selectedGender);
+      const role = selectedRole === '교수' ? 'ROLE_PROFESSOR' : 'ROLE_STUDENT';
+      await signupApi(signupId, signupPw, signupName, signupEmail, selectedGender, role);
       alert(`회원가입이 완료되었습니다!\n${signupName}님, 로그인해주세요.`);
       setTab('login');
     } catch (e) {

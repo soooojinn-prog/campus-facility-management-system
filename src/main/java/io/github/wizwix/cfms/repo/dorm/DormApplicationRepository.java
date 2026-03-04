@@ -14,4 +14,6 @@ public interface DormApplicationRepository extends JpaRepository<DormApplication
   List<DormApplication> findByApplicantAndStatusIn(User applicant, List<DormApplicationStatus> statuses);
 
   List<DormApplication> findByRoomInAndSemesterAndStatusIn(List<DormRoom> rooms, String semester, List<DormApplicationStatus> statuses);
+
+  List<DormApplication> findByStatus(DormApplicationStatus status);
 }

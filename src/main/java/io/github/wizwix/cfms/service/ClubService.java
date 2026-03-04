@@ -97,6 +97,6 @@ public class ClubService implements IClubService {
   }
 
   private int getMemberCount(Club club) {
-    return clubMemberRepository.getClubMemberCountByClubId(club.getId());
+    return clubMemberRepository.countByClubId(club.getId());
   }
 }

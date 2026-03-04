@@ -126,6 +126,16 @@ public class ReservationService implements IReservationService {
     if (reservation.getStatus() != ReservationStatus.PENDING) {
       throw new IllegalStateException("승인 대기 중인 예약만 처리할 수 있습니다.");
     }
+    // 승인 시 같은 호실·겹치는 시간에 이미 승인된 예약이 있으면 거부
+    if (status == ReservationStatus.APPROVED) {
+      List<Reservation> conflicts = reservationRepo.findByRoomIdAndStartTimeLessThanAndEndTimeGreaterThanAndStatusIn(
+          reservation.getRoom().getId(), reservation.getEndTime(), reservation.getStartTime(),
+          List.of(ReservationStatus.APPROVED));
+      if (!conflicts.isEmpty()) {
+        throw new IllegalStateException("해당 시간대에 이미 승인된 예약이 있습니다.");
+      }
+    }
+
     User admin = userRepo.findByNumber(adminNumber).orElseThrow(() -> new IllegalArgumentException("관리자를 찾을 수 없습니다."));
     reservation.setStatus(status);
     reservation.setRejectReason(status == ReservationStatus.REJECTED ? rejectReason : null);

@@ -43,7 +43,7 @@ export function ReserveModal({buildingName, room, selectedDate, startHour, onClo
       });
       onClose();
       if (onReserved) onReserved();
-      alert(`예약 신청이 완료되었습니다!\n\n` + `신청자: ${currentUser.name}(${currentUser.role})\n` + `호실: ${room.name}\n` + `시간: ${String(start).padStart(2, '0')}:00 ~ ${String(end).padStart(2, '0')}:00\n` + `목적: ${purpose}\n\n` + `관리자 승인 후 확정됩니다.`);
+      alert(`예약 신청이 완료되었습니다!\n\n` + `신청자: ${currentUser.name}(${ROLE_LABELS[currentUser.role] || currentUser.role})\n` + `호실: ${room.name}\n` + `시간: ${String(start).padStart(2, '0')}:00 ~ ${String(end).padStart(2, '0')}:00\n` + `목적: ${purpose}\n\n` + `관리자 승인 후 확정됩니다.`);
     } catch (e) {
       setError(true);
     }

@@ -56,6 +56,7 @@ public class Reservation {
   private LocalDateTime startTime;
   /// 시설 예약 현황 (신청 허가됨, 신청 취소됨, 승인 대기 중, 승인 반려됨)
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private ReservationStatus status;
   /// 시설 예약 갱신 시각
   private LocalDateTime updatedAt;

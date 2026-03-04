@@ -3,6 +3,7 @@ package io.github.wizwix.cfms.model.club;
 import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.model.enums.ClubMemberStatus;
 import io.github.wizwix.cfms.model.enums.ClubRole;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,10 +39,12 @@ public class ClubMember {
   private String rejectReason;
   /// 동아리 부원 역할 (부원, 부장, 부부장)
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private ClubRole role;
   /// 동아리 가입 상태 (가입 승인됨, 탈퇴함, 가입 승인 대기 중, 가입 거부 됨)
   // 가입 거부된 줄은 매일 오전 0시에 삭제 처리되어야 함
   @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "varchar(50)")
   private ClubMemberStatus status;
   /// 회원
   @ManyToOne

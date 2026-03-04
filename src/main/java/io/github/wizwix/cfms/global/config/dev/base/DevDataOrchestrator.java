@@ -1,5 +1,10 @@
 package io.github.wizwix.cfms.global.config.dev.base;
 
+import io.github.wizwix.cfms.repo.ReservationRepository;
+import io.github.wizwix.cfms.repo.counceling.CounselingReservationRepository;
+import io.github.wizwix.cfms.repo.dorm.DormApplicationRepository;
+import io.github.wizwix.cfms.repo.library.LibrarySeatReservationRepository;
+import io.github.wizwix.cfms.repo.library.LibraryStudyRoomReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +23,11 @@ import java.util.List;
 @Slf4j
 public class DevDataOrchestrator {
   private final List<DevDataLoader> loaders;
+  private final ReservationRepository reservationRepo;
+  private final DormApplicationRepository dormAppRepo;
+  private final CounselingReservationRepository counselingResRepo;
+  private final LibrarySeatReservationRepository seatResRepo;
+  private final LibraryStudyRoomReservationRepository studyRoomResRepo;
 
   /// 종료 시 dev 데이터 정리.
   /// - 역순 unload: load 순서(Building→Room→...)의 반대로 실행하여 FK 제약 위반 방지
@@ -25,6 +35,14 @@ public class DevDataOrchestrator {
   @EventListener(ContextClosedEvent.class)
   public void onShutdown() {
     log.info("Dev Profile: Cleaning up sample data...");
+    // 사용자가 실행 중 생성한 데이터를 먼저 삭제 — FK 제약 위반 방지
+    log.info("Dev Profile: Cleaning up user-created data...");
+    reservationRepo.deleteAll();
+    dormAppRepo.deleteAll();
+    counselingResRepo.deleteAll();
+    seatResRepo.deleteAll();
+    studyRoomResRepo.deleteAll();
+
     List<DevDataLoader> reversed = new ArrayList<>(loaders);
     Collections.reverse(reversed);
     reversed.forEach(loader -> {

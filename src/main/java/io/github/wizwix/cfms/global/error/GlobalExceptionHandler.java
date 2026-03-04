@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(NotAvailableException.class)
-  public ResponseEntity<ResponseError> handleNotAvailable(DuplicatedReservationException e, HttpServletResponse response) {
+  public ResponseEntity<ResponseError> handleNotAvailable(NotAvailableException e, HttpServletResponse response) {
     return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 

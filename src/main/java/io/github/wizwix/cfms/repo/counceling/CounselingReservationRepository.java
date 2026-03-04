@@ -13,4 +13,6 @@ public interface CounselingReservationRepository extends JpaRepository<Counselin
   List<CounselingReservation> findByCounselorAndDate(Counselor counselor, LocalDate date);
 
   List<CounselingReservation> findByUserAndStatusIn(User user, List<ReservationStatus> statuses);
+
+  List<CounselingReservation> findByStatus(ReservationStatus status);
 }

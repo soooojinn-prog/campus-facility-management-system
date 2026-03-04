@@ -1,13 +1,19 @@
 package io.github.wizwix.cfms.controller;
 
 import io.github.wizwix.cfms.dto.request.admin.RequestAdminClubStatusUpdate;
+import io.github.wizwix.cfms.dto.request.admin.RequestAdminDormStatus;
 import io.github.wizwix.cfms.dto.request.admin.RequestAdminReservationStatus;
 import io.github.wizwix.cfms.dto.response.club.ResponseClubDetail;
 import io.github.wizwix.cfms.dto.response.club.ResponseClubList;
+import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselingReservation;
+import io.github.wizwix.cfms.dto.response.dorm.ResponseDormMyApplication;
 import io.github.wizwix.cfms.dto.response.reservation.ResponseReservation;
 import io.github.wizwix.cfms.model.enums.ClubStatus;
+import io.github.wizwix.cfms.model.enums.DormApplicationStatus;
 import io.github.wizwix.cfms.model.enums.ReservationStatus;
 import io.github.wizwix.cfms.service.iface.IClubService;
+import io.github.wizwix.cfms.service.iface.ICounselingService;
+import io.github.wizwix.cfms.service.iface.IDormService;
 import io.github.wizwix.cfms.service.iface.IReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +37,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminApiController {
   private final IClubService clubService;
+  private final ICounselingService counselingService;
+  private final IDormService dormService;
   private final IReservationService reservationService;
 
   @GetMapping("/clubs")
@@ -59,6 +67,41 @@ public class AdminApiController {
   @PatchMapping("/reservations/{id}/status")
   public ResponseEntity<Void> updateReservationStatus(@PathVariable Long id, @RequestBody RequestAdminReservationStatus req, Authentication auth) {
     reservationService.updateReservationStatus(id, req.status(), req.rejectReason(), auth.getName());
+    return ResponseEntity.ok().build();
+  }
+
+  /// 기숙사 신청 목록 조회 — 상태별 필터링 (기본 PENDING)
+  /// 프론트: AdminPage.jsx → DormTab에서 fetchAdminDorms() 호출
+  @GetMapping("/dorms")
+  public List<ResponseDormMyApplication> getDormApplications(
+      @RequestParam(defaultValue = "PENDING") DormApplicationStatus status) {
+    return dormService.getDormApplicationsByStatus(status);
+  }
+
+  /// 기숙사 신청 승인/거절 — PENDING 상태만 처리 가능
+  /// 프론트: AdminPage.jsx → DormStatusModal에서 updateAdminDormStatus() 호출
+  @PatchMapping("/dorms/{id}/status")
+  public void updateDormApplicationStatus(
+      @PathVariable Long id,
+      @RequestBody RequestAdminDormStatus req,
+      Authentication auth) {
+    dormService.updateDormApplicationStatus(id, req.status(), req.rejectReason(), auth.getName());
+  }
+
+  /// 상담 예약 목록 조회 — 상태별 필터링 (기본 PENDING)
+  @GetMapping("/counseling")
+  public ResponseEntity<List<ResponseCounselingReservation>> getCounselingReservations(
+      @RequestParam(defaultValue = "PENDING") ReservationStatus status) {
+    return ResponseEntity.ok(counselingService.getReservationsByStatus(status));
+  }
+
+  /// 상담 예약 승인/거절 — PENDING 상태만 처리 가능
+  @PatchMapping("/counseling/{id}/status")
+  public ResponseEntity<Void> updateCounselingReservationStatus(
+      @PathVariable Long id,
+      @RequestBody RequestAdminReservationStatus req,
+      Authentication auth) {
+    counselingService.updateReservationStatus(id, req.status(), req.rejectReason(), auth.getName());
     return ResponseEntity.ok().build();
   }
 }

@@ -4,6 +4,7 @@ import io.github.wizwix.cfms.dto.request.counseling.RequestCounselingReservation
 import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselingReservation;
 import io.github.wizwix.cfms.dto.response.counseling.ResponseCounselor;
 import io.github.wizwix.cfms.model.enums.CounselingDepartment;
+import io.github.wizwix.cfms.model.enums.ReservationStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,4 +19,8 @@ public interface ICounselingService {
   List<ResponseCounselingReservation> getMyReservations(String userNumber);
 
   List<ResponseCounselingReservation> getSlots(Long counselorId, LocalDate date);
+
+  List<ResponseCounselingReservation> getReservationsByStatus(ReservationStatus status);
+
+  void updateReservationStatus(Long id, ReservationStatus status, String rejectReason, String adminNumber);
 }

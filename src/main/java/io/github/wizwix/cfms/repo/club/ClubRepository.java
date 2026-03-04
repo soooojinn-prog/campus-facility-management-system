@@ -16,5 +16,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
   List<Club> findByStatus(ClubStatus status);
 
   @Query("SELECT c FROM Club c LEFT JOIN c.president p WHERE c.name LIKE %:keyword% OR c.slug LIKE %:keyword% OR p.name LIKE %:keyword%")
-  List<Club> searchByKeyword(String query);
+  List<Club> searchByKeyword(String keyword);
 }

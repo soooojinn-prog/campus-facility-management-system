@@ -15,5 +15,5 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
 
   Optional<ClubMember> findByUser(User user);
 
-  int getClubMemberCountByClubId(Long clubId);
+  int countByClubId(Long clubId);
 }
