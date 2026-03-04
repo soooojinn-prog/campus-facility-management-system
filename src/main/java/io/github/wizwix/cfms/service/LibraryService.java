@@ -95,18 +95,21 @@ public class LibraryService implements ILibraryService {
     return m;
   }
 
-  // ── 4. 혼잡도 ──
+  // ── 4. 혼잡도 ── 열람실 현황/상단 요약과 동일하게 buildSeats() 기반 실시간 계산
   @Override
   public ResponseLibraryCongestion getCongestion(Long buildingId) {
-    int[] spec4F = ROOM_SPEC.get(4L); int rate4F = spec4F[1];
-    int[] spec3F = ROOM_SPEC.get(2L); int rate3F = spec3F[1];
-    int[] spec2F = ROOM_SPEC.get(1L); int rate2F = spec2F[1];
-    int[] specB1 = ROOM_SPEC.get(3L); int rateB1 = specB1[1];
+    LocalDate today = LocalDate.now();
+    // buildSeats()로 실제 OCCUPIED 수 계산 → 열람실 현황 탭과 % 완전 일치
+    int rate4F = calcOccupiedRate(4L, today); // 디지털열람실
+    int rate2L = calcOccupiedRate(2L, today); // 제2열람실
+    int rate1L = calcOccupiedRate(1L, today); // 제1열람실
+    int rateB1 = calcOccupiedRate(3L, today); // 야간열람실
 
+    // 순서: 4층(맨 위) → 3층 → 2층 → 1층 로비 → B1(맨 아래)
     List<Map<String, Object>> floors = new ArrayList<>(List.of(
         new LinkedHashMap<>(Map.of("name", "4층 디지털열람실",    "rate", rate4F, "capacity",  60)),
-        new LinkedHashMap<>(Map.of("name", "3층 제2열람실",       "rate", rate3F, "capacity",  76)),
-        new LinkedHashMap<>(Map.of("name", "2층 제1열람실",       "rate", rate2F, "capacity", 128)),
+        new LinkedHashMap<>(Map.of("name", "3층 제2열람실",       "rate", rate2L, "capacity",  76)),
+        new LinkedHashMap<>(Map.of("name", "2층 제1열람실",       "rate", rate1L, "capacity", 128)),
         new LinkedHashMap<>(Map.of("name", "1층 로비·안내데스크", "rate", 45,     "capacity",  50)),
         new LinkedHashMap<>(Map.of("name", "B1 야간열람실",       "rate", rateB1, "capacity",  80))
     ));
@@ -233,6 +236,14 @@ public class LibraryService implements ILibraryService {
       ));
     }
     return result;
+  }
+
+  /** roomId + date 기준 실제 OCCUPIED 비율(%) 계산 — 혼잡도/상단요약/열람실현황 공통 */
+  private int calcOccupiedRate(Long roomId, LocalDate date) {
+    List<Map<String, Object>> seats = buildSeats(roomId, date);
+    int total    = ROOM_SPEC.getOrDefault(roomId, new int[]{60, 50})[0];
+    int occupied = (int) seats.stream().filter(s -> "OCCUPIED".equals(s.get("status"))).count();
+    return Math.min((int) Math.round((double) occupied / total * 100), 100);
   }
 
   private List<Map<String, Object>> buildSeats(Long roomId, LocalDate date) {

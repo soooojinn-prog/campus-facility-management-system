@@ -683,7 +683,7 @@ function CongestionSection({ buildingId }) {
             {congestionLabel(data.overallRate)}
           </span>
           </div>
-          {[...data.floors].sort((a, b) => b.rate - a.rate).map(f => (
+          {data.floors.map(f => (
               <div key={f.name} className="floor-item" style={{ cursor: 'default' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 500, fontSize: '.85rem' }}>{f.name}</div>
@@ -854,12 +854,18 @@ export function LibraryPage({ building }) {
           fetchReadingRooms(buildingId),
           fetchStudyRooms(buildingId),
         ]);
-        const room1 = rooms.find(r => r.id === 1);
-        const room4 = rooms.find(r => r.id === 4);
-        const r1Rate = room1 ? Math.round((room1.usedSeats / room1.totalSeats) * 100) : 0;
-        const r4Rate = room4 ? Math.round((room4.usedSeats / room4.totalSeats) * 100) : 0;
+        // 열람실 현황 탭·혼잡도와 동일한 계산식: Math.min(Math.round(used/total*100), 100)
+        const calcRate = r => r ? Math.min(Math.round((r.usedSeats / r.totalSeats) * 100), 100) : 0;
+        const room1 = rooms.find(r => r.id === 1); // 제1열람실  2F
+        const room2 = rooms.find(r => r.id === 2); // 제2열람실  3F
+        const room3 = rooms.find(r => r.id === 3); // 야간열람실 B1
+        const room4 = rooms.find(r => r.id === 4); // 디지털열람실 4F
         const availStudy = studyRooms.filter(r => r.status === 'AVAILABLE').length;
-        setSummaryData({ r1Rate, r4Rate, availStudy, totalStudy: studyRooms.length });
+        setSummaryData({
+          r1Rate: calcRate(room1), r2Rate: calcRate(room2),
+          r3Rate: calcRate(room3), r4Rate: calcRate(room4),
+          availStudy, totalStudy: studyRooms.length,
+        });
       } catch { /* 실패해도 무시 — 하드코딩 fallback */ }
     })();
   }, [buildingId]);
@@ -929,9 +935,11 @@ export function LibraryPage({ building }) {
                   <div className="caf-today-summary">
                     <div className="caf-summary-title">현재 이용 현황</div>
                     {[
-                      { icon: '📚', label: '제1열람실',   value: summaryData ? `${summaryData.r1Rate}% 사용 중` : '로딩 중...' },
-                      { icon: '💻', label: '디지털열람실', value: summaryData ? `${summaryData.r4Rate}%${summaryData.r4Rate >= 80 ? ' 혼잡' : ' 사용 중'}` : '로딩 중...' },
-                      { icon: '🚪', label: '스터디룸',     value: summaryData ? `${summaryData.availStudy}/${summaryData.totalStudy} 사용 가능` : '로딩 중...' },
+                      { icon: '💻', label: '디지털열람실 (4F)', value: summaryData ? `${summaryData.r4Rate}%${summaryData.r4Rate >= 80 ? ' 혼잡' : summaryData.r4Rate >= 60 ? ' 보통' : ' 여유'}` : '로딩 중...' },
+                      { icon: '📖', label: '제2열람실 (3F)',    value: summaryData ? `${summaryData.r2Rate}%${summaryData.r2Rate >= 80 ? ' 혼잡' : summaryData.r2Rate >= 60 ? ' 보통' : ' 여유'}` : '로딩 중...' },
+                      { icon: '📚', label: '제1열람실 (2F)',    value: summaryData ? `${summaryData.r1Rate}%${summaryData.r1Rate >= 80 ? ' 혼잡' : summaryData.r1Rate >= 60 ? ' 보통' : ' 여유'}` : '로딩 중...' },
+                      { icon: '🌙', label: '야간열람실 (B1)',   value: summaryData ? `${summaryData.r3Rate}%${summaryData.r3Rate >= 80 ? ' 혼잡' : summaryData.r3Rate >= 60 ? ' 보통' : ' 여유'}` : '로딩 중...' },
+                      { icon: '🚪', label: '스터디룸',          value: summaryData ? `${summaryData.availStudy}/${summaryData.totalStudy} 사용 가능` : '로딩 중...' },
                     ].map(item => (
                         <div key={item.label} className="caf-summary-row">
                           <span className="caf-summary-icon">{item.icon}</span>
