@@ -18,9 +18,9 @@ public interface ICounselingService {
 
   List<ResponseCounselingReservation> getMyReservations(String userNumber);
 
-  List<ResponseCounselingReservation> getSlots(Long counselorId, LocalDate date);
-
   List<ResponseCounselingReservation> getReservationsByStatus(ReservationStatus status);
+
+  List<ResponseCounselingReservation> getSlots(Long counselorId, LocalDate date);
 
   void updateReservationStatus(Long id, ReservationStatus status, String rejectReason, String adminNumber);
 }

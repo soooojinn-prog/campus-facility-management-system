@@ -24,17 +24,15 @@ export function Header() {
           <div className="subtitle">캠퍼스 시설 예약 및 동아리 관리</div>
         </div>
         <div className="d-flex gap-2 align-items-center">
-          {!currentUser ? (<>
-            <button className="btn btn-outline-light btn-sm" onClick={() => setShowAuth(true)}>마이페이지</button>
-            <button className="btn btn-light btn-sm" onClick={() => setShowAuth(true)}>로그인</button>
-          </>) : (<div className="user-display">
-            <span className="user-role">{roleLabel}</span>
-            <span className="user-name">{currentUser.name}님 환영합니다</span>
-            <Link to="/mypage" className="btn btn-outline-light btn-sm">마이페이지</Link>
-            {currentUser.role === 'ROLE_ADMIN' &&
-                <Link to="/admin" className="btn btn-outline-light btn-sm">관리페이지</Link>}
-            <button className="btn btn-outline-light btn-sm" onClick={logout}>로그아웃</button>
-          </div>)}
+          {!currentUser ? <button className="btn btn-light btn-sm" onClick={() => setShowAuth(true)}>로그인</button> : (
+              <div className="user-display">
+                <span className="user-role">{roleLabel}</span>
+                <span className="user-name">{currentUser.name}님 환영합니다</span>
+                <Link to="/mypage" className="btn btn-outline-light btn-sm">마이페이지</Link>
+                {currentUser.role === 'ROLE_ADMIN' &&
+                    <Link to="/admin" className="btn btn-outline-light btn-sm">관리페이지</Link>}
+                <button className="btn btn-outline-light btn-sm" onClick={logout}>로그아웃</button>
+              </div>)}
         </div>
       </div>
     </header>

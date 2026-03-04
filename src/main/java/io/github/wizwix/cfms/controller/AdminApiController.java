@@ -46,6 +46,21 @@ public class AdminApiController {
     return ResponseEntity.ok(clubService.getClubListByStatus(status));
   }
 
+  /// 상담 예약 목록 조회 — 상태별 필터링 (기본 PENDING)
+  @GetMapping("/counseling")
+  public ResponseEntity<List<ResponseCounselingReservation>> getCounselingReservations(
+      @RequestParam(defaultValue = "PENDING") ReservationStatus status) {
+    return ResponseEntity.ok(counselingService.getReservationsByStatus(status));
+  }
+
+  /// 기숙사 신청 목록 조회 — 상태별 필터링 (기본 PENDING)
+  /// 프론트: AdminPage.jsx → DormTab에서 fetchAdminDorms() 호출
+  @GetMapping("/dorms")
+  public List<ResponseDormMyApplication> getDormApplications(
+      @RequestParam(defaultValue = "PENDING") DormApplicationStatus status) {
+    return dormService.getDormApplicationsByStatus(status);
+  }
+
   /// 시설 예약 목록 조회 — 상태별 필터링 (기본 PENDING)
   /// 프론트: AdminPage.jsx → ReservationTab에서 fetchAdminReservations() 호출
   /// 쿼리 예) GET /api/admin/reservations?status=PENDING
@@ -60,22 +75,14 @@ public class AdminApiController {
     return ResponseEntity.ok(clubService.updateClubStatus(slug, req.status(), req.reason(), auth.getName()));
   }
 
-  /// 시설 예약 승인/거절 — PENDING 상태만 처리 가능
-  /// 프론트: AdminPage.jsx → ReservationStatusModal에서 updateAdminReservationStatus() 호출
-  /// 요청 바디 예) { "status": "REJECTED", "rejectReason": "사유..." }
-  /// auth.getName()으로 처리한 관리자 학번을 가져와서 Reservation.processedBy에 저장
-  @PatchMapping("/reservations/{id}/status")
-  public ResponseEntity<Void> updateReservationStatus(@PathVariable Long id, @RequestBody RequestAdminReservationStatus req, Authentication auth) {
-    reservationService.updateReservationStatus(id, req.status(), req.rejectReason(), auth.getName());
+  /// 상담 예약 승인/거절 — PENDING 상태만 처리 가능
+  @PatchMapping("/counseling/{id}/status")
+  public ResponseEntity<Void> updateCounselingReservationStatus(
+      @PathVariable Long id,
+      @RequestBody RequestAdminReservationStatus req,
+      Authentication auth) {
+    counselingService.updateReservationStatus(id, req.status(), req.rejectReason(), auth.getName());
     return ResponseEntity.ok().build();
-  }
-
-  /// 기숙사 신청 목록 조회 — 상태별 필터링 (기본 PENDING)
-  /// 프론트: AdminPage.jsx → DormTab에서 fetchAdminDorms() 호출
-  @GetMapping("/dorms")
-  public List<ResponseDormMyApplication> getDormApplications(
-      @RequestParam(defaultValue = "PENDING") DormApplicationStatus status) {
-    return dormService.getDormApplicationsByStatus(status);
   }
 
   /// 기숙사 신청 승인/거절 — PENDING 상태만 처리 가능
@@ -88,20 +95,13 @@ public class AdminApiController {
     dormService.updateDormApplicationStatus(id, req.status(), req.rejectReason(), auth.getName());
   }
 
-  /// 상담 예약 목록 조회 — 상태별 필터링 (기본 PENDING)
-  @GetMapping("/counseling")
-  public ResponseEntity<List<ResponseCounselingReservation>> getCounselingReservations(
-      @RequestParam(defaultValue = "PENDING") ReservationStatus status) {
-    return ResponseEntity.ok(counselingService.getReservationsByStatus(status));
-  }
-
-  /// 상담 예약 승인/거절 — PENDING 상태만 처리 가능
-  @PatchMapping("/counseling/{id}/status")
-  public ResponseEntity<Void> updateCounselingReservationStatus(
-      @PathVariable Long id,
-      @RequestBody RequestAdminReservationStatus req,
-      Authentication auth) {
-    counselingService.updateReservationStatus(id, req.status(), req.rejectReason(), auth.getName());
+  /// 시설 예약 승인/거절 — PENDING 상태만 처리 가능
+  /// 프론트: AdminPage.jsx → ReservationStatusModal에서 updateAdminReservationStatus() 호출
+  /// 요청 바디 예) { "status": "REJECTED", "rejectReason": "사유..." }
+  /// auth.getName()으로 처리한 관리자 학번을 가져와서 Reservation.processedBy에 저장
+  @PatchMapping("/reservations/{id}/status")
+  public ResponseEntity<Void> updateReservationStatus(@PathVariable Long id, @RequestBody RequestAdminReservationStatus req, Authentication auth) {
+    reservationService.updateReservationStatus(id, req.status(), req.rejectReason(), auth.getName());
     return ResponseEntity.ok().build();
   }
 }

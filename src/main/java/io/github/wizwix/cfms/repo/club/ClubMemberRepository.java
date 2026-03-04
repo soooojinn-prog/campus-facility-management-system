@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
+  int countByClubId(Long clubId);
+
   List<ClubMember> findByClubSlug(String slug);
 
   List<ClubMember> findByClubSlugAndStatus(String slug, ClubMemberStatus status);
 
   Optional<ClubMember> findByUser(User user);
-
-  int countByClubId(Long clubId);
 }

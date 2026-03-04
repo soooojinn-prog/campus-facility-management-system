@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface ILibraryService {
+  void cancelSeatReservation(String userNumber, Long reservationId);
+
+  void cancelStudyRoomReservation(String userNumber, Long reservationId);
+
   ResponseLibraryCongestion getCongestion();
 
   List<Map<String, Object>> getMySeatReservations(String userNumber);
@@ -35,8 +39,4 @@ public interface ILibraryService {
   void reserveStudyRoom(Long roomId, String date, Integer startHour, String userNumber);
 
   List<ResponseLibraryBook> searchBooks(String q, String publisher, String category);
-
-  void cancelSeatReservation(String userNumber, Long reservationId);
-
-  void cancelStudyRoomReservation(String userNumber, Long reservationId);
 }

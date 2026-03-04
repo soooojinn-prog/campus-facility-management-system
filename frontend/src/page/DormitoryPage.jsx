@@ -71,9 +71,7 @@ export function DormitoryPage() {
           }}>기숙사</a>
           <span className="sep">/</span>
           <span className="current">{genderLabel}</span>
-        </>) : (
-            <span className="current">기숙사</span>
-        )}
+        </>) : (<span className="current">기숙사</span>)}
       </div>
     </div>
 
@@ -82,10 +80,8 @@ export function DormitoryPage() {
       <div className="container">
         <div className="store-name">
           <span>{selectedGender ? genderLabel : '기숙사'}</span>
-          {selectedGender
-              ? <a className="back-link" onClick={() => setSelectedGender(null)}>&larr; 기숙사 선택으로 돌아가기</a>
-              : <a className="back-link" onClick={() => navigate('/')}>&larr; 캠퍼스 지도로 돌아가기</a>
-          }
+          {selectedGender ? <a className="back-link" onClick={() => setSelectedGender(null)}>&larr; 기숙사 선택으로 돌아가기</a> :
+              <a className="back-link" onClick={() => navigate('/')}>&larr; 캠퍼스 지도로 돌아가기</a>}
         </div>
         <div className="info-grid">
           <div className="info-col">
@@ -124,11 +120,8 @@ export function DormitoryPage() {
     </div>
 
     {/* 콘텐츠 */}
-    {!selectedGender ? (
-        <GenderSelection onSelect={handleGenderSelect}/>
-    ) : loading ? (
-        <div style={{padding: 40, textAlign: 'center', color: '#718096'}}>로딩 중...</div>
-    ) : (
+    {!selectedGender ? (<GenderSelection onSelect={handleGenderSelect}/>) : loading ? (
+        <div style={{padding: 40, textAlign: 'center', color: '#718096'}}>로딩 중...</div>) : (
         <div className="floor-guide">
           {/* 좌측: 층 목록 */}
           <div className="floor-list">
@@ -179,15 +172,11 @@ export function DormitoryPage() {
               </div>
               <div className="dorm-room-grid">
                 {currentFloorData.rooms.map(room => (
-                    <DormRoomCard key={room.id} room={room} onApply={(mode) => setApplyModal({room, mode})}/>
-                ))}
+                    <DormRoomCard key={room.id} room={room} onApply={(mode) => setApplyModal({room, mode})}/>))}
               </div>
-            </>) : (
-                <div style={{padding: 40, color: '#718096'}}>층을 선택해주세요.</div>
-            )}
+            </>) : (<div style={{padding: 40, color: '#718096'}}>층을 선택해주세요.</div>)}
           </div>
-        </div>
-    )}
+        </div>)}
 
     {/* 신청 모달 */}
     {applyModal && <DormApplyModal
@@ -208,32 +197,30 @@ export function DormitoryPage() {
 
 /// Step 1: 성별 선택 카드
 function GenderSelection({onSelect}) {
-  const genders = [
-    {key: 'MALE', icon: '🏠', label: '남자기숙사', desc: '남학생 전용\n5층 × 15실 = 75실'},
-    {key: 'FEMALE', icon: '🏠', label: '여자기숙사', desc: '여학생 전용\n5층 × 15실 = 75실'},
-  ];
-  return (
-      <div style={{padding: '60px 0', background: '#FAFBFC', minHeight: 'calc(100vh - 280px)'}}>
-        <div className="container" style={{maxWidth: 600, margin: '0 auto', textAlign: 'center'}}>
-          <h2 style={{fontSize: '1.5rem', fontWeight: 700, color: '#1A365D', marginBottom: 8}}>기숙사 선택</h2>
-          <p style={{color: '#718096', marginBottom: 32, fontSize: '.9rem'}}>본인의 성별에 맞는 기숙사를 선택해주세요.</p>
-          <div className="role-cards" style={{justifyContent: 'center', gap: 24}}>
-            {genders.map(g => (
-                <div key={g.key}
-                     className={`role-card dorm-gender-${g.key.toLowerCase()}`}
-                     style={{padding: '32px 24px', maxWidth: 240, cursor: 'pointer'}}
-                     onClick={() => onSelect(g.key)}>
-                  <div className="role-icon" style={{fontSize: '3rem'}}>{g.icon}</div>
-                  <div className="role-label" style={{fontSize: '1.1rem', marginTop: 8}}>{g.label}</div>
-                  <div className="role-desc" style={{marginTop: 8}}>
-                    {g.desc.split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
-                  </div>
-                </div>
-            ))}
+  const genders = [{key: 'MALE', icon: '🏠', label: '남자기숙사', desc: '남학생 전용\n5층 × 15실 = 75실'}, {
+    key: 'FEMALE',
+    icon: '🏠',
+    label: '여자기숙사',
+    desc: '여학생 전용\n5층 × 15실 = 75실',
+  }];
+  return (<div style={{padding: '60px 0', background: '#FAFBFC', minHeight: 'calc(100vh - 280px)'}}>
+    <div className="container" style={{maxWidth: 600, margin: '0 auto', textAlign: 'center'}}>
+      <h2 style={{fontSize: '1.5rem', fontWeight: 700, color: '#1A365D', marginBottom: 8}}>기숙사 선택</h2>
+      <p style={{color: '#718096', marginBottom: 32, fontSize: '.9rem'}}>본인의 성별에 맞는 기숙사를 선택해주세요.</p>
+      <div className="role-cards" style={{justifyContent: 'center', gap: 24}}>
+        {genders.map(g => (<div key={g.key}
+                                className={`role-card dorm-gender-${g.key.toLowerCase()}`}
+                                style={{padding: '32px 24px', maxWidth: 240, cursor: 'pointer'}}
+                                onClick={() => onSelect(g.key)}>
+          <div className="role-icon" style={{fontSize: '3rem'}}>{g.icon}</div>
+          <div className="role-label" style={{fontSize: '1.1rem', marginTop: 8}}>{g.label}</div>
+          <div className="role-desc" style={{marginTop: 8}}>
+            {g.desc.split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}
           </div>
-        </div>
+        </div>))}
       </div>
-  );
+    </div>
+  </div>);
 }
 
 /// 호실 카드 — occupancy에 따라 색상/버튼 다름
@@ -243,35 +230,25 @@ function DormRoomCard({room, onApply}) {
   const dotColor = room.occupancy === 0 ? '#48BB78' : room.occupancy === 1 ? '#ED8936' : '#F56565';
   const label = room.occupancy === 0 ? '빈방' : room.occupancy === 1 ? '1명' : '만실';
 
-  return (
-      <div className="dorm-room-card" style={{background: bgColor, borderColor}}>
-        <div className="dorm-room-header">
-          <div className="dorm-room-number">{room.roomNumber}</div>
-          <div className="dorm-room-occ">
+  return (<div className="dorm-room-card" style={{background: bgColor, borderColor}}>
+    <div className="dorm-room-header">
+      <div className="dorm-room-number">{room.roomNumber}</div>
+      <div className="dorm-room-occ">
             <span className="room-status-dot" style={{
-              background: dotColor,
-              display: 'inline-block',
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              marginRight: 4,
+              background: dotColor, display: 'inline-block', width: 8, height: 8, borderRadius: '50%', marginRight: 4,
             }}/>
-            {room.occupancy}/2 ({label})
-          </div>
-        </div>
-        {room.occupancy === 1 && room.residentName && (
-            <div className="dorm-room-resident">입주자: {room.residentName}</div>
-        )}
-        <div className="dorm-room-actions">
-          {room.occupancy < 2 && (
-              <button className="btn btn-sm btn-primary" onClick={() => onApply('solo')}>신청하기</button>
-          )}
-          {room.occupancy === 0 && (
-              <button className="btn btn-sm btn-outline-primary" onClick={() => onApply('together')}>같이 신청</button>
-          )}
-        </div>
+        {room.occupancy}/2 ({label})
       </div>
-  );
+    </div>
+    {room.occupancy === 1 && room.residentName && (
+        <div className="dorm-room-resident">입주자: {room.residentName}</div>)}
+    <div className="dorm-room-actions">
+      {room.occupancy < 2 && (
+          <button className="btn btn-sm btn-primary" onClick={() => onApply('solo')}>신청하기</button>)}
+      {room.occupancy === 0 && (
+          <button className="btn btn-sm btn-outline-primary" onClick={() => onApply('together')}>같이 신청</button>)}
+    </div>
+  </div>);
 }
 
 /// 신청 모달
@@ -293,10 +270,7 @@ function DormApplyModal({room, mode, onClose, onSuccess}) {
     setSubmitting(true);
     try {
       const result = await applyDorm({
-        roomId: room.id,
-        semester,
-        period,
-        partnerNumber: mode === 'together' ? partnerNumber.trim() : null,
+        roomId: room.id, semester, period, partnerNumber: mode === 'together' ? partnerNumber.trim() : null,
       });
       alert(result.message);
       onSuccess();
@@ -307,51 +281,45 @@ function DormApplyModal({room, mode, onClose, onSuccess}) {
     }
   }
 
-  return (
-      <div className="modal-bg show" onClick={e => {
-        if (e.target === e.currentTarget) onClose();
-      }}>
-        <div className="modal-box" style={{width: 440}}>
-          <div className="modal-hd">
-            <button className="modal-close" onClick={onClose}>&times;</button>
-            <h3>기숙사 입주 신청</h3>
-            <div className="modal-sub">{room.roomNumber}호 · {mode === 'together' ? '같이 신청' : '단독 신청'}</div>
-          </div>
-          <div className="modal-bd">
-            <div className="mb-3">
-              <label className="form-label">호실</label>
-              <input type="text" className="form-control" value={room.roomNumber} disabled/>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">학기</label>
-              <select className="form-select" value={semester} onChange={e => setSemester(e.target.value)}>
-                {semesterOptions.map(s => (
-                    <option key={s} value={s}>{s.replace('-', '년 ')}학기</option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">입주 기간</label>
-              <select className="form-select" value={period} onChange={e => setPeriod(e.target.value)}>
-                <option value="SEMESTER">한 학기</option>
-                <option value="YEAR">1년</option>
-              </select>
-            </div>
-            {mode === 'together' && (
-                <div className="mb-3">
-                  <label className="form-label">같이 입주할 친구 학번</label>
-                  <input type="text" className="form-control" placeholder="친구의 학번을 입력하세요"
-                         value={partnerNumber} onChange={e => setPartnerNumber(e.target.value)}/>
-                  <div className="form-text text-muted" style={{fontSize: '.75rem'}}>
-                    입력한 학번의 학생과 함께 배정됩니다.
-                  </div>
-                </div>
-            )}
-            <button className="btn btn-primary w-100" onClick={handleSubmit} disabled={submitting}>
-              {submitting ? '신청 중...' : '신청하기'}
-            </button>
-          </div>
-        </div>
+  return (<div className="modal-bg show" onClick={e => {
+    if (e.target === e.currentTarget) onClose();
+  }}>
+    <div className="modal-box" style={{width: 440}}>
+      <div className="modal-hd">
+        <button className="modal-close" onClick={onClose}>&times;</button>
+        <h3>기숙사 입주 신청</h3>
+        <div className="modal-sub">{room.roomNumber}호 · {mode === 'together' ? '같이 신청' : '단독 신청'}</div>
       </div>
-  );
+      <div className="modal-bd">
+        <div className="mb-3">
+          <label className="form-label">호실</label>
+          <input type="text" className="form-control" value={room.roomNumber} disabled/>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">학기</label>
+          <select className="form-select" value={semester} onChange={e => setSemester(e.target.value)}>
+            {semesterOptions.map(s => (<option key={s} value={s}>{s.replace('-', '년 ')}학기</option>))}
+          </select>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">입주 기간</label>
+          <select className="form-select" value={period} onChange={e => setPeriod(e.target.value)}>
+            <option value="SEMESTER">한 학기</option>
+            <option value="YEAR">1년</option>
+          </select>
+        </div>
+        {mode === 'together' && (<div className="mb-3">
+          <label className="form-label">같이 입주할 친구 학번</label>
+          <input type="text" className="form-control" placeholder="친구의 학번을 입력하세요"
+                 value={partnerNumber} onChange={e => setPartnerNumber(e.target.value)}/>
+          <div className="form-text text-muted" style={{fontSize: '.75rem'}}>
+            입력한 학번의 학생과 함께 배정됩니다.
+          </div>
+        </div>)}
+        <button className="btn btn-primary w-100" onClick={handleSubmit} disabled={submitting}>
+          {submitting ? '신청 중...' : '신청하기'}
+        </button>
+      </div>
+    </div>
+  </div>);
 }

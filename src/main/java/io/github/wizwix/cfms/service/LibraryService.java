@@ -57,6 +57,30 @@ public class LibraryService implements ILibraryService {
   // ── 1. 혼잡도 ──
 
   @Override
+  @Transactional
+  public void cancelSeatReservation(String userNumber, Long reservationId) {
+    LibrarySeatReservation reservation = seatResRepo.findById(reservationId)
+        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
+    if (!reservation.getUserNumber().equals(userNumber)) {
+      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
+    }
+    seatResRepo.delete(reservation);
+  }
+
+  // ── 2. 공지사항 ──
+
+  @Override
+  @Transactional
+  public void cancelStudyRoomReservation(String userNumber, Long reservationId) {
+    LibraryStudyRoomReservation reservation = studyResRepo.findById(reservationId)
+        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
+    if (!reservation.getUserNumber().equals(userNumber)) {
+      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
+    }
+    studyResRepo.delete(reservation);
+  }
+
+  @Override
   public ResponseLibraryCongestion getCongestion() {
     LocalDate today = LocalDate.now();
     List<LibraryReadingRoom> rooms = readingRoomRepo.findAll();
@@ -93,7 +117,7 @@ public class LibraryService implements ILibraryService {
     return new ResponseLibraryCongestion(floors, HOURLY_TREND, overallRate);
   }
 
-  // ── 2. 공지사항 ──
+  // ── 3. 열람실 ──
 
   /// 오늘 날짜 기준으로 한 열람실의 좌석 상태 목록을 생성한다.
   ///
@@ -151,8 +175,6 @@ public class LibraryService implements ILibraryService {
     }).toList();
   }
 
-  // ── 3. 열람실 ──
-
   @Override
   public List<Map<String, Object>> getMyStudyRoomReservations(String userNumber) {
     return studyResRepo.findByUserNumber(userNumber).stream().sorted((a, b) -> b.getDate().compareTo(a.getDate())).map(r -> {
@@ -170,6 +192,8 @@ public class LibraryService implements ILibraryService {
     }).toList();
   }
 
+  // ── 4. 스터디룸 ──
+
   @Override
   public ResponseLibraryNotice getNotice(Long noticeId) {
     return noticeRepo.findById(noticeId).map(n -> new ResponseLibraryNotice(n.getId(), n.getContent(), n.getDate().toString(), n.getTitle(), n.getType().getDisplayName(), n.getViews())).orElseThrow(() -> new NotFoundException("공지를 찾을 수 없습니다: " + noticeId));
@@ -180,7 +204,7 @@ public class LibraryService implements ILibraryService {
     return noticeRepo.findAll().stream().map(n -> new ResponseLibraryNotice(n.getId(), null, n.getDate().toString(), n.getTitle(), n.getType().getDisplayName(), n.getViews())).toList();
   }
 
-  // ── 4. 스터디룸 ──
+  // ── 5. 도서 ──
 
   @Override
   public ResponseLibraryReadingRoom getReadingRoomSeats(Long roomId) {
@@ -201,7 +225,7 @@ public class LibraryService implements ILibraryService {
     }).toList();
   }
 
-  // ── 5. 도서 ──
+  // ── 6. 예약 ──
 
   @Override
   public ResponseLibraryStudyRoom getStudyRoomSlots(Long roomId, String date) {
@@ -218,7 +242,7 @@ public class LibraryService implements ILibraryService {
     return studyRoomRepo.findAll().stream().map(room -> new ResponseLibraryStudyRoom(room.getId(), room.getName(), room.getAmenities(), room.getCapacity(), room.getFloor().toDisplayString(), null, room.getStatus().name())).toList();
   }
 
-  // ── 6. 예약 ──
+  // ── 7. 마이페이지 ──
 
   @Override
   @Transactional
@@ -257,8 +281,6 @@ public class LibraryService implements ILibraryService {
     seatResRepo.save(LibrarySeatReservation.builder().roomId(roomId).seatNo(seatNo).date(today).userNumber(userNumber).build());
   }
 
-  // ── 7. 마이페이지 ──
-
   @Override
   @Transactional
   public void reserveStudyRoom(Long roomId, String date, Integer startHour, String userNumber) {
@@ -279,28 +301,6 @@ public class LibraryService implements ILibraryService {
     }
 
     studyResRepo.save(LibraryStudyRoomReservation.builder().roomId(roomId).date(localDate).startHour(startHour).userNumber(userNumber).build());
-  }
-
-  @Override
-  @Transactional
-  public void cancelSeatReservation(String userNumber, Long reservationId) {
-    LibrarySeatReservation reservation = seatResRepo.findById(reservationId)
-        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
-    if (!reservation.getUserNumber().equals(userNumber)) {
-      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
-    }
-    seatResRepo.delete(reservation);
-  }
-
-  @Override
-  @Transactional
-  public void cancelStudyRoomReservation(String userNumber, Long reservationId) {
-    LibraryStudyRoomReservation reservation = studyResRepo.findById(reservationId)
-        .orElseThrow(() -> new NotFoundException("예약을 찾을 수 없습니다."));
-    if (!reservation.getUserNumber().equals(userNumber)) {
-      throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
-    }
-    studyResRepo.delete(reservation);
   }
 
   @Override

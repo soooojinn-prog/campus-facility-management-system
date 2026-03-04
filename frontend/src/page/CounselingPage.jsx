@@ -11,11 +11,11 @@ import {useNavigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext.jsx';
 import {createCounselingReservation, fetchCounselingSlots, fetchCounselors} from '../data/api.js';
 
-const DEPARTMENTS = [
-  {key: 'ACADEMIC', label: '교무처', sub: '학사상담'},
-  {key: 'STUDENT', label: '학생처', sub: '심리상담'},
-  {key: 'CAREER', label: '취업지원센터', sub: '진로상담'},
-];
+const DEPARTMENTS = [{key: 'ACADEMIC', label: '교무처', sub: '학사상담'}, {
+  key: 'STUDENT',
+  label: '학생처',
+  sub: '심리상담',
+}, {key: 'CAREER', label: '취업지원센터', sub: '진로상담'}];
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -79,8 +79,7 @@ export function CounselingPage() {
     }
   }
 
-  return (
-      <div>
+  return (<div>
         {/* 상단 정보 */}
         <div className="store-info-area">
           <div className="container">
@@ -100,8 +99,7 @@ export function CounselingPage() {
           {DEPARTMENTS.map(d => (
               <button key={d.key} className={dept === d.key ? 'active' : ''} onClick={() => setDept(d.key)}>
                 {d.label} <span style={{fontSize: '.75rem', opacity: .7}}>· {d.sub}</span>
-              </button>
-          ))}
+              </button>))}
         </div>
 
         {/* 3단 레이아웃 */}
@@ -109,15 +107,13 @@ export function CounselingPage() {
           {/* 좌측: 상담사 목록 */}
           <div className="counsel-sidebar">
             <div className="counsel-sidebar-header">상담사 목록</div>
-            {counselors.map(c => (
-                <div key={c.id}
-                     className={`counsel-counselor-item${selectedCounselor?.id === c.id ? ' active' : ''}`}
-                     onClick={() => setSelectedCounselor(c)}>
+            {counselors.map(c => (<div key={c.id}
+                                       className={`counsel-counselor-item${selectedCounselor?.id === c.id ? ' active' : ''}`}
+                                       onClick={() => setSelectedCounselor(c)}>
                   <div className="counsel-counselor-name">{c.name}</div>
                   <div className="counsel-counselor-pos">{c.position}</div>
                   <div className="counsel-counselor-spec">{c.specialization}</div>
-                </div>
-            ))}
+                </div>))}
             {counselors.length === 0 && <div className="counsel-empty">등록된 상담사가 없습니다.</div>}
           </div>
 
@@ -137,17 +133,14 @@ export function CounselingPage() {
         </div>
 
         {/* 예약 모달 */}
-        {showModal && modalSlot && selectedCounselor && (
-            <ReserveModal
+        {showModal && modalSlot && selectedCounselor && (<ReserveModal
                 counselor={selectedCounselor}
                 date={buildDateStr(selectedDay)}
                 hour={modalSlot.hour}
                 onClose={() => setShowModal(false)}
                 onCreated={handleReservationCreated}
-            />
-        )}
-      </div>
-  );
+            />)}
+      </div>);
 }
 
 // 상담용 미니 캘린더 — 색상 시드 없이 순수 날짜 선택용
@@ -172,8 +165,12 @@ function CounselCalendar({selectedDay, onDayClick}) {
       week = [];
     }
     week.push({
-      day: d, otherMonth: false, isToday: d === today, isSelected: d === selectedDay,
-      isSunday: week.length === 0, isSaturday: week.length === 6,
+      day: d,
+      otherMonth: false,
+      isToday: d === today,
+      isSelected: d === selectedDay,
+      isSunday: week.length === 0,
+      isSaturday: week.length === 6,
     });
   }
   let nd = 1;
@@ -182,8 +179,7 @@ function CounselCalendar({selectedDay, onDayClick}) {
   }
   weeks.push(week);
 
-  return (
-      <div>
+  return (<div>
         <div className="cal-header">
           <span className="cal-month-num">{m + 1}</span>
           <span className="cal-month-name">{MONTH_NAMES[m]}</span>
@@ -202,24 +198,19 @@ function CounselCalendar({selectedDay, onDayClick}) {
           </tr>
           </thead>
           <tbody>
-          {weeks.map((wk, wi) => (
-              <tr key={wi}>
+          {weeks.map((wk, wi) => (<tr key={wi}>
                 {wk.map((cell, ci) => {
                   if (cell.otherMonth) return <td key={ci} className="other-month"><span
                       className="day-num">{cell.day}</span></td>;
                   const cls = [cell.isSunday && 'sunday', cell.isSaturday && 'saturday', cell.isToday && 'today', cell.isSelected && 'selected'].filter(Boolean).join(' ');
-                  return (
-                      <td key={ci} className={cls} style={{cursor: 'pointer'}} onClick={() => onDayClick(cell.day)}>
+                  return (<td key={ci} className={cls} style={{cursor: 'pointer'}} onClick={() => onDayClick(cell.day)}>
                         <span className="day-num">{cell.day}</span>
-                      </td>
-                  );
+                      </td>);
                 })}
-              </tr>
-          ))}
+              </tr>))}
           </tbody>
         </table>
-      </div>
-  );
+      </div>);
 }
 
 // 타임라인 — 09:00~17:00, 30분 단위
@@ -239,9 +230,9 @@ function CounselTimeline({slots, onEmptyClick}) {
     });
   }
 
-  return (
-      <div className="timeline">
+  return (<div className="timeline">
         {timeSlots.map(ts => {
+
           const booked = getSlotForTime(ts.hour, ts.min);
           const startLabel = booked?.startTime?.substring(0, 5);
           const isStart = booked && startLabel === ts.label;
@@ -249,33 +240,36 @@ function CounselTimeline({slots, onEmptyClick}) {
           if (booked && !isStart) return null; // 예약 중간 슬롯은 스킵
 
           if (booked && isStart) {
+            const [sh, sm] = (booked.startTime || '00:00').substring(0, 5).split(':').map(Number);
+            const [eh, em] = (booked.endTime || '00:00').substring(0, 5).split(':').map(Number);
+            const spanCount = ((eh * 60 + em) - (sh * 60 + sm)) / 30;
             const statusCls = booked.status === 'APPROVED' ? 'approved' : 'pending';
-            return (
-                <div className="tl-slot" key={ts.label}>
+            return (<div className="tl-slot" key={ts.label}>
                   <div className="tl-time">{ts.label}</div>
                   <div className="tl-content">
-                    <div className={`tl-booked ${statusCls}`}>
+                    <div className={`tl-booked ${statusCls}`}
+                         style={spanCount > 1 ? {minHeight: spanCount * 52 - 8} : undefined}>
                       <div className="tl-title">{booked.topic || '상담 예약'}</div>
                       <div
                           className="tl-detail">{booked.startTime?.substring(0, 5)} ~ {booked.endTime?.substring(0, 5)}</div>
                       <div className="tl-status-tag">{booked.status === 'APPROVED' ? '승인됨' : '대기 중'}</div>
                     </div>
                   </div>
-                </div>
-            );
+                </div>);
           }
 
-          return (
-              <div className="tl-slot" key={ts.label}>
+          return (<div className="tl-slot" key={ts.label}>
                 <div className="tl-time">{ts.label}</div>
                 <div className="tl-content">
                   <div className="tl-empty" onClick={() => onEmptyClick(ts.hour, ts.min)}>+ 예약 가능</div>
                 </div>
-              </div>
-          );
+              </div>);
         })}
-      </div>
-  );
+        <div className="tl-slot" style={{borderBottom: 'none'}}>
+          <div className="tl-time">17:00</div>
+          <div className="tl-content"/>
+        </div>
+      </div>);
 }
 
 // 상담 예약 모달
@@ -317,8 +311,7 @@ function ReserveModal({counselor, date, hour, onClose, onCreated}) {
   const hourOptions = [];
   for (let h = 9; h <= 17; h++) hourOptions.push(h);
 
-  return (
-      <div className="modal-bg show" onClick={onClose}>
+  return (<div className="modal-bg show" onClick={onClose}>
         <div className="modal-box" onClick={e => e.stopPropagation()}>
           <div className="modal-hd">
             <h3>상담 예약 신청</h3>
@@ -381,6 +374,5 @@ function ReserveModal({counselor, date, hour, onClose, onCreated}) {
             </div>
           </form>
         </div>
-      </div>
-  );
+      </div>);
 }

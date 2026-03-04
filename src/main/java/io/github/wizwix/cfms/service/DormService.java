@@ -119,6 +119,21 @@ public class DormService implements IDormService {
     dormAppRepo.save(app);
   }
 
+  /// 관리자 — 상태별 기숙사 신청 목록 조회
+  @Override
+  @Transactional(readOnly = true)
+  public List<ResponseDormMyApplication> getDormApplicationsByStatus(DormApplicationStatus status) {
+    return dormAppRepo.findByStatus(status).stream().map(app -> new ResponseDormMyApplication(
+        app.getId(),
+        app.getRoom().getRoomNumber(),
+        app.getSemester(),
+        app.getPeriod(),
+        app.getStatus(),
+        app.getPartner() != null ? app.getPartner().getName() : null,
+        app.getCreatedAt()
+    )).toList();
+  }
+
   @Override
   public List<ResponseDormFloor> getDormRooms(Gender gender) {
     List<DormRoom> rooms = dormRoomRepo.findByGender(gender);
@@ -173,29 +188,11 @@ public class DormService implements IDormService {
     return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getPartner() != null ? app.getPartner().getName() : null, app.getCreatedAt())).toList();
   }
 
-  /// 관리자 — 상태별 기숙사 신청 목록 조회
-  @Override
-  @Transactional(readOnly = true)
-  public List<ResponseDormMyApplication> getDormApplicationsByStatus(DormApplicationStatus status) {
-    return dormAppRepo.findByStatus(status).stream().map(app -> new ResponseDormMyApplication(
-        app.getId(),
-        app.getRoom().getRoomNumber(),
-        app.getSemester(),
-        app.getPeriod(),
-        app.getStatus(),
-        app.getPartner() != null ? app.getPartner().getName() : null,
-        app.getCreatedAt()
-    )).toList();
-  }
-
   /// 관리자 — 기숙사 신청 승인/거절 (PENDING만 처리 가능)
   @Override
   public void updateDormApplicationStatus(Long id, DormApplicationStatus status, String rejectReason, String adminNumber) {
     DormApplication app = dormAppRepo.findById(id)
         .orElseThrow(() -> new NotFoundException("신청 내역을 찾을 수 없습니다."));
-    if (app.getStatus() != DormApplicationStatus.PENDING) {
-      throw new IllegalStateException("승인 대기 중인 신청만 처리할 수 있습니다.");
-    }
     User admin = userRepo.findByNumber(adminNumber)
         .orElseThrow(() -> new NotFoundException("관리자를 찾을 수 없습니다."));
     app.setStatus(status);

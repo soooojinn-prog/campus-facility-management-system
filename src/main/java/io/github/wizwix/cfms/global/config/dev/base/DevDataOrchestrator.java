@@ -22,10 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DevDataOrchestrator {
+  private final CounselingReservationRepository counselingResRepo;
+  private final DormApplicationRepository dormAppRepo;
   private final List<DevDataLoader> loaders;
   private final ReservationRepository reservationRepo;
-  private final DormApplicationRepository dormAppRepo;
-  private final CounselingReservationRepository counselingResRepo;
   private final LibrarySeatReservationRepository seatResRepo;
   private final LibraryStudyRoomReservationRepository studyRoomResRepo;
 

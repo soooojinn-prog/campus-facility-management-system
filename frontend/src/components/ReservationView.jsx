@@ -118,10 +118,14 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
                 return (<div key={d.getTime()}
                              onClick={() => setSelectedDate(d)}
                              style={{
-                               display: 'flex', alignItems: 'center', gap: '10px',
-                               padding: '8px 12px', borderRadius: '8px', cursor: 'pointer',
-                               background: isSelected ? '#3182ce' : 'transparent',
-                               color: isSelected ? '#fff' : isSun ? '#e53e3e' : isSat ? '#3182ce' : '#2D3748',
+                               display: 'flex',
+                               alignItems: 'center',
+                               gap: '10px',
+                               padding: '8px 12px',
+                               borderRadius: '8px',
+                               cursor: 'pointer',
+                               background: isSelected ? '#3182CE' : 'transparent',
+                               color: isSelected ? '#FFF' : isSun ? '#E53E3E' : isSat ? '#3182CE' : '#2D3748',
                                fontWeight: isSelected || isToday ? 600 : 400,
                                fontSize: '0.88rem',
                                transition: 'background 0.15s',
@@ -133,7 +137,7 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
                     padding: '1px 6px',
                     borderRadius: '8px',
                     background: isSelected ? 'rgba(255,255,255,0.25)' : '#EBF8FF',
-                    color: isSelected ? '#fff' : '#3182ce',
+                    color: isSelected ? '#FFF' : '#3182CE',
                   }}>오늘</span>}
                 </div>);
               })}
@@ -150,10 +154,7 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
             <hr className="my-2"/>
             <div className="d-flex align-items-center gap-2 mb-1">
               <div style={{
-                width: 20,
-                height: 12,
-                background: 'linear-gradient(135deg,#2c5282,#3182ce)',
-                borderRadius: 3,
+                width: 20, height: 12, background: 'linear-gradient(135deg,#2c5282,#3182ce)', borderRadius: 3,
               }}/>
               <span>승인된 예약</span>
             </div>
@@ -193,6 +194,7 @@ export function ReservationView({buildingKey, buildingData, jumpToRoom}) {
               {Array.from({length: 13}, (_, i) => i + 9).map(h => {
                 const res = reservations.find(r => h >= r.start && h < r.end);
                 const isStart = res && h === res.start;
+                if (res && !isStart) return null;
                 return (<div key={h} className="tl-slot">
                   <div className="tl-time">{String(h).padStart(2, '0')}:00</div>
                   <div className="tl-content">

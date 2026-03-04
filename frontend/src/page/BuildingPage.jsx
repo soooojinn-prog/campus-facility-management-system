@@ -48,9 +48,7 @@ export function BuildingPage() {
       });
       // name/info는 BUILDING_POLYGONS에서 가져옴 (DB의 Building.rentable과 프론트 설정이 다를 수 있으므로)
       setBuildingData({
-        name: polygon?.name || buildingKey,
-        info: polygon?.info || '',
-        floors,
+        name: polygon?.name || buildingKey, info: polygon?.info || '', floors,
       });
       setLoading(false);
     }).catch(() => {

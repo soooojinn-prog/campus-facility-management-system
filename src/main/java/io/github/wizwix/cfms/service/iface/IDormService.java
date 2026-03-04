@@ -14,11 +14,11 @@ public interface IDormService {
 
   void cancelApplication(String number, Long applicationId);
 
+  List<ResponseDormMyApplication> getDormApplicationsByStatus(DormApplicationStatus status);
+
   List<ResponseDormFloor> getDormRooms(Gender gender);
 
   List<ResponseDormMyApplication> getMyApplications(String userNumber);
-
-  List<ResponseDormMyApplication> getDormApplicationsByStatus(DormApplicationStatus status);
 
   void updateDormApplicationStatus(Long id, DormApplicationStatus status, String rejectReason, String adminNumber);
 }

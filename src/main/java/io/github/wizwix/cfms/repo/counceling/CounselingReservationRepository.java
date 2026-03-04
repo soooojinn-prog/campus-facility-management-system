@@ -12,7 +12,7 @@ import java.util.List;
 public interface CounselingReservationRepository extends JpaRepository<CounselingReservation, Long> {
   List<CounselingReservation> findByCounselorAndDate(Counselor counselor, LocalDate date);
 
-  List<CounselingReservation> findByUserAndStatusIn(User user, List<ReservationStatus> statuses);
-
   List<CounselingReservation> findByStatus(ReservationStatus status);
+
+  List<CounselingReservation> findByUserAndStatusIn(User user, List<ReservationStatus> statuses);
 }

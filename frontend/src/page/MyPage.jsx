@@ -30,14 +30,13 @@ import {
   updateMyProfile,
 } from '../data/api.js';
 
-const TABS = [
-  {key: 'profile', label: '개인정보'},
-  {key: 'dorm', label: '기숙사 신청'},
-  {key: 'reservation', label: '강의실 예약'},
-  {key: 'counseling', label: '상담 예약'},
-  {key: 'seatReservation', label: '열람실 예약'},
-  {key: 'studyReservation', label: '스터디룸 예약'},
-];
+const TABS = [{key: 'profile', label: '개인정보'}, {key: 'dorm', label: '기숙사 신청'}, {
+  key: 'reservation',
+  label: '강의실 예약',
+}, {key: 'counseling', label: '상담 예약'}, {key: 'seatReservation', label: '열람실 예약'}, {
+  key: 'studyReservation',
+  label: '스터디룸 예약',
+}];
 
 const ROLE_LABELS = {ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '관리자'};
 const GENDER_LABELS = {MALE: '남성', FEMALE: '여성'};
@@ -61,26 +60,22 @@ export function MyPage() {
 
   if (!currentUser) return null;
 
-  return (
-      <div className="mypage-layout">
-        <div className="mypage-sidebar">
-          {TABS.map(t => (
-              <div key={t.key} className={`mypage-sidebar-item${tab === t.key ? ' active' : ''}`}
-                   onClick={() => setTab(t.key)}>
-                {t.label}
-              </div>
-          ))}
-        </div>
-        <div className="mypage-content">
-          {tab === 'profile' && <ProfileTab/>}
-          {tab === 'dorm' && <DormTab/>}
-          {tab === 'reservation' && <ReservationTab/>}
-          {tab === 'counseling' && <CounselingTab/>}
-          {tab === 'seatReservation' && <SeatReservationTab/>}
-          {tab === 'studyReservation' && <StudyReservationTab/>}
-        </div>
-      </div>
-  );
+  return (<div className="mypage-layout">
+    <div className="mypage-sidebar">
+      {TABS.map(t => (<div key={t.key} className={`mypage-sidebar-item${tab === t.key ? ' active' : ''}`}
+                           onClick={() => setTab(t.key)}>
+        {t.label}
+      </div>))}
+    </div>
+    <div className="mypage-content">
+      {tab === 'profile' && <ProfileTab/>}
+      {tab === 'dorm' && <DormTab/>}
+      {tab === 'reservation' && <ReservationTab/>}
+      {tab === 'counseling' && <CounselingTab/>}
+      {tab === 'seatReservation' && <SeatReservationTab/>}
+      {tab === 'studyReservation' && <StudyReservationTab/>}
+    </div>
+  </div>);
 }
 
 // 개인정보 탭 — 프로필 카드(읽기전용) + 수정 폼
@@ -128,50 +123,48 @@ function ProfileTab() {
   if (error) return <div className="alert alert-danger">{error}</div>;
   if (!profile) return null;
 
-  return (
-      <div>
-        <div className="mypage-section-header">
-          <h3>개인정보</h3>
-          <p className="mypage-section-sub">내 계정 정보를 확인하고 수정할 수 있습니다.</p>
-        </div>
-        <div className="mypage-profile-card">
-          <div className="mypage-profile-row"><span className="mypage-label">이름</span><span>{profile.name}</span></div>
-          <div className="mypage-profile-row"><span
-              className="mypage-label">학번/교번</span><span>{profile.userNumber}</span></div>
-          <div className="mypage-profile-row"><span className="mypage-label">이메일</span><span>{profile.email}</span>
-          </div>
-          <div className="mypage-profile-row"><span
-              className="mypage-label">역할</span><span>{ROLE_LABELS[profile.role] || profile.role}</span></div>
-          <div className="mypage-profile-row"><span
-              className="mypage-label">성별</span><span>{GENDER_LABELS[profile.gender] || '-'}</span></div>
-          <div className="mypage-profile-row"><span
-              className="mypage-label">가입일</span><span>{profile.createdAt?.substring(0, 10)}</span></div>
-        </div>
-
-        <div className="mypage-edit-section">
-          <h4>정보 수정</h4>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label">현재 비밀번호 <span className="text-danger">*</span></label>
-              <input type="password" className="form-control" value={oldPassword}
-                     onChange={e => setOldPassword(e.target.value)} required/>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">새 비밀번호</label>
-              <input type="password" className="form-control" value={newPassword}
-                     onChange={e => setNewPassword(e.target.value)} placeholder="변경하지 않으려면 비워두세요"/>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">이메일</label>
-              <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)}/>
-            </div>
-            {editMsg && <div className="alert alert-success py-2">{editMsg}</div>}
-            {editErr && <div className="alert alert-danger py-2">{editErr}</div>}
-            <button type="submit" className="btn btn-primary">수정하기</button>
-          </form>
-        </div>
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>개인정보</h3>
+      <p className="mypage-section-sub">내 계정 정보를 확인하고 수정할 수 있습니다.</p>
+    </div>
+    <div className="mypage-profile-card">
+      <div className="mypage-profile-row"><span className="mypage-label">이름</span><span>{profile.name}</span></div>
+      <div className="mypage-profile-row"><span
+          className="mypage-label">학번/교번</span><span>{profile.userNumber}</span></div>
+      <div className="mypage-profile-row"><span className="mypage-label">이메일</span><span>{profile.email}</span>
       </div>
-  );
+      <div className="mypage-profile-row"><span
+          className="mypage-label">역할</span><span>{ROLE_LABELS[profile.role] || profile.role}</span></div>
+      <div className="mypage-profile-row"><span
+          className="mypage-label">성별</span><span>{GENDER_LABELS[profile.gender] || '-'}</span></div>
+      <div className="mypage-profile-row"><span
+          className="mypage-label">가입일</span><span>{profile.createdAt?.substring(0, 10)}</span></div>
+    </div>
+
+    <div className="mypage-edit-section">
+      <h4>정보 수정</h4>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label className="form-label">현재 비밀번호 <span className="text-danger">*</span></label>
+          <input type="password" className="form-control" value={oldPassword}
+                 onChange={e => setOldPassword(e.target.value)} required/>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">새 비밀번호</label>
+          <input type="password" className="form-control" value={newPassword}
+                 onChange={e => setNewPassword(e.target.value)} placeholder="변경하지 않으려면 비워두세요"/>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">이메일</label>
+          <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)}/>
+        </div>
+        {editMsg && <div className="alert alert-success py-2">{editMsg}</div>}
+        {editErr && <div className="alert alert-danger py-2">{editErr}</div>}
+        <button type="submit" className="btn btn-primary">수정하기</button>
+      </form>
+    </div>
+  </div>);
 }
 
 // 기숙사 신청 내역 탭 — 테이블 형태
@@ -202,53 +195,50 @@ function DormTab() {
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
-  return (
-      <div>
-        <div className="mypage-section-header">
-          <h3>기숙사 신청 내역</h3>
-          <p className="mypage-section-sub">내 기숙사 입주 신청 현황을 확인할 수 있습니다.</p>
-        </div>
-        {apps.length === 0 ? (
-            <div className="mypage-empty">신청 내역이 없습니다.</div>
-        ) : (
-            <div className="table-responsive">
-              <table className="table mypage-table">
-                <thead>
-                <tr>
-                  <th>호실</th>
-                  <th>학기</th>
-                  <th>입주 기간</th>
-                  <th>룸메이트</th>
-                  <th>상태</th>
-                  <th>신청일</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {apps.map(a => (
-                    <tr key={a.id}>
-                      <td>{a.roomNumber}호</td>
-                      <td>{a.semester}</td>
-                      <td>{PERIOD_LABELS[a.period] || a.period}</td>
-                      <td>{a.partnerName || '-'}</td>
-                      <td><span
-                          className={`mypage-badge ${STATUS_CLASSES[a.status] || ''}`}>{STATUS_LABELS[a.status] || a.status}</span>
-                      </td>
-                      <td>{a.createdAt?.substring(0, 10)}</td>
-                      <td>
-                        {a.status === 'PENDING' && (
-                            <button className="btn btn-outline-danger btn-sm"
-                                    onClick={() => handleCancel(a.id)}>취소</button>
-                        )}
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>
-        )}
-      </div>
-  );
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>기숙사 신청 내역</h3>
+      <p className="mypage-section-sub">내 기숙사 입주 신청 현황을 확인할 수 있습니다.</p>
+    </div>
+    {apps.length === 0 ? (<div className="mypage-empty">신청 내역이 없습니다.</div>) : (<div className="table-responsive">
+      <table className="table mypage-table">
+        <thead>
+        <tr>
+          <th>호실</th>
+          <th>학기</th>
+          <th>입주 기간</th>
+          <th>룸메이트</th>
+          <th>상태</th>
+          <th>신청일</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {apps.map(a => (<tr key={a.id}>
+          <td>{a.roomNumber}호</td>
+          <td>{a.semester}</td>
+          <td>{PERIOD_LABELS[a.period] || a.period}</td>
+          <td>{a.partnerName || '-'}</td>
+          <td>
+            {a.status === 'REJECTED' && a.rejectReason ?
+                <button className={`mypage-badge ${STATUS_CLASSES[a.status] || ''}`}
+                        style={{cursor: 'pointer', border: 'none'}}
+                        title="클릭하여 거절 사유 확인"
+                        onClick={() => alert(`거절 사유:\n${a.rejectReason}`)}>
+                  {STATUS_LABELS[a.status]}
+                </button> : <span
+                    className={`mypage-badge ${STATUS_CLASSES[a.status] || ''}`}>{STATUS_LABELS[a.status] || a.status}</span>}
+          </td>
+          <td>{a.createdAt?.substring(0, 10)}</td>
+          <td>
+            {a.status === 'PENDING' && (<button className="btn btn-outline-danger btn-sm"
+                                                onClick={() => handleCancel(a.id)}>취소</button>)}
+          </td>
+        </tr>))}
+        </tbody>
+      </table>
+    </div>)}
+  </div>);
 }
 
 // 강의실 예약 내역 탭 — 테이블 형태
@@ -289,59 +279,50 @@ function ReservationTab() {
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
-  return (
-      <div>
-        <div className="mypage-section-header">
-          <h3>강의실 예약 내역</h3>
-          <p className="mypage-section-sub">내 강의실 예약 현황을 확인할 수 있습니다.</p>
-        </div>
-        {list.length === 0 ? (
-            <div className="mypage-empty">신청 내역이 없습니다.</div>
-        ) : (
-            <div className="table-responsive">
-              <table className="table mypage-table">
-                <thead>
-                <tr>
-                  <th>강의실</th>
-                  <th>시작</th>
-                  <th>종료</th>
-                  <th>목적</th>
-                  <th>동아리</th>
-                  <th>상태</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {list.map(r => (
-                    <tr key={r.id}>
-                      <td>{r.roomCode}</td>
-                      <td>{formatTime(r.startTime)}</td>
-                      <td>{formatTime(r.endTime)}</td>
-                      <td>{r.purpose || '-'}</td>
-                      <td>{r.clubName || '-'}</td>
-                      <td>
-                        <span className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}>
-                          {STATUS_LABELS[r.status] || r.status}
-                        </span>
-                        {/* 관리자 거절 시 사유 표시 — ResponseReservation.rejectReason 필드 */}
-                        {r.status === 'REJECTED' && r.rejectReason && (
-                            <div className="text-danger small mt-1">사유: {r.rejectReason}</div>
-                        )}
-                      </td>
-                      <td>
-                        {r.status === 'PENDING' && (
-                            <button className="btn btn-outline-danger btn-sm"
-                                    onClick={() => handleCancel(r.id)}>취소</button>
-                        )}
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>
-        )}
-      </div>
-  );
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>강의실 예약 내역</h3>
+      <p className="mypage-section-sub">내 강의실 예약 현황을 확인할 수 있습니다.</p>
+    </div>
+    {list.length === 0 ? (<div className="mypage-empty">신청 내역이 없습니다.</div>) : (<div className="table-responsive">
+      <table className="table mypage-table">
+        <thead>
+        <tr>
+          <th>강의실</th>
+          <th>시작</th>
+          <th>종료</th>
+          <th>목적</th>
+          <th>동아리</th>
+          <th>상태</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {list.map(r => (<tr key={r.id}>
+          <td>{r.roomCode}</td>
+          <td>{formatTime(r.startTime)}</td>
+          <td>{formatTime(r.endTime)}</td>
+          <td>{r.purpose || '-'}</td>
+          <td>{r.clubName || '-'}</td>
+          <td>
+            {r.status === 'REJECTED' && r.rejectReason ?
+                <button className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}
+                        style={{cursor: 'pointer', border: 'none'}}
+                        title="클릭하여 거절 사유 확인"
+                        onClick={() => alert(`거절 사유:\n${r.rejectReason}`)}>
+                  {STATUS_LABELS[r.status]}
+                </button> : <span
+                    className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}>{STATUS_LABELS[r.status] || r.status}</span>}
+          </td>
+          <td>
+            {r.status === 'PENDING' && (<button className="btn btn-outline-danger btn-sm"
+                                                onClick={() => handleCancel(r.id)}>취소</button>)}
+          </td>
+        </tr>))}
+        </tbody>
+      </table>
+    </div>)}
+  </div>);
 }
 
 const DEPT_LABELS = {ACADEMIC: '교무처', STUDENT: '학생처', CAREER: '취업지원센터'};
@@ -373,53 +354,50 @@ function CounselingTab() {
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
-  return (
-      <div>
-        <div className="mypage-section-header">
-          <h3>상담 예약 내역</h3>
-          <p className="mypage-section-sub">내 상담 예약 현황을 확인할 수 있습니다.</p>
-        </div>
-        {list.length === 0 ? (
-            <div className="mypage-empty">상담 예약 내역이 없습니다.</div>
-        ) : (
-            <div className="table-responsive">
-              <table className="table mypage-table">
-                <thead>
-                <tr>
-                  <th>상담사</th>
-                  <th>부서</th>
-                  <th>날짜</th>
-                  <th>시간</th>
-                  <th>주제</th>
-                  <th>상태</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {list.map(r => (
-                    <tr key={r.id}>
-                      <td>{r.counselorName}</td>
-                      <td>{DEPT_LABELS[r.department] || r.department}</td>
-                      <td>{r.date}</td>
-                      <td>{r.startTime?.substring(0, 5)} ~ {r.endTime?.substring(0, 5)}</td>
-                      <td>{r.topic || '-'}</td>
-                      <td><span
-                          className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}>{STATUS_LABELS[r.status] || r.status}</span>
-                      </td>
-                      <td>
-                        {r.status === 'PENDING' && (
-                            <button className="btn btn-outline-danger btn-sm"
-                                    onClick={() => handleCancel(r.id)}>취소</button>
-                        )}
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>
-        )}
-      </div>
-  );
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>상담 예약 내역</h3>
+      <p className="mypage-section-sub">내 상담 예약 현황을 확인할 수 있습니다.</p>
+    </div>
+    {list.length === 0 ? (<div className="mypage-empty">상담 예약 내역이 없습니다.</div>) : (<div className="table-responsive">
+      <table className="table mypage-table">
+        <thead>
+        <tr>
+          <th>상담사</th>
+          <th>부서</th>
+          <th>날짜</th>
+          <th>시간</th>
+          <th>주제</th>
+          <th>상태</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {list.map(r => (<tr key={r.id}>
+          <td>{r.counselorName}</td>
+          <td>{DEPT_LABELS[r.department] || r.department}</td>
+          <td>{r.date}</td>
+          <td>{r.startTime?.substring(0, 5)} ~ {r.endTime?.substring(0, 5)}</td>
+          <td>{r.topic || '-'}</td>
+          <td>
+            {r.status === 'REJECTED' && r.rejectReason ?
+                <button className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}
+                        style={{cursor: 'pointer', border: 'none'}}
+                        title="클릭하여 거절 사유 확인"
+                        onClick={() => alert(`거절 사유:\n${r.rejectReason}`)}>
+                  {STATUS_LABELS[r.status]}
+                </button> : <span
+                    className={`mypage-badge ${STATUS_CLASSES[r.status] || ''}`}>{STATUS_LABELS[r.status] || r.status}</span>}
+          </td>
+          <td>
+            {r.status === 'PENDING' && (<button className="btn btn-outline-danger btn-sm"
+                                                onClick={() => handleCancel(r.id)}>취소</button>)}
+          </td>
+        </tr>))}
+        </tbody>
+      </table>
+    </div>)}
+  </div>);
 }
 
 // 열람실 예약 내역 탭 — 내가 예약한 좌석 목록 (로그인 기반)
@@ -449,45 +427,39 @@ function SeatReservationTab() {
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
-  return (
-      <div>
-        <div className="mypage-section-header">
-          <h3>열람실 예약 내역</h3>
-          <p className="mypage-section-sub">내 도서관 열람실 좌석 예약 현황입니다.</p>
-        </div>
-        {list.length === 0 ? (
-            <div className="mypage-empty">열람실 예약 내역이 없습니다.</div>
-        ) : (
-            <div className="table-responsive">
-              <table className="table mypage-table">
-                <thead>
-                <tr>
-                  <th>층</th>
-                  <th>열람실</th>
-                  <th>좌석 번호</th>
-                  <th>예약 날짜</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {list.map(r => (
-                    <tr key={r.id}>
-                      <td>{r.floor}</td>
-                      <td>{r.roomName}</td>
-                      <td>{r.seatNo}번</td>
-                      <td>{r.date}</td>
-                      <td>
-                        <button className="btn btn-outline-danger btn-sm"
-                                onClick={() => handleCancel(r.id)}>취소</button>
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>
-        )}
-      </div>
-  );
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>열람실 예약 내역</h3>
+      <p className="mypage-section-sub">내 도서관 열람실 좌석 예약 현황입니다.</p>
+    </div>
+    {list.length === 0 ? (<div className="mypage-empty">열람실 예약 내역이 없습니다.</div>) : (
+        <div className="table-responsive">
+          <table className="table mypage-table">
+            <thead>
+            <tr>
+              <th>층</th>
+              <th>열람실</th>
+              <th>좌석 번호</th>
+              <th>예약 날짜</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {list.map(r => (<tr key={r.id}>
+              <td>{r.floor}</td>
+              <td>{r.roomName}</td>
+              <td>{r.seatNo}번</td>
+              <td>{r.date}</td>
+              <td>
+                <button className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleCancel(r.id)}>취소
+                </button>
+              </td>
+            </tr>))}
+            </tbody>
+          </table>
+        </div>)}
+  </div>);
 }
 
 function StudyReservationTab() {
@@ -516,43 +488,37 @@ function StudyReservationTab() {
   if (loading) return <div className="mypage-loading">로딩 중...</div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
-  return (
-      <div>
-        <div className="mypage-section-header">
-          <h3>스터디룸 예약 내역</h3>
-          <p className="mypage-section-sub">내 도서관 스터디룸 예약 현황입니다.</p>
-        </div>
-        {list.length === 0 ? (
-            <div className="mypage-empty">스터디룸 예약 내역이 없습니다.</div>
-        ) : (
-            <div className="table-responsive">
-              <table className="table mypage-table">
-                <thead>
-                <tr>
-                  <th>층</th>
-                  <th>호실</th>
-                  <th>예약 날짜</th>
-                  <th>시간</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {list.map(r => (
-                    <tr key={r.id}>
-                      <td>{r.floor}</td>
-                      <td>{r.roomName}</td>
-                      <td>{r.date}</td>
-                      <td>{String(r.startHour).padStart(2, '0')}:00 ~ {String(r.startHour + 1).padStart(2, '0')}:00</td>
-                      <td>
-                        <button className="btn btn-outline-danger btn-sm"
-                                onClick={() => handleCancel(r.id)}>취소</button>
-                      </td>
-                    </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>
-        )}
-      </div>
-  );
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>스터디룸 예약 내역</h3>
+      <p className="mypage-section-sub">내 도서관 스터디룸 예약 현황입니다.</p>
+    </div>
+    {list.length === 0 ? (<div className="mypage-empty">스터디룸 예약 내역이 없습니다.</div>) : (
+        <div className="table-responsive">
+          <table className="table mypage-table">
+            <thead>
+            <tr>
+              <th>층</th>
+              <th>호실</th>
+              <th>예약 날짜</th>
+              <th>시간</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {list.map(r => (<tr key={r.id}>
+              <td>{r.floor}</td>
+              <td>{r.roomName}</td>
+              <td>{r.date}</td>
+              <td>{String(r.startHour).padStart(2, '0')}:00 ~ {String(r.startHour + 1).padStart(2, '0')}:00</td>
+              <td>
+                <button className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleCancel(r.id)}>취소
+                </button>
+              </td>
+            </tr>))}
+            </tbody>
+          </table>
+        </div>)}
+  </div>);
 }

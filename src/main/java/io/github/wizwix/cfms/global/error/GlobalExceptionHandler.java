@@ -23,14 +23,14 @@ public class GlobalExceptionHandler {
     return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ResponseError> handleGeneral(Exception e, HttpServletResponse response) {
-    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-  }
-
   private ResponseEntity<ResponseError> buildResponse(HttpStatus httpStatus, String message) {
     ResponseError body = new ResponseError(httpStatus.value(), httpStatus.getReasonPhrase(), message, System.currentTimeMillis());
     return ResponseEntity.status(httpStatus).body(body);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ResponseError> handleGeneral(Exception e, HttpServletResponse response) {
+    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
