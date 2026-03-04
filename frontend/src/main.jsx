@@ -10,6 +10,7 @@ import {AdminPage} from './page/AdminPage.jsx';
 import {BuildingPage} from './page/BuildingPage.jsx';
 import {CafeteriaPage} from './page/CafeteriaPage.jsx';
 import {CampusMapPage} from './page/CampusMapPage.jsx';
+import {ClubPage} from './page/ClubPage.jsx';
 import {CounselingPage} from './page/CounselingPage.jsx';
 import {DormitoryPage} from './page/DormitoryPage.jsx';
 import {LibraryPage} from './page/LibraryPage.jsx';
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')).render(<StrictMode>
         <Route path="/cafeteria" element={<CafeteriaPage/>}/>
         <Route path="/dormitory" element={<DormitoryPage/>}/>
         <Route path="/library" element={<LibraryPage building={BUILDING_POLYGONS.find(b => b.key === 'library')}/>}/>
+        <Route path="/clubs" element={<ClubPage/>}/>
         <Route path="/counseling" element={<CounselingPage/>}/>
         <Route path="/mypage" element={<MyPage/>}/>
       </Routes>

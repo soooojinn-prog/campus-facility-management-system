@@ -397,3 +397,61 @@ export async function cancelStudyRoomReservation(id) {
   const res = await fetch(`${BASE}/library/study-rooms/reservations/${id}`, {method: 'DELETE'});
   if (!res.ok) throw new Error(await extractError(res));
 }
+
+// ── 동아리 관련 ──
+
+/// 동아리 목록 검색 — 공개
+/// 응답: [{ id, name, slug, presidentName, status, memberCount, createdAt }]
+export async function fetchClubs(query = '', page = 0) {
+  const params = new URLSearchParams();
+  if (query) params.set('q', query);
+  if (page) params.set('page', page);
+  const res = await fetch(`${BASE}/clubs?${params}`);
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
+
+/// 동아리 상세 조회 — 공개
+/// 응답: { id, name, slug, description, presidentName, autoApprove, memberCount, createdAt, status }
+export async function fetchClubDetail(slug) {
+  const res = await fetch(`${BASE}/clubs/${slug}`);
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
+
+/// 동아리 부원 목록 — 공개
+/// 응답: [{ userId, name, userNnumber, role, joinedAt }]
+export async function fetchClubMembers(slug) {
+  const res = await fetch(`${BASE}/clubs/${slug}/members`);
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
+
+/// 동아리 개설 신청 — 로그인 필요
+/// data: { name, slug, description, autoApprove }
+export async function createClub(data) {
+  const res = await fetch(`${BASE}/clubs`, {
+    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
+
+/// 동아리 가입 신청 — 로그인 필요
+export async function joinClub(slug) {
+  const res = await fetch(`${BASE}/clubs/${slug}/members`, {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+  });
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
+
+/// 동아리 정보 수정 — 로그인 필요 (회장만)
+/// data: { name, description, autoApprove }
+export async function updateClub(slug, data) {
+  const res = await fetch(`${BASE}/clubs/${slug}`, {
+    method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
