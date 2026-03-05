@@ -7,6 +7,9 @@ import io.github.wizwix.cfms.dto.response.club.ResponseClubList;
 import io.github.wizwix.cfms.exception.NotFoundException;
 import io.github.wizwix.cfms.model.User;
 import io.github.wizwix.cfms.model.club.Club;
+import io.github.wizwix.cfms.model.club.ClubMember;
+import io.github.wizwix.cfms.model.enums.ClubMemberStatus;
+import io.github.wizwix.cfms.model.enums.ClubRole;
 import io.github.wizwix.cfms.model.enums.ClubStatus;
 import io.github.wizwix.cfms.model.enums.UserRole;
 import io.github.wizwix.cfms.repo.UserRepository;
@@ -108,6 +111,19 @@ public class ClubService implements IClubService {
     club.setStatus(status);
     club.setRejectReason(reason);
     clubRepository.save(club);
+
+    // 승인 시 회장을 ClubMember(ROLE_PRESIDENT, APPROVED)로 자동 등록
+    if (status == ClubStatus.APPROVED && club.getPresident() != null) {
+      if (!clubMemberRepository.existsByUserAndClub(club.getPresident(), club)) {
+        ClubMember president = new ClubMember();
+        president.setClub(club);
+        president.setUser(club.getPresident());
+        president.setRole(ClubRole.ROLE_PRESIDENT);
+        president.setStatus(ClubMemberStatus.APPROVED);
+        president.setJoinedAt(LocalDateTime.now());
+        clubMemberRepository.save(president);
+      }
+    }
 
     return new ResponseClubDetail(club.getId(), club.getName(), club.getSlug(), club.getDescription(), getPresidentName(club), club.getAutoApprove(), getMemberCount(club), club.getCreatedAt(), club.getStatus());
   }
