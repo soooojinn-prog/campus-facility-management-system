@@ -21,6 +21,7 @@ import {
   cancelReservation,
   cancelSeatReservation,
   cancelStudyRoomReservation,
+  fetchMyClubs,
   fetchMyCounselingReservations,
   fetchMyDormApplications,
   fetchMyProfile,
@@ -34,7 +35,7 @@ const TABS = [{key: 'profile', label: '개인정보'}, {key: 'dorm', label: '기
   key: 'reservation', label: '강의실 예약',
 }, {key: 'counseling', label: '상담 예약'}, {key: 'seatReservation', label: '열람실 예약'}, {
   key: 'studyReservation', label: '스터디룸 예약',
-}];
+}, {key: 'club', label: '내 동아리'}];
 
 const ROLE_LABELS = {ROLE_STUDENT: '학생', ROLE_PROFESSOR: '교수', ROLE_ADMIN: '관리자'};
 const GENDER_LABELS = {MALE: '남성', FEMALE: '여성'};
@@ -72,6 +73,7 @@ export function MyPage() {
       {tab === 'counseling' && <CounselingTab/>}
       {tab === 'seatReservation' && <SeatReservationTab/>}
       {tab === 'studyReservation' && <StudyReservationTab/>}
+      {tab === 'club' && <ClubTab/>}
     </div>
   </div>);
 }
@@ -512,6 +514,66 @@ function StudyReservationTab() {
                     onClick={() => handleCancel(r.id)}>취소
             </button>
           </td>
+        </tr>))}
+        </tbody>
+      </table>
+    </div>)}
+  </div>);
+}
+
+const CLUB_ROLE_LABELS = {ROLE_PRESIDENT: '회장', ROLE_VICE_PRESIDENT: '부회장', ROLE_MEMBER: '부원'};
+const MEMBER_STATUS_LABELS = {PENDING: '승인 대기', APPROVED: '가입됨'};
+const MEMBER_STATUS_CLASSES = {PENDING: 'mypage-badge-pending', APPROVED: 'mypage-badge-approved'};
+
+// 내 동아리 탭 — 가입한 동아리 목록 (APPROVED + PENDING)
+function ClubTab() {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchMyClubs()
+        .then(setList)
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="mypage-loading">로딩 중...</div>;
+  if (error) return <div className="alert alert-danger">{error}</div>;
+
+  return (<div>
+    <div className="mypage-section-header">
+      <h3>내 동아리</h3>
+      <p className="mypage-section-sub">내가 가입한 동아리 목록입니다.</p>
+    </div>
+    {list.length === 0 ? (<div className="mypage-empty">가입한 동아리가 없습니다.</div>) : (<div className="table-responsive">
+      <table className="table mypage-table">
+        <thead>
+        <tr>
+          <th>동아리명</th>
+          <th>회장</th>
+          <th>역할</th>
+          <th>가입 상태</th>
+          <th>가입일</th>
+        </tr>
+        </thead>
+        <tbody>
+        {list.map(c => (<tr key={c.clubId}>
+          <td>
+            <span style={{cursor: 'pointer', color: '#0d6efd', textDecoration: 'underline'}}
+                  onClick={() => navigate(`/clubs/${c.slug}`)}>
+              {c.clubName}
+            </span>
+          </td>
+          <td>{c.presidentName || '-'}</td>
+          <td>{c.memberStatus === 'APPROVED' ? (CLUB_ROLE_LABELS[c.myRole] || c.myRole) : '-'}</td>
+          <td>
+            <span className={`mypage-badge ${MEMBER_STATUS_CLASSES[c.memberStatus] || ''}`}>
+              {MEMBER_STATUS_LABELS[c.memberStatus] || c.memberStatus}
+            </span>
+          </td>
+          <td>{c.joinedAt?.substring(0, 10)}</td>
         </tr>))}
         </tbody>
       </table>

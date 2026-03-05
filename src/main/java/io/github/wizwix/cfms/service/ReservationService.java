@@ -48,6 +48,9 @@ public class ReservationService implements IReservationService {
     if (!reservation.getUser().getNumber().equals(userNumber)) {
       throw new IllegalStateException("본인의 예약만 취소할 수 있습니다.");
     }
+    if (reservation.getStatus() != ReservationStatus.PENDING) {
+      throw new IllegalArgumentException("대기 중인 예약만 취소할 수 있습니다.");
+    }
     reservation.setStatus(ReservationStatus.CANCELLED);
     reservation.setUpdatedAt(LocalDateTime.now());
     reservationRepo.save(reservation);
@@ -120,6 +123,9 @@ public class ReservationService implements IReservationService {
   @Override
   public void updateReservationStatus(Long id, ReservationStatus status, String rejectReason, String adminNumber) {
     Reservation reservation = reservationRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+    if (reservation.getStatus() != ReservationStatus.PENDING) {
+      throw new IllegalArgumentException("대기 중인 예약만 처리할 수 있습니다.");
+    }
     // 승인 시 같은 호실·겹치는 시간에 이미 승인된 예약이 있으면 거부
     if (status == ReservationStatus.APPROVED) {
       List<Reservation> conflicts = reservationRepo.findByRoomIdAndStartTimeLessThanAndEndTimeGreaterThanAndStatusIn(

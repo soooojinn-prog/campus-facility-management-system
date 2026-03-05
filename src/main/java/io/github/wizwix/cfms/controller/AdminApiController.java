@@ -72,7 +72,7 @@ public class AdminApiController {
 
   @PatchMapping("/clubs/{slug}/status")
   public ResponseEntity<ResponseClubDetail> updateClubStatus(@PathVariable String slug, @RequestBody RequestAdminClubStatusUpdate req, Authentication auth) {
-    return ResponseEntity.ok(clubService.updateClubStatus(slug, req.status(), req.reason(), auth.getName()));
+    return ResponseEntity.ok(clubService.updateClubStatus(slug, req.status(), req.rejectReason(), auth.getName()));
   }
 
   /// 상담 예약 승인/거절 — PENDING 상태만 처리 가능

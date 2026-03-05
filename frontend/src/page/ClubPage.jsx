@@ -226,10 +226,12 @@ function ClubDetailView({slug, onBack}) {
   async function handleKick(userId) {
     if (!confirm('정말 이 부원을 추방하시겠습니까?')) return;
     try {
-      await fetch(`/api/clubs/${slug}/members/${userId}`, {method: 'DELETE'});
-      setMembers(prev => prev.filter(m => m.userId !== userId));
-      const detail = await fetchClubDetail(slug);
+      const res = await fetch(`/api/clubs/${slug}/members/${userId}`, {method: 'DELETE'});
+      if (!res.ok) throw new Error(await res.text());
+      // 성공 시 멤버 목록 + 상세 정보 재조회
+      const [detail, memberList] = await Promise.all([fetchClubDetail(slug), fetchClubMembers(slug)]);
       setClub(detail);
+      setMembers(memberList);
     } catch (err) {
       alert('추방에 실패했습니다.');
     }
