@@ -38,8 +38,8 @@ public class DormService implements IDormService {
   public ResponseDormApplyResult apply(String userNumber, RequestDormApply request) {
     User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new NotFoundException("존재하지 않는 호실입니다."));
 
-    if (user.getRole() == UserRole.ROLE_PROFESSOR) {
-      throw new IllegalArgumentException("교수는 기숙사 신청이 불가합니다.");
+    if (user.getRole() != UserRole.ROLE_STUDENT) {
+      throw new IllegalArgumentException("학생만 기숙사 신청이 가능합니다.");
     }
 
     DormRoom room = dormRoomRepo.findById(request.roomId()).orElseThrow(() -> new NotFoundException("존재하지 않는 호실입니다."));
@@ -71,8 +71,8 @@ public class DormService implements IDormService {
       if (partner.getId().equals(user.getId())) {
         throw new IllegalArgumentException("본인의 학번은 입력할 수 없습니다.");
       }
-      if (partner.getRole() == UserRole.ROLE_PROFESSOR) {
-        throw new IllegalArgumentException("교수는 기숙사 신청이 불가합니다.");
+      if (partner.getRole() != UserRole.ROLE_STUDENT) {
+        throw new IllegalArgumentException("학생만 기숙사 신청이 가능합니다.");
       }
       if (partner.getGender() != room.getGender()) {
         throw new IllegalArgumentException("같이 신청하는 친구의 성별이 해당 기숙사와 일치하지 않습니다.");
@@ -126,7 +126,7 @@ public class DormService implements IDormService {
   @Override
   @Transactional(readOnly = true)
   public List<ResponseDormMyApplication> getDormApplicationsByStatus(DormApplicationStatus status) {
-    return dormAppRepo.findByStatus(status).stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : ""), app.getCreatedAt())).toList();
+    return dormAppRepo.findByStatus(status).stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : ""), app.getRejectReason(), app.getCreatedAt())).toList();
   }
 
   @Override
@@ -180,13 +180,16 @@ public class DormService implements IDormService {
     User user = userRepo.findByNumber(userNumber).orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
     List<DormApplicationStatus> visibleStatuses = List.of(DormApplicationStatus.PENDING, DormApplicationStatus.APPROVED, DormApplicationStatus.REJECTED);
     List<DormApplication> apps = dormAppRepo.findByApplicantAndStatusIn(user, visibleStatuses);
-    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : ""), app.getCreatedAt())).toList();
+    return apps.stream().map(app -> new ResponseDormMyApplication(app.getId(), app.getRoom().getRoomNumber(), app.getSemester(), app.getPeriod(), app.getStatus(), app.getApplicant().getName() + (app.getPartner() != null ? "," + app.getPartner().getName() : ""), app.getRejectReason(), app.getCreatedAt())).toList();
   }
 
   /// 관리자 — 기숙사 신청 승인/거절 (PENDING만 처리 가능)
   @Override
   public void updateDormApplicationStatus(Long id, DormApplicationStatus status, String rejectReason, String adminNumber) {
     DormApplication app = dormAppRepo.findById(id).orElseThrow(() -> new NotFoundException("신청 내역을 찾을 수 없습니다."));
+    if (app.getStatus() != DormApplicationStatus.PENDING) {
+      throw new IllegalArgumentException("대기 중인 신청만 처리할 수 있습니다.");
+    }
     User admin = userRepo.findByNumber(adminNumber).orElseThrow(() -> new NotFoundException("관리자를 찾을 수 없습니다."));
     app.setStatus(status);
     app.setRejectReason(status == DormApplicationStatus.REJECTED ? rejectReason : null);

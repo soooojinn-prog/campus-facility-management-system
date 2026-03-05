@@ -45,6 +45,9 @@ public class CounselingReservation {
   /// 메모
   @Column(length = 1000)
   private String memo;
+  /// 거절 사유 (관리자가 REJECTED 처리 시 입력)
+  @Column(length = 1000)
+  private String rejectReason;
   /// 상담 시작 시간
   private LocalTime startTime;
   /// 예약 상태 (PENDING/APPROVED/REJECTED/CANCELLED)

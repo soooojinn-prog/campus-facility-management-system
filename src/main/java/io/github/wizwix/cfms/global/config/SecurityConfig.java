@@ -42,6 +42,8 @@ public class SecurityConfig {
         //   ※ /api/reservations/me, /api/reservations/{id} 는 아래 authenticated에 매치됨
         //   매처 순서 중요: 이 줄이 아래 "/api/reservations/**".authenticated() 보다 먼저 선언되어야 함
         .requestMatchers(HttpMethod.GET, "/api/library/reading-rooms/reservations/me", "/api/library/study-rooms/reservations/me").authenticated()
+        .requestMatchers(HttpMethod.GET, "/api/clubs/my").authenticated()
+        .requestMatchers(HttpMethod.GET, "/api/dorms/applications/me").authenticated()
         .requestMatchers(HttpMethod.GET, "/api/buildings/**", "/api/rooms/**", "/api/cafeterias/**", "/api/dorms/**", "/api/clubs/**", "/api/counseling/counselors", "/api/counseling/slots", "/api/reservations", "/api/library/**").permitAll()
         // ── 관리자 전용 ──
         .requestMatchers("/api/admin/**").hasRole("ADMIN")

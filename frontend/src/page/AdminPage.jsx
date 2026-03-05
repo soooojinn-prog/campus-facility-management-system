@@ -396,7 +396,7 @@ function DormStatusModal({app, onClose, onRefresh}) {
       <AdminActionModal title="기숙사 신청 심사" onClose={onClose} onSubmit={handleSubmit} submitting={submitting}>
         <div className="p-3 mb-3 border rounded bg-light">
           <strong>호실:</strong> {app.roomNumber}<br/>
-          <strong>신청인:</strong> {app.partnerName ? `${app.applicantName}, ${app.partnerName}` : app.applicantName || '-'}<br/>
+          <strong>신청인:</strong> {app.studentsName || '-'}<br/>
           <strong>학기:</strong> {app.semester} ({app.period})
         </div>
         <div className="mb-3">
@@ -473,7 +473,7 @@ function DormTab() {
                 ) : data.map(d => (
                     <tr key={d.id}>
                       <td>{d.roomNumber}</td>
-                      <td>{d.partnerName ? `${d.applicantName}, ${d.partnerName}` : d.applicantName || '-'}</td>
+                      <td>{d.studentsName || '-'}</td>
                       <td>{d.semester} ({d.period})</td>
                       <td>{d.createdAt?.split('T')[0]}</td>
                       <td>
